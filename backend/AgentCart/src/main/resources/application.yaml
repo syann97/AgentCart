@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: AgentCart
+  profiles:
+    active: local

@@ -1,0 +1,74 @@
+### Gradle ###
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### Spring ###
+HELP.md
+
+### IDE ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+bin/
+.settings/
+.factorypath
+.classpath
+.project
+.springBeans
+.sts4-cache
+.apt_generated
+
+### VS Code ###
+.vscode/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+### Logs ###
+*.log
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Env ###
+.env
+.env.*
+
+### Security ###
+*.p12
+*.jks
+*.keystore
+*.pem
+*.key
+**/application-local.yml
+**/application-local.yaml
+**/application-secret.yml
+**/application-secret.yaml
+
+### Node (Frontend) ###
+node_modules/
+dist/
+coverage/
+
+### Docker ###
+docker-compose.override.yml
+
+### Flyway ###
+**/db/migration/*-local.sql
+
+### LLM Prompts (민감한 프롬프트만 제외, CLAUDE.md는 공유) ###
+docs/prompts/*.md
+
+### Gradle wrapper ###
+# gradlew
+# gradlew.bat
+# gradle/wrapper/gradle-wrapper.properties
