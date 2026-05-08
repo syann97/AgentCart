@@ -1,0 +1,31 @@
+jwt:
+  secret: test-secret-key-minimum-32-chars-for-hs256
+  access-token-expiration: 1800000
+  refresh-token-expiration: 604800000
+
+spring:
+  jpa:
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  autoconfigure:
+    exclude:
+      # Infrastructure
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.redisson.spring.starter.RedissonAutoConfigurationV4
+      # Spring AI — all model/vector auto-configs disabled; tests do not need real AI connections
+      - org.springframework.ai.vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
+      - org.springframework.ai.model.anthropic.autoconfigure.AnthropicChatAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiEmbeddingAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiImageAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiAudioSpeechAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiAudioTranscriptionAutoConfiguration
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiModerationAutoConfiguration
+      - org.springframework.ai.model.chat.client.autoconfigure.ChatClientAutoConfiguration
+      - org.springframework.ai.model.chat.memory.autoconfigure.ChatMemoryAutoConfiguration
+      - org.springframework.ai.model.tool.autoconfigure.ToolCallingAutoConfiguration
+      - org.springframework.ai.model.chat.observation.autoconfigure.ChatObservationAutoConfiguration
+      - org.springframework.ai.retry.autoconfigure.SpringAiRetryAutoConfiguration
