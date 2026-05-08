@@ -7,6 +7,7 @@ build/
 
 ### Spring ###
 HELP.md
+/.claude/settings.local.json
 
 ### IDE ###
 .idea/
@@ -40,7 +41,7 @@ bin/
 Thumbs.db
 
 ### Env ###
-.env
+backend/AgentCart/.env
 .env.*
 
 ### Security ###
@@ -72,3 +73,4 @@ docs/prompts/*.md
 # gradlew
 # gradlew.bat
 # gradle/wrapper/gradle-wrapper.properties
+
