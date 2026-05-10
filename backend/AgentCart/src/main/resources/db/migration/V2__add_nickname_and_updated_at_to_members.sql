@@ -1,0 +1,6 @@
+ALTER TABLE members
+    ADD COLUMN nickname VARCHAR(100) NOT NULL DEFAULT '' AFTER name,
+    ADD COLUMN updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) AFTER created_at,
+    ADD UNIQUE KEY uq_members_nickname (nickname);
+
+DROP TABLE IF EXISTS refresh_tokens;

@@ -22,9 +22,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class JwtVerificationFilter extends OncePerRequestFilter {
 
-    // Paths that carry their own credentials — skip Bearer token check entirely
     private static final Set<String> PUBLIC_PATHS = Set.of(
             "/api/auth/login",
+            "/api/auth/register",
             "/api/auth/refresh"
     );
 
