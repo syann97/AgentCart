@@ -37,22 +37,11 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Full integration test for the JWT authentication flow.
- *
- * Infrastructure: MySQL (primary DB) + Redis (Redisson) via TestContainers.
- * Flyway runs on startup and creates the schema.
- *
- * Note: if 'spring.autoconfigure.exclude' entries in application-test.yaml reference
- * wrong class names for your Spring AI version, remove them and add the correct ones.
- */
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Testcontainers
 class AuthIntegrationTest {
-
-    // ── Test-only controller (exposes a protected endpoint for filter tests) ───
 
     @TestConfiguration
     static class TestControllerConfig {
@@ -65,8 +54,6 @@ class AuthIntegrationTest {
             }
         }
     }
-
-    // ── TestContainers ─────────────────────────────────────────────────────────
 
     @Container
     @ServiceConnection
@@ -83,8 +70,6 @@ class AuthIntegrationTest {
         registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
     }
 
-    // ── Spring beans ───────────────────────────────────────────────────────────
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -100,22 +85,19 @@ class AuthIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // ── Test member credentials ────────────────────────────────────────────────
-
     private static final String EMAIL = "test@example.com";
     private static final String PASSWORD = "password123";
-
-    // ── Lifecycle ──────────────────────────────────────────────────────────────
+    private static final String NICKNAME = "tester";
 
     @BeforeEach
     void setUp() {
-        Member member = Member.builder()
+        memberRepository.save(Member.builder()
                 .email(EMAIL)
                 .password(passwordEncoder.encode(PASSWORD))
                 .name("Integration Tester")
+                .nickname(NICKNAME)
                 .role(Role.MEMBER)
-                .build();
-        memberRepository.save(member);
+                .build());
     }
 
     @AfterEach
@@ -124,29 +106,160 @@ class AuthIntegrationTest {
         memberRepository.deleteAll();
     }
 
+    // ── Register ───────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("POST /api/auth/register - valid request returns 201 with member info")
+    void register_validRequest_returns201() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerBody("new@example.com", "newpassword", "New User", "newuser")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.email").value("new@example.com"))
+                .andExpect(jsonPath("$.data.nickname").value("newuser"));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/register - duplicate email returns 409")
+    void register_duplicateEmail_returns409() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerBody(EMAIL, "somepassword", "Name", "othernick")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("DUPLICATE_EMAIL"));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/register - duplicate nickname returns 409")
+    void register_duplicateNickname_returns409() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerBody("other@example.com", "somepassword", "Name", NICKNAME)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("DUPLICATE_NICKNAME"));
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/register - invalid body returns 400")
+    void register_invalidBody_returns400() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"not-an-email\",\"password\":\"short\",\"name\":\"N\",\"nickname\":\"x\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"));
+    }
+
+    // ── Register — response contract ───────────────────────────────────────────
+    //
+    // These tests pin the exact JSON shape that the frontend reads:
+    //   response.data.errorCode
+    //   response.data.message
+    //   response.data.fields[fieldName]
+    //
+    // Field keys must match the frontend form field names exactly.
+
+    @Test
+    @DisplayName("Contract: invalid email format → fields.email is set")
+    void registerContract_invalidEmailFormat_fieldsEmailIsSet() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"not-an-email\",\"password\":\"password123\",\"name\":\"Test\",\"nickname\":\"testuser\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fields.email").value("올바른 이메일 형식이 아닙니다"));
+    }
+
+    @Test
+    @DisplayName("Contract: short password → fields.password is set")
+    void registerContract_shortPassword_fieldsPasswordIsSet() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"valid@example.com\",\"password\":\"short\",\"name\":\"Test\",\"nickname\":\"testuser\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fields.password").value("비밀번호는 8자 이상이어야 합니다"));
+    }
+
+    @Test
+    @DisplayName("Contract: short nickname → fields.nickname is set")
+    void registerContract_shortNickname_fieldsNicknameIsSet() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"valid@example.com\",\"password\":\"password123\",\"name\":\"Test\",\"nickname\":\"x\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fields.nickname").value("닉네임은 2자 이상 20자 이하여야 합니다"));
+    }
+
+    @Test
+    @DisplayName("Contract: empty body → fields contains all four blank-field messages")
+    void registerContract_emptyBody_allFieldsHaveMessages() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.fields.email").value("이메일을 입력해주세요"))
+                .andExpect(jsonPath("$.fields.password").value("비밀번호를 입력해주세요"))
+                .andExpect(jsonPath("$.fields.name").value("이름을 입력해주세요"))
+                .andExpect(jsonPath("$.fields.nickname").value("닉네임을 입력해주세요"));
+    }
+
+    @Test
+    @DisplayName("Contract: duplicate email → DUPLICATE_EMAIL, no fields key in response")
+    void registerContract_duplicateEmail_noFieldsInResponse() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerBody(EMAIL, "somepassword", "Name", "othernick")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("DUPLICATE_EMAIL"))
+                .andExpect(jsonPath("$.fields").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("Contract: duplicate nickname → DUPLICATE_NICKNAME, no fields key in response")
+    void registerContract_duplicateNickname_noFieldsInResponse() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(registerBody("other@example.com", "somepassword", "Name", NICKNAME)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("DUPLICATE_NICKNAME"))
+                .andExpect(jsonPath("$.fields").doesNotExist());
+    }
+
     // ── Login ──────────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("POST /api/auth/login - valid credentials return access token and set refresh cookie")
-    void login_validCredentials_returnsAccessTokenAndSetsRefreshCookie() throws Exception {
-        // When
+    @DisplayName("POST /api/auth/login - valid credentials return access token and member info")
+    void login_validCredentials_returnsAccessTokenAndMemberInfo() throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginBody(EMAIL, PASSWORD)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").isNotEmpty())
-                .andExpect(jsonPath("$.tokenType").value("Bearer"))
-                .andExpect(jsonPath("$.expiresIn").value(1800000))
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
+                .andExpect(jsonPath("$.data.tokenType").value("Bearer"))
+                .andExpect(jsonPath("$.data.expiresIn").value(1800000))
+                .andExpect(jsonPath("$.data.member.email").value(EMAIL))
+                .andExpect(jsonPath("$.data.member.nickname").value(NICKNAME))
                 .andReturn();
 
-        // Then: refresh token cookie is set with correct attributes
         String setCookie = result.getResponse().getHeader("Set-Cookie");
         assertThat(setCookie).contains("refresh_token=");
         assertThat(setCookie).contains("HttpOnly");
         assertThat(setCookie).contains("SameSite=Strict");
         assertThat(setCookie).contains("Path=/api/auth/refresh");
 
-        // Then: refresh token persisted in DB
         assertThat(refreshTokenRepository.count()).isEqualTo(1);
     }
 
@@ -157,7 +270,8 @@ class AuthIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginBody(EMAIL, "wrong-password")))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("Invalid email or password"));
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errorCode").value("INVALID_CREDENTIALS"));
     }
 
     @Test
@@ -169,15 +283,13 @@ class AuthIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // ── JwtVerificationFilter: protected endpoint ──────────────────────────────
+    // ── Protected endpoint ─────────────────────────────────────────────────────
 
     @Test
     @DisplayName("GET /api/test/protected - valid access token returns 200")
     void protectedEndpoint_withValidToken_returns200() throws Exception {
-        // Given: obtain access token via login
         String accessToken = loginAndGetAccessToken();
 
-        // When / Then
         mockMvc.perform(get("/api/test/protected")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk());
@@ -203,7 +315,6 @@ class AuthIntegrationTest {
     @Test
     @DisplayName("POST /api/auth/refresh - valid cookie returns new access token and rotates refresh token")
     void refresh_validCookie_returnsNewAccessTokenAndRotatesRefreshToken() throws Exception {
-        // Given: login to get the initial refresh token
         MvcResult loginResult = mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginBody(EMAIL, PASSWORD)))
@@ -213,23 +324,19 @@ class AuthIntegrationTest {
         String oldRefreshToken = extractRefreshTokenCookie(loginResult);
         assertThat(refreshTokenRepository.findByToken(oldRefreshToken)).isPresent();
 
-        // When: call refresh endpoint with the cookie
         MvcResult refreshResult = mockMvc.perform(post("/api/auth/refresh")
-                        .cookie(new MockCookie("refresh_token",oldRefreshToken)))
+                        .cookie(new MockCookie("refresh_token", oldRefreshToken)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.accessToken").isNotEmpty())
-                .andExpect(jsonPath("$.tokenType").value("Bearer"))
+                .andExpect(jsonPath("$.data.accessToken").isNotEmpty())
+                .andExpect(jsonPath("$.data.tokenType").value("Bearer"))
                 .andReturn();
 
-        // Then: old token is deleted (rotation)
         assertThat(refreshTokenRepository.findByToken(oldRefreshToken)).isEmpty();
 
-        // Then: new refresh token is stored in DB
         String newRefreshToken = extractRefreshTokenCookie(refreshResult);
         assertThat(refreshTokenRepository.findByToken(newRefreshToken)).isPresent();
 
-        // Then: new access token differs from the perspective of being a valid JWT
-        String newAccessToken = extractJsonField(refreshResult, "accessToken");
+        String newAccessToken = extractDataField(refreshResult, "accessToken");
         assertThat(newAccessToken).isNotBlank();
     }
 
@@ -241,44 +348,71 @@ class AuthIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /api/auth/refresh - invalid (non-existent) token returns 401")
+    @DisplayName("POST /api/auth/refresh - invalid token returns 401")
     void refresh_invalidToken_returns401() throws Exception {
         mockMvc.perform(post("/api/auth/refresh")
-                        .cookie(new MockCookie("refresh_token","this-token-does-not-exist")))
+                        .cookie(new MockCookie("refresh_token", "this-token-does-not-exist")))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @DisplayName("POST /api/auth/refresh - replay (using old rotated token) returns 401")
+    @DisplayName("POST /api/auth/refresh - replay of rotated token returns 401")
     void refresh_replayOfRotatedToken_returns401() throws Exception {
-        // Given: login and refresh once
         MvcResult loginResult = performLogin();
         String firstToken = extractRefreshTokenCookie(loginResult);
 
         MvcResult firstRefresh = mockMvc.perform(post("/api/auth/refresh")
-                        .cookie(new MockCookie("refresh_token",firstToken)))
+                        .cookie(new MockCookie("refresh_token", firstToken)))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // The first token was rotated — using it again must fail
         assertThat(extractRefreshTokenCookie(firstRefresh)).isNotEqualTo(firstToken);
 
-        // When: replay the original (now rotated) token
         mockMvc.perform(post("/api/auth/refresh")
-                        .cookie(new MockCookie("refresh_token",firstToken)))
+                        .cookie(new MockCookie("refresh_token", firstToken)))
                 .andExpect(status().isUnauthorized());
     }
 
-    // ── DB state verification ──────────────────────────────────────────────────
+    // ── Logout ─────────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Login followed by second login - only one refresh token exists per member (rotation)")
+    @DisplayName("POST /api/auth/logout - valid token removes refresh token from Redis")
+    void logout_validToken_removesRefreshToken() throws Exception {
+        performLogin();
+        assertThat(refreshTokenRepository.count()).isEqualTo(1);
+
+        String accessToken = loginAndGetAccessToken();
+
+        mockMvc.perform(post("/api/auth/logout")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+        assertThat(refreshTokenRepository.count()).isZero();
+    }
+
+    // ── Me endpoint ────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("GET /api/auth/me - returns current member info")
+    void me_withValidToken_returnsMemberInfo() throws Exception {
+        String accessToken = loginAndGetAccessToken();
+
+        mockMvc.perform(get("/api/auth/me")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value(EMAIL))
+                .andExpect(jsonPath("$.data.nickname").value(NICKNAME));
+    }
+
+    // ── DB state ───────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("Login twice - only one refresh token stored per member (rotation)")
     void login_twice_onlyOneRefreshTokenStoredPerMember() throws Exception {
-        // When: login twice
         performLogin();
         performLogin();
 
-        // Then: only the latest refresh token persisted
         assertThat(refreshTokenRepository.count()).isEqualTo(1);
     }
 
@@ -294,24 +428,28 @@ class AuthIntegrationTest {
 
     private String loginAndGetAccessToken() throws Exception {
         MvcResult result = performLogin();
-        return extractJsonField(result, "accessToken");
+        return extractDataField(result, "accessToken");
     }
 
-    private String extractJsonField(MvcResult result, String field) throws Exception {
+    private String extractDataField(MvcResult result, String field) throws Exception {
         String json = result.getResponse().getContentAsString();
         JsonNode node = objectMapper.readTree(json);
-        return node.get(field).asString();
+        return node.get("data").get(field).asString();
     }
 
     private String extractRefreshTokenCookie(MvcResult result) {
         String setCookie = result.getResponse().getHeader("Set-Cookie");
         assertThat(setCookie).as("Set-Cookie header must be present").isNotNull();
-        // Format: refresh_token=<value>; ...
         String tokenPart = setCookie.split(";")[0];
         return tokenPart.substring("refresh_token=".length());
     }
 
     private String loginBody(String email, String password) {
         return String.format("{\"email\":\"%s\",\"password\":\"%s\"}", email, password);
+    }
+
+    private String registerBody(String email, String password, String name, String nickname) {
+        return String.format("{\"email\":\"%s\",\"password\":\"%s\",\"name\":\"%s\",\"nickname\":\"%s\"}",
+                email, password, name, nickname);
     }
 }

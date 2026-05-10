@@ -1,20 +1,33 @@
 package com.agentcart.exception;
 
+import com.agentcart.common.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<Map<String, String>> handleAuthException(AuthException e) {
+    public ResponseEntity<ApiResponse<Void>> handleAuthException(AuthException e) {
+        ErrorCode code = e.getErrorCode();
         return ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(Map.of("error", e.getMessage()));
+                .status(code.getStatus())
+                .body(ApiResponse.error(code.name(), code.getMessage()));
     }
-    // Note: BadCredentialsException from the login flow never reaches here.
-    // Spring Security intercepts it at the filter level and delegates to LoginFailureHandler.
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException e) {
+        Map<String, String> fields = new LinkedHashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(fe ->
+                fields.putIfAbsent(fe.getField(), fe.getDefaultMessage())
+        );
+        return ResponseEntity
+                .status(ErrorCode.VALIDATION_ERROR.getStatus())
+                .body(ApiResponse.validationError(fields));
+    }
 }

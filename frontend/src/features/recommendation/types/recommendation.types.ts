@@ -1,0 +1,12 @@
+export interface RecommendationResult {
+  productId: number;
+  productName: string;
+  reason: string;
+  conditions: string[];
+  score: number;
+}
+
+export interface RecommendationStreamChunk {
+  type: 'partial' | 'complete' | 'error';
+  data: Partial<RecommendationResult>;
+}

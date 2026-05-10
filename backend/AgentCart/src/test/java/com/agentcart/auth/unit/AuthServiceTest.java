@@ -49,6 +49,7 @@ class AuthServiceTest {
                 .email("user@example.com")
                 .password("hashedPw")
                 .name("Test User")
+                .nickname("testuser")
                 .role(Role.MEMBER)
                 .build();
         ReflectionTestUtils.setField(member, "id", 1L);
@@ -59,15 +60,13 @@ class AuthServiceTest {
     @Test
     @DisplayName("issueRefreshToken - deletes old token and persists new one (rotation)")
     void issueRefreshToken_rotatesAndPersistsToken() {
-        // Given
         given(memberRepository.findByEmail("user@example.com")).willReturn(Optional.of(member));
         given(jwtUtil.generateRefreshToken("user@example.com")).willReturn("new-refresh-token");
         given(jwtUtil.getRefreshTokenExpiration()).willReturn(604800000L);
+        given(refreshTokenRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
 
-        // When
         String result = authService.issueRefreshToken("user@example.com");
 
-        // Then
         then(refreshTokenRepository).should().deleteByMemberId(1L);
         then(refreshTokenRepository).should().save(argThat(rt ->
                 rt.getMemberId().equals(1L) && rt.getToken().equals("new-refresh-token")));
@@ -77,10 +76,8 @@ class AuthServiceTest {
     @Test
     @DisplayName("issueRefreshToken - throws MEMBER_NOT_FOUND when member does not exist")
     void issueRefreshToken_memberNotFound_throwsAuthException() {
-        // Given
         given(memberRepository.findByEmail("ghost@example.com")).willReturn(Optional.empty());
 
-        // When / Then
         assertThatThrownBy(() -> authService.issueRefreshToken("ghost@example.com"))
                 .isInstanceOf(AuthException.class)
                 .satisfies(ex -> assertThat(((AuthException) ex).getErrorCode())
@@ -92,7 +89,6 @@ class AuthServiceTest {
     @Test
     @DisplayName("refresh - returns new access and refresh tokens, deletes old token")
     void refresh_validToken_returnsNewPair() {
-        // Given
         RefreshToken stored = RefreshToken.builder()
                 .memberId(1L)
                 .token("old-refresh-token")
@@ -104,27 +100,22 @@ class AuthServiceTest {
         given(jwtUtil.generateAccessToken("user@example.com", "ROLE_MEMBER")).willReturn("new-access-token");
         given(jwtUtil.generateRefreshToken("user@example.com")).willReturn("new-refresh-token");
         given(jwtUtil.getRefreshTokenExpiration()).willReturn(604800000L);
+        given(refreshTokenRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
 
-        // When
         AuthTokens tokens = authService.refresh("old-refresh-token");
 
-        // Then: old token is deleted (rotation)
         then(refreshTokenRepository).should().delete(stored);
-        // Then: new tokens are issued
         assertThat(tokens.accessToken()).isEqualTo("new-access-token");
         assertThat(tokens.refreshToken()).isEqualTo("new-refresh-token");
-        // Then: new refresh token is persisted
         then(refreshTokenRepository).should().save(argThat(rt ->
                 rt.getMemberId().equals(1L) && rt.getToken().equals("new-refresh-token")));
     }
 
     @Test
-    @DisplayName("refresh - throws INVALID_REFRESH_TOKEN when token not found in DB")
+    @DisplayName("refresh - throws INVALID_REFRESH_TOKEN when token not found")
     void refresh_tokenNotFound_throwsInvalidException() {
-        // Given
         given(refreshTokenRepository.findByToken("unknown-token")).willReturn(Optional.empty());
 
-        // When / Then
         assertThatThrownBy(() -> authService.refresh("unknown-token"))
                 .isInstanceOf(AuthException.class)
                 .satisfies(ex -> assertThat(((AuthException) ex).getErrorCode())
@@ -134,7 +125,6 @@ class AuthServiceTest {
     @Test
     @DisplayName("refresh - throws EXPIRED_REFRESH_TOKEN and deletes expired token")
     void refresh_expiredToken_throwsExpiredExceptionAndDeletesToken() {
-        // Given
         RefreshToken expired = RefreshToken.builder()
                 .memberId(1L)
                 .token("expired-token")
@@ -142,20 +132,17 @@ class AuthServiceTest {
                 .build();
         given(refreshTokenRepository.findByToken("expired-token")).willReturn(Optional.of(expired));
 
-        // When / Then
         assertThatThrownBy(() -> authService.refresh("expired-token"))
                 .isInstanceOf(AuthException.class)
                 .satisfies(ex -> assertThat(((AuthException) ex).getErrorCode())
                         .isEqualTo(ErrorCode.EXPIRED_REFRESH_TOKEN));
 
-        // Expired token must be deleted
         then(refreshTokenRepository).should().delete(expired);
     }
 
     @Test
     @DisplayName("refresh - throws MEMBER_NOT_FOUND when member is deleted after token was issued")
     void refresh_memberNotFound_throwsMemberNotFoundException() {
-        // Given
         RefreshToken stored = RefreshToken.builder()
                 .memberId(99L)
                 .token("orphan-token")
@@ -164,10 +151,21 @@ class AuthServiceTest {
         given(refreshTokenRepository.findByToken("orphan-token")).willReturn(Optional.of(stored));
         given(memberRepository.findById(99L)).willReturn(Optional.empty());
 
-        // When / Then
         assertThatThrownBy(() -> authService.refresh("orphan-token"))
                 .isInstanceOf(AuthException.class)
                 .satisfies(ex -> assertThat(((AuthException) ex).getErrorCode())
                         .isEqualTo(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    // ── logout ─────────────────────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("logout - removes refresh token for member")
+    void logout_validEmail_deletesRefreshToken() {
+        given(memberRepository.findByEmail("user@example.com")).willReturn(Optional.of(member));
+
+        authService.logout("user@example.com");
+
+        then(refreshTokenRepository).should().deleteByMemberId(1L);
     }
 }

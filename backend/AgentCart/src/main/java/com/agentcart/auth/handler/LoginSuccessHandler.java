@@ -1,8 +1,12 @@
 package com.agentcart.auth.handler;
 
-import com.agentcart.auth.dto.TokenResponse;
+import com.agentcart.auth.dto.LoginResponse;
+import com.agentcart.auth.dto.MemberResponse;
 import com.agentcart.auth.service.AuthService;
 import com.agentcart.auth.util.JwtUtil;
+import com.agentcart.common.ApiResponse;
+import com.agentcart.member.domain.Member;
+import com.agentcart.member.service.MemberService;
 import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +28,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
     private final AuthService authService;
+    private final MemberService memberService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -36,7 +41,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = jwtUtil.generateAccessToken(email, role);
         String refreshToken = authService.issueRefreshToken(email);
 
-        // Refresh Token → HttpOnly cookie (silent refresh)
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -46,8 +50,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
+        Member member = memberService.findByEmail(email);
+        LoginResponse loginResponse = new LoginResponse(
+                accessToken, "Bearer", jwtUtil.getAccessTokenExpiration(), MemberResponse.from(member));
+
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), new TokenResponse(accessToken, jwtUtil.getAccessTokenExpiration()));
+        objectMapper.writeValue(response.getWriter(), ApiResponse.ok(loginResponse));
     }
 }

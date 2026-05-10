@@ -27,7 +27,6 @@ public class AuthService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // rotate: delete any existing token before issuing a new one
         refreshTokenRepository.deleteByMemberId(member.getId());
 
         String token = jwtUtil.generateRefreshToken(email);
@@ -56,8 +55,6 @@ public class AuthService {
         Member member = memberRepository.findById(stored.getMemberId())
                 .orElseThrow(() -> new AuthException(ErrorCode.MEMBER_NOT_FOUND));
 
-        // Rotate: old token is invalidated immediately, new token issued
-        // Limits replay window if a refresh token is stolen
         refreshTokenRepository.delete(stored);
 
         String newAccessToken = jwtUtil.generateAccessToken(member.getEmail(), "ROLE_" + member.getRole().name());
@@ -72,5 +69,12 @@ public class AuthService {
                 .build());
 
         return new AuthTokens(newAccessToken, newRefreshToken);
+    }
+
+    @Transactional
+    public void logout(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthException(ErrorCode.MEMBER_NOT_FOUND));
+        refreshTokenRepository.deleteByMemberId(member.getId());
     }
 }

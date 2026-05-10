@@ -36,6 +36,7 @@ class CustomUserDetailsServiceTest {
                 .email("user@example.com")
                 .password("encodedPassword")
                 .name("Test User")
+                .nickname("testuser")
                 .role(Role.MEMBER)
                 .build();
     }
@@ -65,6 +66,7 @@ class CustomUserDetailsServiceTest {
                 .email("admin@example.com")
                 .password("encodedPw")
                 .name("Admin")
+                .nickname("adminuser")
                 .role(Role.ADMIN)
                 .build();
         given(memberRepository.findByEmail("admin@example.com")).willReturn(Optional.of(admin));

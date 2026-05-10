@@ -1,17 +1,16 @@
 package com.agentcart.member.domain;
 
+import com.agentcart.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "members")
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,19 +25,19 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
     @Builder
-    public Member(String email, String password, String name, Role role) {
+    public Member(String email, String password, String name, String nickname, Role role) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.nickname = nickname;
         this.role = role;
-        this.createdAt = LocalDateTime.now();
     }
 }

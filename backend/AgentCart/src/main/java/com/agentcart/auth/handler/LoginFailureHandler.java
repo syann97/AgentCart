@@ -1,5 +1,7 @@
 package com.agentcart.auth.handler;
 
+import com.agentcart.common.ApiResponse;
+import com.agentcart.exception.ErrorCode;
 import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +12,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), Map.of("error", "Invalid email or password"));
+        objectMapper.writeValue(response.getWriter(),
+                ApiResponse.error(ErrorCode.INVALID_CREDENTIALS.name(), ErrorCode.INVALID_CREDENTIALS.getMessage()));
     }
 }
