@@ -6,7 +6,10 @@ import type { TokenResponse } from '@/features/auth/types/auth.types';
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: {
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420',
+  },
   withCredentials: true,
 });
 
