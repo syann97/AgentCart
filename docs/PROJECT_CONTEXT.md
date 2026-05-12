@@ -2,26 +2,23 @@
 
 ## Overview
 
-AgentCart is an AI-powered backend system that supports purchase decision-making using a multi-agent architecture.
+AI-based recommendation commerce platform.
 
-## Core Pipeline
+---
 
-Planner → Executor → Evaluator
+## Architecture
 
-## Key Features
+- Spring Boot backend
+- Next.js frontend
+- Event-driven architecture
+- Hybrid recommendation search
 
-- Hybrid Search (SQL filtering + Vector reranking)
-- Explainable recommendations (conditions + review keywords)
-- Role-based agent architecture
+---
 
-## Tech Stack
+## Core Systems
 
-- Spring Boot 4 / Java 25
-- MySQL / Redis / Kafka
-- PostgreSQL (pgvector)
-- Spring AI
-
-## System Goal
-
-- Provide reliable and explainable recommendations
-- Maintain system stability even when LLM fails
+- JWT authentication
+- Kafka event pipeline
+- Redis caching
+- pgvector recommendation search
+- SSE streaming

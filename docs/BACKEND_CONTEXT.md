@@ -1,75 +1,40 @@
 # Backend Context
 
-## Architecture
+## Stack
 
-- Layered architecture
-    - controller
-    - service
-    - repository
-    - domain
-
----
-
-## DataSource Rules
-
-- MySQL → business data (Product, Order, Member, Recommendation)
-- PostgreSQL → vector data (pgvector)
-
-Do not mix data sources.
+- Java 25
+- Gradle 9.4.1
+- Spring Boot 4.0.6
+- Spring Framework 7.0.7
+- Spring Security 7.0.5
+- Spring AI 2.0.0-M5
+- Spring Kafka 4.0.5
+- Hibernate ORM 7.2.12.Final
 
 ---
 
-## Hybrid Search
+## Persistence
 
-Step 1: SQL filtering  
-Step 2: BM25 + Vector reranking
-
-Score formula:
-
-score = 0.4 * BM25 + 0.6 * Vector
-
-Both scores must be normalized (0~1).
+- MySQL
+- PostgreSQL + pgvector
+- Flyway
 
 ---
 
-## Kafka
+## Serialization
 
-Topics:
-
-- recommendation-topic
-- result-topic
-- click-topic
-
-Rules:
-
-- Always implement both Producer and Consumer
-- Include eventId (UUID v4)
-- Consumer must ensure idempotency
+- Jackson 3.1.2
+- JJWT 0.13.0
 
 ---
 
-## Redis
+## Infrastructure Libraries
 
-- TTL: 5 minutes (fixed)
-- Use Redisson for distributed lock
-- Lock timeout: 5 seconds
-
-If lock fails:
-→ throw exception and request retry
+- Redisson 4.3.1
+- Micrometer 1.16.5
 
 ---
 
-## Recommendation Result
+## Testing
 
-Must include:
-
-- reason
-- conditions
-- score
-
----
-
-## Observability
-
-- Log LLM token usage and cost
-- Measure execution time for each agent step
+- Testcontainers 1.21.1
