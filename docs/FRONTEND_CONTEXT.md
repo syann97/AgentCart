@@ -1,29 +1,44 @@
 # Frontend Context
 
-## Communication
+## Stack
 
-- REST API
+- Node.js 22.14.0
+- Next.js 15.5.18
+- React 19.1.0
+- TypeScript 5.9.3
+
+---
+
+## UI
+
+- TailwindCSS v4
+
+---
+
+## State Management
+
+- Zustand
+- TanStack Query
+
+---
+
+## Networking
+
+- Axios
 - SSE (Server-Sent Events)
 
 ---
 
-## Features
+## Form & Validation
 
-- Product search
-- Recommendation display
-- Explanation display (reason, conditions)
-
----
-
-## SSE Rules
-
-- Stream recommendation results progressively
-- Do not wait for full response
+- react-hook-form
+- Zod
 
 ---
 
-## UX Guidelines
+## Testing
 
-- Show recommendation reason clearly
-- Emphasize matched conditions
-- Display loading state during streaming
+- Vitest
+- Testing Library
+- MSW
+- jsdom

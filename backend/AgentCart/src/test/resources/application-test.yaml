@@ -3,6 +3,13 @@ jwt:
   access-token-expiration: 1800000
   refresh-token-expiration: 604800000
 
+cors:
+  allowed-origins: http://localhost:3000
+
+cookie:
+  secure: false
+  same-site: Strict
+
 spring:
   jpa:
     open-in-view: false
