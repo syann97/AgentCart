@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -32,6 +33,12 @@ public class AuthController {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
+    @Value("${cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${cookie.same-site}")
+    private String cookieSameSite;
+
     // POST /api/auth/login is handled by JwtLoginFilter
 
     @PostMapping("/register")
@@ -49,10 +56,10 @@ public class AuthController {
 
         ResponseCookie rotatedCookie = ResponseCookie.from("refresh_token", tokens.refreshToken())
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
                 .path("/api/auth/refresh")
                 .maxAge(Duration.ofMillis(jwtUtil.getRefreshTokenExpiration()))
-                .sameSite("Strict")
+                .sameSite(cookieSameSite)
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, rotatedCookie.toString());
 

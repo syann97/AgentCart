@@ -11,6 +11,8 @@ import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.Duration;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -31,6 +34,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final MemberService memberService;
     private final ObjectMapper objectMapper;
 
+    @Value("${cookie.secure}")
+    private boolean cookieSecure;
+
+    @Value("${cookie.same-site}")
+    private String cookieSameSite;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
@@ -38,15 +47,17 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String email = userDetails.getUsername();
         String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
+        log.info("Login success: email={}", email);
+
         String accessToken = jwtUtil.generateAccessToken(email, role);
         String refreshToken = authService.issueRefreshToken(email);
 
         ResponseCookie refreshCookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
                 .path("/api/auth/refresh")
                 .maxAge(Duration.ofMillis(jwtUtil.getRefreshTokenExpiration()))
-                .sameSite("Strict")
+                .sameSite(cookieSameSite)
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
