@@ -391,6 +391,22 @@ class AuthIntegrationTest {
         assertThat(refreshTokenRepository.count()).isZero();
     }
 
+    @Test
+    @DisplayName("POST /api/auth/logout - after logout, refresh token returns 401")
+    void logout_thenRefresh_returns401() throws Exception {
+        MvcResult loginResult = performLogin();
+        String refreshToken = extractRefreshTokenCookie(loginResult);
+        String accessToken = loginAndGetAccessToken();
+
+        mockMvc.perform(post("/api/auth/logout")
+                        .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/auth/refresh")
+                        .cookie(new MockCookie("refresh_token", refreshToken)))
+                .andExpect(status().isUnauthorized());
+    }
+
     // ── Me endpoint ────────────────────────────────────────────────────────────
 
     @Test
