@@ -57,6 +57,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-flyway'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.flywaydb:flyway-database-postgresql'
 
     // Observability
     implementation 'io.micrometer:micrometer-registry-prometheus'
@@ -74,6 +75,7 @@ dependencies {
     testImplementation platform('org.testcontainers:testcontainers-bom:1.21.1')
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mysql'
+    testImplementation 'org.testcontainers:postgresql'
 
     // H2 for repository slice tests
     testRuntimeOnly 'com.h2database:h2'

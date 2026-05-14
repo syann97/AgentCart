@@ -14,7 +14,8 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member not found"),
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "Email already in use"),
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "Nickname already in use"),
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation failed");
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation failed"),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Product not found");
 
     private final HttpStatus status;
     private final String message;
