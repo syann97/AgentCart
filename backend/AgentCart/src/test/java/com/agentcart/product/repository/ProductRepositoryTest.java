@@ -6,10 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,57 +25,74 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
-    @DisplayName("findByCategory - returns only products in the given category")
-    void findByCategory_returnsMatchingProducts() {
-        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE));
-        productRepository.save(buildProduct("Phone", "electronics", ProductStatus.ACTIVE));
-        productRepository.save(buildProduct("Shirt", "clothing", ProductStatus.ACTIVE));
+    @DisplayName("findByCategory - returns page of products in given category")
+    void findByCategory_withPageable_returnsPage() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
+        productRepository.save(buildProduct("Phone", "electronics", ProductStatus.ACTIVE, "Apple"));
+        productRepository.save(buildProduct("Shirt", "clothing", ProductStatus.ACTIVE, "Nike"));
 
-        List<Product> result = productRepository.findByCategory("electronics");
+        Page<Product> result = productRepository.findByCategory("electronics", PageRequest.of(0, 10));
 
-        assertThat(result).hasSize(2);
-        assertThat(result).extracting("name").containsExactlyInAnyOrder("Laptop", "Phone");
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getContent()).extracting("name").containsExactlyInAnyOrder("Laptop", "Phone");
     }
 
     @Test
-    @DisplayName("findByCategory - returns empty list when no products in category")
-    void findByCategory_noMatch_returnsEmptyList() {
-        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE));
+    @DisplayName("findByCategory - returns empty page when no products in category")
+    void findByCategory_noMatch_returnsEmptyPage() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
 
-        List<Product> result = productRepository.findByCategory("furniture");
+        Page<Product> result = productRepository.findByCategory("furniture", PageRequest.of(0, 10));
 
-        assertThat(result).isEmpty();
+        assertThat(result.getTotalElements()).isEqualTo(0);
     }
 
     @Test
-    @DisplayName("findByStatus - returns only products with the given status")
-    void findByStatus_returnsMatchingProducts() {
-        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE));
-        productRepository.save(buildProduct("Old Phone", "electronics", ProductStatus.INACTIVE));
-        productRepository.save(buildProduct("Watch", "accessories", ProductStatus.SOLD_OUT));
+    @DisplayName("findByStatus - returns page of products with given status")
+    void findByStatus_withPageable_returnsPage() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
+        productRepository.save(buildProduct("Old Phone", "electronics", ProductStatus.INACTIVE, "Nokia"));
+        productRepository.save(buildProduct("Watch", "accessories", ProductStatus.SOLD_OUT, "Casio"));
 
-        List<Product> result = productRepository.findByStatus(ProductStatus.ACTIVE);
+        Page<Product> result = productRepository.findByStatus(ProductStatus.ACTIVE, PageRequest.of(0, 10));
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Laptop");
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("Laptop");
+    }
+
+    @Test
+    @DisplayName("existsByNameAndBrand - returns true when combination exists")
+    void existsByNameAndBrand_existingCombination_returnsTrue() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
+
+        assertThat(productRepository.existsByNameAndBrand("Laptop", "Samsung")).isTrue();
+    }
+
+    @Test
+    @DisplayName("existsByNameAndBrand - returns false for different name or brand")
+    void existsByNameAndBrand_unknownCombination_returnsFalse() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
+
+        assertThat(productRepository.existsByNameAndBrand("Laptop", "Apple")).isFalse();
+        assertThat(productRepository.existsByNameAndBrand("Phone", "Samsung")).isFalse();
     }
 
     @Test
     @DisplayName("Save - createdAt and updatedAt are populated automatically")
     void save_timestampsAreSet() {
-        Product saved = productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE));
+        Product saved = productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
 
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getUpdatedAt()).isNotNull();
     }
 
-    private Product buildProduct(String name, String category, ProductStatus status) {
+    private Product buildProduct(String name, String category, ProductStatus status, String brand) {
         return Product.builder()
                 .name(name)
                 .description("Description")
                 .price(BigDecimal.valueOf(99.99))
                 .category(category)
-                .brand("Brand")
+                .brand(brand)
                 .stock(5)
                 .status(status)
                 .build();

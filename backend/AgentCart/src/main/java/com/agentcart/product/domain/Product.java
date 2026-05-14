@@ -1,6 +1,8 @@
 package com.agentcart.product.domain;
 
 import com.agentcart.common.BaseTimeEntity;
+import com.agentcart.exception.ErrorCode;
+import com.agentcart.exception.ProductException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,5 +52,33 @@ public class Product extends BaseTimeEntity {
         this.brand = brand;
         this.stock = stock;
         this.status = status != null ? status : ProductStatus.ACTIVE;
+    }
+
+    public void activate() {
+        this.status = ProductStatus.ACTIVE;
+    }
+
+    public void deactivate() {
+        this.status = ProductStatus.INACTIVE;
+    }
+
+    public void decreaseStock(int qty) {
+        if (this.stock < qty) {
+            throw new ProductException(ErrorCode.INSUFFICIENT_STOCK);
+        }
+        this.stock -= qty;
+        if (this.stock == 0) {
+            this.status = ProductStatus.SOLD_OUT;
+        }
+    }
+
+    public void update(String name, String description, BigDecimal price,
+                       String category, String brand, int stock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.brand = brand;
+        this.stock = stock;
     }
 }
