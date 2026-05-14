@@ -4,7 +4,7 @@ import type { ProductSummary, ProductDetail, ProductCreateInput, ProductUpdateIn
 import type { ApiResponse, PageResponse } from '@/types/api.types';
 
 export const productApi = {
-  list: (params?: { category?: string; page?: number; size?: number }) =>
+  list: (params?: { search?: string; page?: number; size?: number }) =>
     apiClient
       .get<ApiResponse<PageResponse<ProductSummary>>>(API_ENDPOINTS.products.list, { params })
       .then((r) => r.data),

@@ -55,8 +55,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> findByCategory(String category, Pageable pageable) {
-        return productRepository.findByCategory(category, pageable);
+    public Page<Product> search(String keyword, Pageable pageable) {
+        return productRepository.search(keyword, pageable);
     }
 
     @Transactional
