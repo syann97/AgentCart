@@ -20,5 +20,9 @@ cookie:
   secure: true
   same-site: None
 
+app:
+  embedding:
+    timeout-seconds: 5
+
 
 

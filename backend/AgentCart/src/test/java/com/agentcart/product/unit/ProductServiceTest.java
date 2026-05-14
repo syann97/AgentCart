@@ -7,7 +7,9 @@ import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.dto.ProductCreateRequest;
 import com.agentcart.product.dto.ProductUpdateRequest;
 import com.agentcart.product.repository.ProductRepository;
+import com.agentcart.product.service.ProductEmbeddingService;
 import com.agentcart.product.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +36,16 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ProductEmbeddingService embeddingService;
+
     @InjectMocks
     private ProductService productService;
+
+    @BeforeEach
+    void injectEmbeddingService() {
+        ReflectionTestUtils.setField(productService, "embeddingService", embeddingService);
+    }
 
     // ── register ──────────────────────────────────────────────────────────────
 
@@ -172,6 +182,34 @@ class ProductServiceTest {
                 .isInstanceOf(ProductException.class)
                 .satisfies(ex -> assertThat(((ProductException) ex).getErrorCode())
                         .isEqualTo(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    // ── embedding delegation ──────────────────────────────────────────────────
+
+    @Test
+    @DisplayName("register - delegates to embeddingService after save")
+    void register_withEmbeddingService_callsEmbedding() {
+        ProductCreateRequest request = buildCreateRequest("Laptop", "Samsung");
+        Product saved = buildProduct("Laptop", "electronics", ProductStatus.ACTIVE);
+        ReflectionTestUtils.setField(saved, "id", 1L);
+        given(productRepository.existsByNameAndBrand("Laptop", "Samsung")).willReturn(false);
+        given(productRepository.save(any())).willReturn(saved);
+
+        productService.register(request);
+
+        then(embeddingService).should().createOrUpdate(eq(1L), same(saved));
+    }
+
+    @Test
+    @DisplayName("update - delegates to embeddingService after update")
+    void update_withEmbeddingService_callsEmbedding() {
+        Product product = buildProduct("Old Name", "electronics", ProductStatus.ACTIVE);
+        ReflectionTestUtils.setField(product, "id", 1L);
+        given(productRepository.findById(1L)).willReturn(Optional.of(product));
+
+        productService.update(1L, buildUpdateRequest("New Name", "clothing"));
+
+        then(embeddingService).should().createOrUpdate(eq(1L), same(product));
     }
 
     // ── helpers ───────────────────────────────────────────────────────────────
