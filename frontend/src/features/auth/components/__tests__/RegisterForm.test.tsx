@@ -1,8 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RegisterForm } from '../RegisterForm';
+
+const mockMutate = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
@@ -10,7 +12,7 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('../../hooks/use-register', () => ({
   useRegister: () => ({
-    mutate: vi.fn(),
+    mutate: mockMutate,
     isPending: false,
     isSuccess: false,
   }),
@@ -25,6 +27,10 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('RegisterForm', () => {
+  beforeEach(() => {
+    mockMutate.mockReset();
+  });
+
   it('이메일, 이름, 닉네임, 비밀번호, 비밀번호 확인 필드와 회원가입 버튼을 렌더링한다', () => {
     render(<RegisterForm />, { wrapper });
 
@@ -65,13 +71,6 @@ describe('RegisterForm', () => {
   });
 
   it('유효한 값 제출 시 register mutate를 호출한다', async () => {
-    const mutate = vi.fn();
-    vi.mocked(await import('../../hooks/use-register')).useRegister = () => ({
-      mutate,
-      isPending: false,
-      isSuccess: false,
-    });
-
     render(<RegisterForm />, { wrapper });
 
     await userEvent.type(screen.getByLabelText('이메일'), 'test@example.com');
@@ -82,7 +81,7 @@ describe('RegisterForm', () => {
     await userEvent.click(screen.getByRole('button', { name: '회원가입' }));
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledWith(
+      expect(mockMutate).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'test@example.com',
           name: '홍길동',
