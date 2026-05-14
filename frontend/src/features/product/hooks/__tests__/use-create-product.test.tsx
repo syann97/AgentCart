@@ -12,7 +12,7 @@ import { productApi } from '../../api/product.api';
 const validBody = { name: 'Laptop', price: 999, category: 'electronics', stock: 10 };
 const mockResponse = {
   success: true,
-  data: { id: 1, ...validBody, brand: null, status: 'ACTIVE', description: null, createdAt: '', updatedAt: null },
+  data: { id: 1, ...validBody, brand: null, status: 'ACTIVE' as const, description: null, createdAt: '', updatedAt: null },
   timestamp: '',
 };
 

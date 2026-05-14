@@ -13,7 +13,7 @@ const PRODUCT_ID = 1;
 const validBody = { name: 'Updated Laptop', price: 1099, category: 'electronics', stock: 5 };
 const mockResponse = {
   success: true,
-  data: { id: PRODUCT_ID, ...validBody, brand: null, status: 'ACTIVE', description: null, createdAt: '', updatedAt: '' },
+  data: { id: PRODUCT_ID, ...validBody, brand: null, status: 'ACTIVE' as const, description: null, createdAt: '', updatedAt: '' },
   timestamp: '',
 };
 

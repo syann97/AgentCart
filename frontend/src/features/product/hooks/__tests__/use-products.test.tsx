@@ -25,7 +25,7 @@ describe('useProducts', () => {
   });
 
   it('카테고리·페이지 파라미터를 productApi.list에 전달한다', async () => {
-    const mockData = { success: true, data: { content: [], totalElements: 0 }, timestamp: '' };
+    const mockData = { success: true, data: { content: [], totalElements: 0, totalPages: 0, size: 20, number: 0, last: true }, timestamp: '' };
     vi.mocked(productApi.list).mockResolvedValue(mockData);
 
     const { wrapper } = createWrapper();
@@ -37,7 +37,7 @@ describe('useProducts', () => {
   });
 
   it('파라미터 없이 호출하면 전체 목록 데이터를 반환한다', async () => {
-    const mockData = { success: true, data: { content: [], totalElements: 5 }, timestamp: '' };
+    const mockData = { success: true, data: { content: [], totalElements: 5, totalPages: 1, size: 20, number: 0, last: true }, timestamp: '' };
     vi.mocked(productApi.list).mockResolvedValue(mockData);
 
     const { wrapper } = createWrapper();
