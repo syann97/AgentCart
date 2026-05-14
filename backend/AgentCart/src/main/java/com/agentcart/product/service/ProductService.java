@@ -8,6 +8,7 @@ import com.agentcart.product.dto.ProductCreateRequest;
 import com.agentcart.product.dto.ProductUpdateRequest;
 import com.agentcart.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,15 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    @Autowired(required = false)
+    private ProductEmbeddingService embeddingService;
+
     @Transactional
     public Product register(ProductCreateRequest request) {
         if (productRepository.existsByNameAndBrand(request.getName(), request.getBrand())) {
             throw new ProductException(ErrorCode.DUPLICATE_PRODUCT);
         }
-        return productRepository.save(Product.builder()
+        Product saved = productRepository.save(Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
@@ -33,6 +37,10 @@ public class ProductService {
                 .stock(request.getStock())
                 .status(ProductStatus.ACTIVE)
                 .build());
+        if (embeddingService != null) {
+            embeddingService.createOrUpdate(saved.getId(), saved);
+        }
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -57,6 +65,9 @@ public class ProductService {
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
         product.update(request.getName(), request.getDescription(), request.getPrice(),
                 request.getCategory(), request.getBrand(), request.getStock());
+        if (embeddingService != null) {
+            embeddingService.createOrUpdate(product.getId(), product);
+        }
         return product;
     }
 
