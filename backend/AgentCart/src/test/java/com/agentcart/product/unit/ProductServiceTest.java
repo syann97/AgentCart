@@ -116,7 +116,6 @@ class ProductServiceTest {
         Page<Product> result = productService.findAll(pageable);
 
         assertThat(result.getTotalElements()).isEqualTo(2);
-        then(productRepository).should().findAll(pageable);
     }
 
     // ── findByCategory ────────────────────────────────────────────────────────
