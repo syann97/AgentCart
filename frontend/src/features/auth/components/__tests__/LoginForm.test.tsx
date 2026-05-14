@@ -4,13 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LoginForm } from '../LoginForm';
 
+const mockMutate = vi.fn();
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
 }));
 
 vi.mock('../../hooks/use-login', () => ({
   useLogin: () => ({
-    mutate: vi.fn(),
+    mutate: mockMutate,
     isPending: false,
   }),
 }));
@@ -24,6 +26,10 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 describe('LoginForm', () => {
+  beforeEach(() => {
+    mockMutate.mockReset();
+  });
+
   it('이메일, 비밀번호 필드와 로그인 버튼을 렌더링한다', () => {
     render(<LoginForm />, { wrapper });
 
@@ -57,12 +63,6 @@ describe('LoginForm', () => {
   });
 
   it('유효한 값 제출 시 login mutate를 호출한다', async () => {
-    const mutate = vi.fn();
-    vi.mocked(await import('../../hooks/use-login')).useLogin = () => ({
-      mutate,
-      isPending: false,
-    });
-
     render(<LoginForm />, { wrapper });
 
     await userEvent.type(screen.getByLabelText('이메일'), 'test@example.com');
@@ -70,7 +70,7 @@ describe('LoginForm', () => {
     await userEvent.click(screen.getByRole('button', { name: '로그인' }));
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledWith(
+      expect(mockMutate).toHaveBeenCalledWith(
         { email: 'test@example.com', password: 'password123' },
         expect.anything(),
       );
