@@ -27,7 +27,7 @@ describe('useProduct', () => {
   it('id로 productApi.detail을 호출하고 상세 데이터를 반환한다', async () => {
     const mockData = {
       success: true,
-      data: { id: 1, name: 'Laptop', price: 999, category: 'electronics', brand: null, status: 'ACTIVE', description: null, stock: 5, createdAt: '', updatedAt: null },
+      data: { id: 1, name: 'Laptop', price: 999, category: 'electronics', brand: null, status: 'ACTIVE' as const, description: null, stock: 5, createdAt: '', updatedAt: null },
       timestamp: '',
     };
     vi.mocked(productApi.detail).mockResolvedValue(mockData);
