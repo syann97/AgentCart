@@ -5,7 +5,7 @@ import { productApi } from '../api/product.api';
 import { QUERY_KEYS } from '@/constants/api.constants';
 
 interface UseProductsParams {
-  category?: string;
+  search?: string;
   page?: number;
   size?: number;
 }

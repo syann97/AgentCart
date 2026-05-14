@@ -26,10 +26,10 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<ProductSummaryResponse>>> getProducts(
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search,
             @PageableDefault(size = 20) Pageable pageable) {
-        Page<ProductSummaryResponse> page = category != null
-                ? productService.findByCategory(category, pageable).map(ProductSummaryResponse::from)
+        Page<ProductSummaryResponse> page = search != null && !search.isBlank()
+                ? productService.search(search, pageable).map(ProductSummaryResponse::from)
                 : productService.findAll(pageable).map(ProductSummaryResponse::from);
         return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(page)));
     }

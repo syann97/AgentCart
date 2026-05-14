@@ -131,17 +131,17 @@ class ProductIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/products?category= - returns only products in the given category")
-    void getProducts_withCategory_returnsFilteredList() throws Exception {
-        saveProduct("Laptop", "electronics");
-        saveProduct("Phone", "electronics");
-        saveProduct("Shirt", "clothing");
+    @DisplayName("GET /api/products?search= - returns products matching name, brand, or category")
+    void getProducts_withSearch_returnsMatchedList() throws Exception {
+        saveProduct("Laptop Pro", "electronics");
+        saveProduct("Phone Max", "electronics");
+        saveProduct("Cotton Shirt", "clothing");
 
-        mockMvc.perform(get("/api/products").param("category", "electronics")
+        mockMvc.perform(get("/api/products").param("search", "laptop")
                         .header("Authorization", "Bearer " + memberToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.totalElements").value(2))
-                .andExpect(jsonPath("$.data.content[0].category").value("electronics"));
+                .andExpect(jsonPath("$.data.totalElements").value(1))
+                .andExpect(jsonPath("$.data.content[0].name").value("Laptop Pro"));
     }
 
     // ── GET /api/products/{id} ────────────────────────────────────────────────

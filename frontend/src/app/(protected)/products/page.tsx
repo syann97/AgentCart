@@ -4,18 +4,18 @@ import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useProducts } from '@/features/product/hooks/use-products';
 import { ProductList } from '@/features/product/components/ProductList';
-import { CategoryFilter } from '@/features/product/components/CategoryFilter';
+import { SearchBar } from '@/features/product/components/SearchBar';
 import { useAuthStore } from '@/stores/auth.store';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const category = searchParams.get('category') ?? undefined;
+  const search = searchParams.get('search') ?? undefined;
   const page = Number(searchParams.get('page') ?? 0);
   const member = useAuthStore((s) => s.member);
   const isAdmin = member?.role === 'ADMIN';
 
-  const { data, isLoading, isError } = useProducts({ category, page, size: 20 });
+  const { data, isLoading, isError } = useProducts({ search, page, size: 20 });
 
   const goToPage = (next: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -38,7 +38,7 @@ export default function ProductsPage() {
       </div>
 
       <div className="mb-4">
-        <CategoryFilter />
+        <SearchBar />
       </div>
 
       {isLoading && (

@@ -25,24 +25,37 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
-    @DisplayName("findByCategory - returns page of products in given category")
-    void findByCategory_withPageable_returnsPage() {
-        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
-        productRepository.save(buildProduct("Phone", "electronics", ProductStatus.ACTIVE, "Apple"));
-        productRepository.save(buildProduct("Shirt", "clothing", ProductStatus.ACTIVE, "Nike"));
+    @DisplayName("search - matches products by name keyword")
+    void search_byName_returnsMatchedPage() {
+        productRepository.save(buildProduct("Laptop Pro", "electronics", ProductStatus.ACTIVE, "Samsung"));
+        productRepository.save(buildProduct("Gaming Laptop", "electronics", ProductStatus.ACTIVE, "Asus"));
+        productRepository.save(buildProduct("Cotton Shirt", "clothing", ProductStatus.ACTIVE, "Nike"));
 
-        Page<Product> result = productRepository.findByCategory("electronics", PageRequest.of(0, 10));
+        Page<Product> result = productRepository.search("laptop", PageRequest.of(0, 10));
 
         assertThat(result.getTotalElements()).isEqualTo(2);
-        assertThat(result.getContent()).extracting("name").containsExactlyInAnyOrder("Laptop", "Phone");
+        assertThat(result.getContent()).extracting("name")
+                .containsExactlyInAnyOrder("Laptop Pro", "Gaming Laptop");
     }
 
     @Test
-    @DisplayName("findByCategory - returns empty page when no products in category")
-    void findByCategory_noMatch_returnsEmptyPage() {
+    @DisplayName("search - matches products by category keyword")
+    void search_byCategory_returnsMatchedPage() {
+        productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
+        productRepository.save(buildProduct("Shirt", "clothing", ProductStatus.ACTIVE, "Nike"));
+
+        Page<Product> result = productRepository.search("electronics", PageRequest.of(0, 10));
+
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent().get(0).getName()).isEqualTo("Laptop");
+    }
+
+    @Test
+    @DisplayName("search - returns empty page when no products match keyword")
+    void search_noMatch_returnsEmptyPage() {
         productRepository.save(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE, "Samsung"));
 
-        Page<Product> result = productRepository.findByCategory("furniture", PageRequest.of(0, 10));
+        Page<Product> result = productRepository.search("furniture", PageRequest.of(0, 10));
 
         assertThat(result.getTotalElements()).isEqualTo(0);
     }

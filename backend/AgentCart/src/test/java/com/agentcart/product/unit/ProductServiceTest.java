@@ -118,19 +118,19 @@ class ProductServiceTest {
         assertThat(result.getTotalElements()).isEqualTo(2);
     }
 
-    // ── findByCategory ────────────────────────────────────────────────────────
+    // ── search ────────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("findByCategory - returns page of products in category")
-    void findByCategory_existingCategory_returnsPage() {
+    @DisplayName("search - delegates to repository with keyword and pageable")
+    void search_keyword_returnsPage() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> page = new PageImpl<>(List.of(buildProduct("Laptop", "electronics", ProductStatus.ACTIVE)));
-        given(productRepository.findByCategory("electronics", pageable)).willReturn(page);
+        Page<Product> page = new PageImpl<>(List.of(buildProduct("Laptop Pro", "electronics", ProductStatus.ACTIVE)));
+        given(productRepository.search("laptop", pageable)).willReturn(page);
 
-        Page<Product> result = productService.findByCategory("electronics", pageable);
+        Page<Product> result = productService.search("laptop", pageable);
 
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getCategory()).isEqualTo("electronics");
+        assertThat(result.getContent().get(0).getName()).isEqualTo("Laptop Pro");
     }
 
     // ── update ────────────────────────────────────────────────────────────────
