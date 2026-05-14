@@ -1,6 +1,7 @@
 package com.agentcart.product.controller;
 
 import com.agentcart.common.ApiResponse;
+import com.agentcart.common.PageResponse;
 import com.agentcart.product.dto.ProductCreateRequest;
 import com.agentcart.product.dto.ProductResponse;
 import com.agentcart.product.dto.ProductSummaryResponse;
@@ -24,13 +25,13 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<ProductSummaryResponse>>> getProducts(
+    public ResponseEntity<ApiResponse<PageResponse<ProductSummaryResponse>>> getProducts(
             @RequestParam(required = false) String category,
             @PageableDefault(size = 20) Pageable pageable) {
         Page<ProductSummaryResponse> page = category != null
                 ? productService.findByCategory(category, pageable).map(ProductSummaryResponse::from)
                 : productService.findAll(pageable).map(ProductSummaryResponse::from);
-        return ResponseEntity.ok(ApiResponse.ok(page));
+        return ResponseEntity.ok(ApiResponse.ok(PageResponse.from(page)));
     }
 
     @GetMapping("/{id}")
