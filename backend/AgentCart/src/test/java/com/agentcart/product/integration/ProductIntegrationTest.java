@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -21,10 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import tools.jackson.databind.JsonNode;
@@ -33,6 +36,8 @@ import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -51,10 +56,27 @@ class ProductIntegrationTest {
     static GenericContainer<?> redis = new GenericContainer<>("redis:7-alpine")
             .withExposedPorts(6379);
 
+    @SuppressWarnings("resource")
+    @Container
+    static PostgreSQLContainer<?> pgvector = new PostgreSQLContainer<>("pgvector/pgvector:0.8.2-pg17")
+            .withDatabaseName("agentcart")
+            .withUsername("postgres")
+            .withPassword("postgres");
+
+    @MockitoBean
+    EmbeddingModel embeddingModel;
+
     @DynamicPropertySource
     static void configureRedis(DynamicPropertyRegistry registry) {
         registry.add("spring.data.redis.host", redis::getHost);
         registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
+    }
+
+    @DynamicPropertySource
+    static void configurePgvector(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.pgvector.url", pgvector::getJdbcUrl);
+        registry.add("spring.datasource.pgvector.username", pgvector::getUsername);
+        registry.add("spring.datasource.pgvector.password", pgvector::getPassword);
     }
 
     @Autowired MockMvc mockMvc;
@@ -247,6 +269,23 @@ class ProductIntegrationTest {
         mockMvc.perform(delete("/api/products/{id}", saved.getId())
                         .header("Authorization", "Bearer " + memberToken()))
                 .andExpect(status().isForbidden());
+    }
+
+    // ── POST /api/products (embedding) ───────────────────────────────────────
+
+    @Test
+    @DisplayName("POST /api/products - embedding failure does not affect product save")
+    void createProduct_embeddingFails_returns201() throws Exception {
+        given(embeddingModel.embed(anyString())).willThrow(new RuntimeException("model unavailable"));
+
+        mockMvc.perform(post("/api/products")
+                        .header("Authorization", "Bearer " + adminToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createBody("Laptop", "electronics", "99.99")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.name").value("Laptop"));
+
+        assertThat(productRepository.count()).isEqualTo(1);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
