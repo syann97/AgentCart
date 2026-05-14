@@ -1,15 +1,19 @@
 'use client';
 
+import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useProducts } from '@/features/product/hooks/use-products';
 import { ProductList } from '@/features/product/components/ProductList';
 import { CategoryFilter } from '@/features/product/components/CategoryFilter';
+import { useAuthStore } from '@/stores/auth.store';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const category = searchParams.get('category') ?? undefined;
   const page = Number(searchParams.get('page') ?? 0);
+  const member = useAuthStore((s) => s.member);
+  const isAdmin = member?.role === 'ADMIN';
 
   const { data, isLoading, isError } = useProducts({ category, page, size: 20 });
 
@@ -21,7 +25,17 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">상품 목록</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">상품 목록</h1>
+        {isAdmin && (
+          <Link
+            href="/products/new"
+            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+          >
+            상품 등록
+          </Link>
+        )}
+      </div>
 
       <div className="mb-4">
         <CategoryFilter />
