@@ -84,7 +84,7 @@ describe('CartItemRow', () => {
     expect(screen.queryByText(/최대|이상/)).not.toBeInTheDocument();
   });
 
-  it('재고 초과 입력 시 에러 메시지가 표시되고 updateItem이 호출되지 않는다', () => {
+  it('재고 초과 입력 시 에러 메시지가 표시되고 재고 최대값으로 클램프된다', () => {
     render(<CartItemRow item={{ ...activeItem, productStock: 3 }} />);
 
     const input = screen.getByLabelText('수량') as HTMLInputElement;
@@ -92,18 +92,20 @@ describe('CartItemRow', () => {
     fireEvent.blur(input);
 
     expect(screen.getByText('최대 3개까지 주문 가능합니다.')).toBeInTheDocument();
+    expect(input.value).toBe('3');
     expect(mockUpdateItem).not.toHaveBeenCalled();
   });
 
-  it('주문 상한(10개) 초과 시 에러 메시지가 표시된다', async () => {
+  it('주문 상한(10개) 초과 시 에러 메시지가 표시되고 10으로 클램프된다', async () => {
     render(<CartItemRow item={{ ...activeItem, productStock: 20, quantity: 10 }} />);
     await userEvent.click(screen.getByLabelText('수량 증가'));
 
     expect(screen.getByText('최대 10개까지 주문 가능합니다.')).toBeInTheDocument();
+    expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('10');
     expect(mockUpdateItem).not.toHaveBeenCalled();
   });
 
-  it('0 이하 입력 시 에러 메시지가 표시된다', () => {
+  it('0 이하 입력 시 에러 메시지가 표시되고 1로 클램프된다', () => {
     render(<CartItemRow item={activeItem} />);
 
     const input = screen.getByLabelText('수량') as HTMLInputElement;
@@ -111,6 +113,7 @@ describe('CartItemRow', () => {
     fireEvent.blur(input);
 
     expect(screen.getByText('수량은 1개 이상이어야 합니다.')).toBeInTheDocument();
+    expect(input.value).toBe('1');
     expect(mockUpdateItem).not.toHaveBeenCalled();
   });
 
