@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useAddCartItem } from '@/features/cart/hooks/use-add-cart-item';
 import type { ProductDetail as ProductDetailType, ProductStatus } from '../types/product.types';
 
+const MAX_ORDER_QUANTITY = 10;
+
 const STATUS_LABEL: Record<ProductStatus, string> = {
   ACTIVE: '판매중',
   SOLD_OUT: '품절',
@@ -23,17 +25,38 @@ interface ProductDetailProps {
 
 export function ProductDetail({ product }: ProductDetailProps) {
   const isSoldOut = product.status === 'SOLD_OUT' || product.stock === 0;
+  const maxQuantity = Math.min(product.stock, MAX_ORDER_QUANTITY);
+  const [quantity, setQuantity] = useState(1);
+  const [inputValue, setInputValue] = useState('1');
   const [toast, setToast] = useState<string | null>(null);
 
   const { mutate: addToCart, isPending } = useAddCartItem({
     onSuccess: () => {
-      setToast('장바구니에 담았습니다.');
+      setToast(`장바구니에 ${quantity}개 담았습니다.`);
       setTimeout(() => setToast(null), 3000);
     },
   });
 
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
+  }
+
+  function handleInputBlur() {
+    const parsed = parseInt(inputValue, 10);
+    if (isNaN(parsed) || parsed < 1) {
+      setQuantity(1);
+      setInputValue('1');
+    } else if (parsed > maxQuantity) {
+      setQuantity(maxQuantity);
+      setInputValue(String(maxQuantity));
+    } else {
+      setQuantity(parsed);
+      setInputValue(String(parsed));
+    }
+  }
+
   function handleAddToCart() {
-    addToCart({ productId: product.id, quantity: 1 });
+    addToCart({ productId: product.id, quantity });
   }
 
   return (
@@ -59,6 +82,25 @@ export function ProductDetail({ product }: ProductDetailProps) {
           재고: {product.stock}개
         </p>
       </div>
+
+      {product.status === 'ACTIVE' && !isSoldOut && (
+        <div className="flex items-center gap-3 mb-6">
+          <label htmlFor="quantity" className="text-sm text-gray-700 shrink-0">
+            수량
+          </label>
+          <input
+            id="quantity"
+            type="number"
+            min={1}
+            max={maxQuantity}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            className="w-20 px-3 py-1.5 border rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <span className="text-xs text-gray-400">최대 {maxQuantity}개</span>
+        </div>
+      )}
 
       <div className="flex gap-2">
         <Link
