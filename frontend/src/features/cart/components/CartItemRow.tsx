@@ -27,32 +27,38 @@ export function CartItemRow({ item }: CartItemRowProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [inputValue, setInputValue] = useState(String(item.quantity));
   const [error, setError] = useState<string | null>(null);
+
   const isSoldOut = item.productStatus === 'SOLD_OUT';
   const maxQuantity = Math.min(item.productStock, MAX_ORDER_QUANTITY);
 
   const { mutate: updateItem, isPending: isUpdating } = useUpdateCartItem(item.id);
   const { mutate: removeItem, isPending: isRemoving } = useRemoveCartItem();
-
   const isPending = isUpdating || isRemoving;
 
-  function applyQuantity(value: number) {
-    if (isNaN(value) || value < 1) {
-      if (value < 1 && value === item.quantity - 1 && item.quantity === 1) {
-        setShowDeleteConfirm(true);
-      } else {
-        setError('수량은 1개 이상이어야 합니다.');
-        setInputValue(String(item.quantity));
-      }
+  function applyQuantity(next: number) {
+    if (isNaN(next) || next < 1) {
+      setError('수량은 1개 이상이어야 합니다.');
+      setInputValue(String(item.quantity));
       return;
     }
-    if (value > maxQuantity) {
+    if (next > maxQuantity) {
       setError(`최대 ${maxQuantity}개까지 주문 가능합니다.`);
       setInputValue(String(item.quantity));
       return;
     }
     setError(null);
-    setInputValue(String(value));
-    updateItem({ quantity: value });
+    setInputValue(String(next));
+    if (next !== item.quantity) {
+      updateItem({ quantity: next });
+    }
+  }
+
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
+  }
+
+  function handleInputBlur() {
+    applyQuantity(parseInt(inputValue, 10));
   }
 
   function handleDecrease() {
@@ -65,24 +71,6 @@ export function CartItemRow({ item }: CartItemRowProps) {
 
   function handleIncrease() {
     applyQuantity(item.quantity + 1);
-  }
-
-  function handleInputBlur() {
-    const parsed = parseInt(inputValue, 10);
-    if (isNaN(parsed) || parsed < 1) {
-      setError('수량은 1개 이상이어야 합니다.');
-      setInputValue(String(item.quantity));
-      return;
-    }
-    if (parsed > maxQuantity) {
-      setError(`최대 ${maxQuantity}개까지 주문 가능합니다.`);
-      setInputValue(String(item.quantity));
-      return;
-    }
-    if (parsed !== item.quantity) {
-      setError(null);
-      updateItem({ quantity: parsed });
-    }
   }
 
   function handleDelete() {
@@ -117,7 +105,7 @@ export function CartItemRow({ item }: CartItemRowProps) {
                 type="number"
                 min={1}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 disabled={isPending || isSoldOut}
                 aria-label="수량"
