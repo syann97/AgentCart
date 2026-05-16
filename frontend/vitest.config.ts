@@ -18,7 +18,6 @@ export default defineConfig({
         'src/app/**',
       ],
       reporter: ['text'],
-      all: true,
     },
   },
   resolve: {
