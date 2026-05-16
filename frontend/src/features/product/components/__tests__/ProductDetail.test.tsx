@@ -80,16 +80,12 @@ describe('ProductDetail', () => {
     expect(screen.getByRole('link', { name: '목록으로' })).toHaveAttribute('href', '/products');
   });
 
-  it('ACTIVE 상품에 수량 입력 필드와 최대 수량이 표시된다', () => {
+  it('ACTIVE 상품에 수량 입력 필드와 +/- 버튼이 표시된다', () => {
     render(<ProductDetail product={product} />);
 
     expect(screen.getByLabelText('수량')).toBeInTheDocument();
-    expect(screen.getByText('최대 10개')).toBeInTheDocument();
-  });
-
-  it('재고 3개이면 최대 수량이 3개로 표시된다', () => {
-    render(<ProductDetail product={{ ...product, stock: 3 }} />);
-    expect(screen.getByText('최대 3개')).toBeInTheDocument();
+    expect(screen.getByLabelText('수량 감소')).toBeInTheDocument();
+    expect(screen.getByLabelText('수량 증가')).toBeInTheDocument();
   });
 
   it('SOLD_OUT 상품에는 수량 입력 필드가 표시되지 않는다', () => {
@@ -97,36 +93,36 @@ describe('ProductDetail', () => {
     expect(screen.queryByLabelText('수량')).not.toBeInTheDocument();
   });
 
-  it('수량 입력 후 장바구니에 담기 시 선택한 수량으로 호출된다', async () => {
+  it('[+] 클릭 시 수량이 1 증가한다', async () => {
     render(<ProductDetail product={product} />);
-
-    const input = screen.getByLabelText('수량');
-    await userEvent.clear(input);
-    await userEvent.type(input, '3');
-    fireEvent.blur(input);
-
-    await userEvent.click(screen.getByText('장바구니에 담기'));
-
-    expect(mockAddToCart).toHaveBeenCalledWith({ productId: 1, quantity: 3 });
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('2');
   });
 
-  it('최대 수량 초과 입력 시 blur에서 최대값으로 보정된다', () => {
+  it('[-] 클릭 시 수량이 1 감소하고 1 미만이면 에러 메시지가 표시된다', async () => {
     render(<ProductDetail product={product} />);
+    await userEvent.click(screen.getByLabelText('수량 감소'));
+    expect(screen.getByText('수량은 1개 이상이어야 합니다.')).toBeInTheDocument();
+  });
+
+  it('재고 초과 입력 시 에러 메시지가 표시되고 최대값으로 보정된다', () => {
+    render(<ProductDetail product={{ ...product, stock: 3 }} />);
 
     const input = screen.getByLabelText('수량') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '99' } });
     fireEvent.blur(input);
 
-    expect(input.value).toBe('10');
+    expect(screen.getByText('최대 3개까지 주문 가능합니다.')).toBeInTheDocument();
+    expect(input.value).toBe('3');
   });
 
-  it('0 또는 음수 입력 시 blur에서 1로 보정된다', () => {
+  it('선택한 수량으로 장바구니에 담기를 호출한다', async () => {
     render(<ProductDetail product={product} />);
 
-    const input = screen.getByLabelText('수량') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '0' } });
-    fireEvent.blur(input);
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    await userEvent.click(screen.getByText('장바구니에 담기'));
 
-    expect(input.value).toBe('1');
+    expect(mockAddToCart).toHaveBeenCalledWith({ productId: 1, quantity: 3 });
   });
 });
