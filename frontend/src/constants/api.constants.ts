@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   },
   cart: {
     root: '/api/cart',
+    items: '/api/cart/items',
     item: (id: number) => `/api/cart/items/${id}`,
   },
   orders: {
