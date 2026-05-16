@@ -1,0 +1,99 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { CartItemRow } from '../CartItemRow';
+import type { CartItem } from '../../types/cart.types';
+
+const mockUpdateItem = vi.fn();
+const mockRemoveItem = vi.fn();
+
+vi.mock('../../hooks/use-update-cart-item', () => ({
+  useUpdateCartItem: () => ({ mutate: mockUpdateItem, isPending: false }),
+}));
+
+vi.mock('../../hooks/use-remove-cart-item', () => ({
+  useRemoveCartItem: () => ({ mutate: mockRemoveItem, isPending: false }),
+}));
+
+const activeItem: CartItem = {
+  id: 1,
+  productId: 10,
+  productName: '테스트 상품',
+  productPrice: 10000,
+  productStatus: 'ACTIVE',
+  quantity: 2,
+  subtotal: 20000,
+};
+
+describe('CartItemRow', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('상품명, 단가, 수량, 소계를 표시한다', () => {
+    render(<CartItemRow item={activeItem} />);
+
+    expect(screen.getByText('테스트 상품')).toBeInTheDocument();
+    expect(screen.getByText('₩10,000')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByText('소계: ₩20,000')).toBeInTheDocument();
+  });
+
+  it('ACTIVE 상태 배지를 표시한다', () => {
+    render(<CartItemRow item={activeItem} />);
+    expect(screen.getByText('판매중')).toBeInTheDocument();
+  });
+
+  it('SOLD_OUT 상품은 수량 버튼이 비활성화된다', () => {
+    render(<CartItemRow item={{ ...activeItem, productStatus: 'SOLD_OUT' }} />);
+
+    expect(screen.getByLabelText('수량 감소')).toBeDisabled();
+    expect(screen.getByLabelText('수량 증가')).toBeDisabled();
+    expect(screen.getByText('품절')).toBeInTheDocument();
+  });
+
+  it('[+] 클릭 시 수량 +1로 updateItem을 호출한다', async () => {
+    render(<CartItemRow item={activeItem} />);
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    expect(mockUpdateItem).toHaveBeenCalledWith({ quantity: 3 });
+  });
+
+  it('수량 > 1에서 [-] 클릭 시 수량 -1로 updateItem을 호출한다', async () => {
+    render(<CartItemRow item={activeItem} />);
+    await userEvent.click(screen.getByLabelText('수량 감소'));
+    expect(mockUpdateItem).toHaveBeenCalledWith({ quantity: 1 });
+  });
+
+  it('수량 1에서 [-] 클릭 시 삭제 확인 다이얼로그가 표시된다', async () => {
+    render(<CartItemRow item={{ ...activeItem, quantity: 1 }} />);
+    await userEvent.click(screen.getByLabelText('수량 감소'));
+
+    expect(screen.getByRole('heading', { name: '상품 삭제' })).toBeInTheDocument();
+    expect(mockUpdateItem).not.toHaveBeenCalled();
+  });
+
+  it('[삭제] 버튼 클릭 시 삭제 확인 다이얼로그가 표시된다', async () => {
+    render(<CartItemRow item={activeItem} />);
+    await userEvent.click(screen.getByText('삭제'));
+    expect(screen.getByRole('heading', { name: '상품 삭제' })).toBeInTheDocument();
+  });
+
+  it('삭제 확인 시 removeItem이 호출된다', async () => {
+    render(<CartItemRow item={activeItem} />);
+    await userEvent.click(screen.getByText('삭제'));
+
+    const buttons = screen.getAllByRole('button', { name: '삭제' });
+    const confirmBtn = buttons[buttons.length - 1];
+    await userEvent.click(confirmBtn);
+
+    expect(mockRemoveItem).toHaveBeenCalledWith(activeItem.id);
+  });
+
+  it('삭제 다이얼로그에서 취소 시 다이얼로그가 닫힌다', async () => {
+    render(<CartItemRow item={activeItem} />);
+    await userEvent.click(screen.getByText('삭제'));
+    await userEvent.click(screen.getByText('취소'));
+
+    expect(screen.queryByRole('heading', { name: '상품 삭제' })).not.toBeInTheDocument();
+  });
+});

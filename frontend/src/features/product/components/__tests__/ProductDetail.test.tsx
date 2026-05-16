@@ -9,6 +9,10 @@ vi.mock('next/link', () => ({
   ),
 }));
 
+vi.mock('@/features/cart/hooks/use-add-cart-item', () => ({
+  useAddCartItem: () => ({ mutate: vi.fn(), isPending: false }),
+}));
+
 const product: ProductDetailType = {
   id: 1,
   name: 'Laptop',
