@@ -10,6 +10,7 @@ public record CartItemResponse(
         String productName,
         BigDecimal productPrice,
         String productStatus,
+        int productStock,
         int quantity,
         BigDecimal subtotal
 ) {
@@ -22,6 +23,7 @@ public record CartItemResponse(
                 item.getProduct().getName(),
                 item.getProduct().getPrice(),
                 item.getProduct().getStatus().name(),
+                item.getProduct().getStock(),
                 item.getQuantity(),
                 subtotal
         );

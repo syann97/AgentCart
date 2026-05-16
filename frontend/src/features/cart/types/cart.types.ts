@@ -8,6 +8,7 @@ export interface CartItem {
   productName: string;
   productPrice: number;
   productStatus: ProductStatus;
+  productStock: number;
   quantity: number;
   subtotal: number;
 }
