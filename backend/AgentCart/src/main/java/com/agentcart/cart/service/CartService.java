@@ -29,6 +29,12 @@ public class CartService {
     private final MemberRepository memberRepository;
 
     @Transactional
+    public Cart getCartWithItems(Long memberId) {
+        return cartRepository.findByMemberIdWithItems(memberId)
+                .orElseGet(() -> getOrCreateCart(memberId));
+    }
+
+    @Transactional
     public Cart getOrCreateCart(Long memberId) {
         return cartRepository.findByMemberId(memberId)
                 .orElseGet(() -> {
