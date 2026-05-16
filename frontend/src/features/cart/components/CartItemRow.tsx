@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUpdateCartItem } from '../hooks/use-update-cart-item';
 import { useRemoveCartItem } from '../hooks/use-remove-cart-item';
 import type { CartItem } from '../types/cart.types';
@@ -25,6 +25,7 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item }: CartItemRowProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [quantity, setQuantity] = useState(item.quantity);
   const [inputValue, setInputValue] = useState(String(item.quantity));
   const [error, setError] = useState<string | null>(null);
 
@@ -35,18 +36,27 @@ export function CartItemRow({ item }: CartItemRowProps) {
   const { mutate: removeItem, isPending: isRemoving } = useRemoveCartItem();
   const isPending = isUpdating || isRemoving;
 
+  // 서버 응답 후 로컬 상태 동기화 (mutation 완료 → React Query 리페치 → item.quantity 변경)
+  useEffect(() => {
+    setQuantity(item.quantity);
+    setInputValue(String(item.quantity));
+  }, [item.quantity]);
+
   function applyQuantity(next: number) {
     if (isNaN(next) || next < 1) {
       setError('수량은 1개 이상이어야 합니다.');
-      setInputValue(String(item.quantity));
+      setQuantity(1);
+      setInputValue('1');
       return;
     }
     if (next > maxQuantity) {
       setError(`최대 ${maxQuantity}개까지 주문 가능합니다.`);
-      setInputValue(String(item.quantity));
+      setQuantity(maxQuantity);
+      setInputValue(String(maxQuantity));
       return;
     }
     setError(null);
+    setQuantity(next);
     setInputValue(String(next));
     if (next !== item.quantity) {
       updateItem({ quantity: next });
@@ -62,15 +72,15 @@ export function CartItemRow({ item }: CartItemRowProps) {
   }
 
   function handleDecrease() {
-    if (item.quantity === 1) {
+    if (quantity === 1) {
       setShowDeleteConfirm(true);
     } else {
-      applyQuantity(item.quantity - 1);
+      applyQuantity(quantity - 1);
     }
   }
 
   function handleIncrease() {
-    applyQuantity(item.quantity + 1);
+    applyQuantity(quantity + 1);
   }
 
   function handleDelete() {
