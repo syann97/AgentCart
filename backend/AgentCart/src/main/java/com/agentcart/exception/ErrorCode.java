@@ -17,7 +17,10 @@ public enum ErrorCode {
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, "Validation failed"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Product not found"),
     DUPLICATE_PRODUCT(HttpStatus.CONFLICT, "Product with same name and brand already exists"),
-    INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "Insufficient stock");
+    INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "Insufficient stock"),
+    CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "Cart item not found"),
+    PRODUCT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "Product is not available for purchase"),
+    EXCEEDS_STOCK(HttpStatus.BAD_REQUEST, "Requested quantity exceeds available stock");
 
     private final HttpStatus status;
     private final String message;
