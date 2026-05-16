@@ -28,6 +28,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const maxQuantity = Math.min(product.stock, MAX_ORDER_QUANTITY);
   const [quantity, setQuantity] = useState(1);
   const [inputValue, setInputValue] = useState('1');
+  const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const { mutate: addToCart, isPending } = useAddCartItem({
@@ -37,27 +38,45 @@ export function ProductDetail({ product }: ProductDetailProps) {
     },
   });
 
+  function applyQuantity(value: number) {
+    if (isNaN(value) || value < 1) {
+      setError('수량은 1개 이상이어야 합니다.');
+      setQuantity(1);
+      setInputValue('1');
+      return;
+    }
+    if (value > maxQuantity) {
+      setError(`최대 ${maxQuantity}개까지 주문 가능합니다.`);
+      setQuantity(maxQuantity);
+      setInputValue(String(maxQuantity));
+      return;
+    }
+    setError(null);
+    setQuantity(value);
+    setInputValue(String(value));
+  }
+
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputValue(e.target.value);
   }
 
   function handleInputBlur() {
-    const parsed = parseInt(inputValue, 10);
-    if (isNaN(parsed) || parsed < 1) {
-      setQuantity(1);
-      setInputValue('1');
-    } else if (parsed > maxQuantity) {
-      setQuantity(maxQuantity);
-      setInputValue(String(maxQuantity));
-    } else {
-      setQuantity(parsed);
-      setInputValue(String(parsed));
-    }
+    applyQuantity(parseInt(inputValue, 10));
+  }
+
+  function handleDecrease() {
+    applyQuantity(quantity - 1);
+  }
+
+  function handleIncrease() {
+    applyQuantity(quantity + 1);
   }
 
   function handleAddToCart() {
     addToCart({ productId: product.id, quantity });
   }
+
+  const canAddToCart = product.status === 'ACTIVE' && !isSoldOut;
 
   return (
     <div className="max-w-2xl">
@@ -83,22 +102,39 @@ export function ProductDetail({ product }: ProductDetailProps) {
         </p>
       </div>
 
-      {product.status === 'ACTIVE' && !isSoldOut && (
-        <div className="flex items-center gap-3 mb-6">
-          <label htmlFor="quantity" className="text-sm text-gray-700 shrink-0">
-            수량
-          </label>
-          <input
-            id="quantity"
-            type="number"
-            min={1}
-            max={maxQuantity}
-            value={inputValue}
-            onChange={handleInputChange}
-            onBlur={handleInputBlur}
-            className="w-20 px-3 py-1.5 border rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <span className="text-xs text-gray-400">최대 {maxQuantity}개</span>
+      {canAddToCart && (
+        <div className="mb-6">
+          <div className="flex items-center gap-2">
+            <label htmlFor="quantity" className="text-sm text-gray-700 shrink-0">
+              수량
+            </label>
+            <button
+              onClick={handleDecrease}
+              disabled={isPending}
+              aria-label="수량 감소"
+              className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 flex items-center justify-center text-lg font-medium"
+            >
+              -
+            </button>
+            <input
+              id="quantity"
+              type="number"
+              min={1}
+              value={inputValue}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              className="w-16 px-2 py-1.5 border rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={handleIncrease}
+              disabled={isPending}
+              aria-label="수량 증가"
+              className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 flex items-center justify-center text-lg font-medium"
+            >
+              +
+            </button>
+          </div>
+          {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
         </div>
       )}
 
@@ -110,7 +146,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
           목록으로
         </Link>
 
-        {product.status === 'ACTIVE' && !isSoldOut && (
+        {canAddToCart && (
           <button
             onClick={handleAddToCart}
             disabled={isPending}
