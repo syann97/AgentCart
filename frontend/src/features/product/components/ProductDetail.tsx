@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAddCartItem } from '@/features/cart/hooks/use-add-cart-item';
 import type { ProductDetail as ProductDetailType, ProductStatus } from '../types/product.types';
 
@@ -24,6 +25,7 @@ interface ProductDetailProps {
 }
 
 export function ProductDetail({ product }: ProductDetailProps) {
+  const router = useRouter();
   const isSoldOut = product.status === 'SOLD_OUT' || product.stock === 0;
   const maxQuantity = Math.min(product.stock, MAX_ORDER_QUANTITY);
   const [quantity, setQuantity] = useState(1);
@@ -74,6 +76,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   function handleAddToCart() {
     addToCart({ productId: product.id, quantity });
+  }
+
+  function handleDirectBuy() {
+    router.push(`/orders/new?productId=${product.id}&quantity=${quantity}`);
   }
 
   const canAddToCart = product.status === 'ACTIVE' && !isSoldOut;
@@ -155,6 +161,14 @@ export function ProductDetail({ product }: ProductDetailProps) {
             {isPending ? '담는 중...' : '장바구니에 담기'}
           </button>
         )}
+
+        <button
+          onClick={handleDirectBuy}
+          disabled={!canAddToCart}
+          className="px-4 py-2 rounded-md text-sm font-medium bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          바로구매
+        </button>
       </div>
 
       {toast && (
