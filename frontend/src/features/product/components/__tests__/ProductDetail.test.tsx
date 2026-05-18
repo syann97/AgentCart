@@ -5,11 +5,16 @@ import { ProductDetail } from '../ProductDetail';
 import type { ProductDetail as ProductDetailType } from '../../types/product.types';
 
 const mockAddToCart = vi.fn();
+const mockRouterPush = vi.fn();
 
 vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mockRouterPush }),
 }));
 
 vi.mock('@/features/cart/hooks/use-add-cart-item', () => ({
@@ -124,5 +129,36 @@ describe('ProductDetail', () => {
     await userEvent.click(screen.getByText('장바구니에 담기'));
 
     expect(mockAddToCart).toHaveBeenCalledWith({ productId: 1, quantity: 3 });
+  });
+
+  // ── 바로구매 ──────────────────────────────────────────────────────────────────
+
+  it('ACTIVE 상품에 바로구매 버튼이 활성화된다', () => {
+    render(<ProductDetail product={product} />);
+    expect(screen.getByText('바로구매')).not.toBeDisabled();
+  });
+
+  it('바로구매 버튼 클릭 시 productId와 quantity를 포함한 URL로 이동한다', async () => {
+    render(<ProductDetail product={product} />);
+    await userEvent.click(screen.getByText('바로구매'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/orders/new?productId=1&quantity=1');
+  });
+
+  it('수량 변경 후 바로구매 클릭 시 변경된 수량으로 이동한다', async () => {
+    render(<ProductDetail product={product} />);
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    await userEvent.click(screen.getByLabelText('수량 증가'));
+    await userEvent.click(screen.getByText('바로구매'));
+    expect(mockRouterPush).toHaveBeenCalledWith('/orders/new?productId=1&quantity=3');
+  });
+
+  it('SOLD_OUT 상품의 바로구매 버튼은 비활성화된다', () => {
+    render(<ProductDetail product={{ ...product, status: 'SOLD_OUT', stock: 0 }} />);
+    expect(screen.getByText('바로구매')).toBeDisabled();
+  });
+
+  it('INACTIVE 상품의 바로구매 버튼은 비활성화된다', () => {
+    render(<ProductDetail product={{ ...product, status: 'INACTIVE' }} />);
+    expect(screen.getByText('바로구매')).toBeDisabled();
   });
 });
