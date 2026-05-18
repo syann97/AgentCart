@@ -99,6 +99,22 @@ describe('OrderDetailContent', () => {
     expect(screen.queryByText('주문 취소')).not.toBeInTheDocument();
   });
 
+  it('CANCELLED 상태이면 결제하기·주문취소 버튼이 모두 표시되지 않는다', () => {
+    mockOrder({ status: 'CANCELLED' });
+    renderContent();
+
+    expect(screen.queryByText('결제하기')).not.toBeInTheDocument();
+    expect(screen.queryByText('주문 취소')).not.toBeInTheDocument();
+  });
+
+  it('SHIPPED 상태이면 결제하기 버튼이 표시되지 않고 주문취소 버튼도 표시되지 않는다', () => {
+    mockOrder({ status: 'SHIPPED' });
+    renderContent();
+
+    expect(screen.queryByText('결제하기')).not.toBeInTheDocument();
+    expect(screen.queryByText('주문 취소')).not.toBeInTheDocument();
+  });
+
   it('결제하기 버튼 클릭 시 pay를 orderId와 함께 호출한다', async () => {
     mockOrder({ status: 'PENDING' });
     renderContent();
