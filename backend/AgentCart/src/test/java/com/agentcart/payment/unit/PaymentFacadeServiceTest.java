@@ -135,6 +135,20 @@ class PaymentFacadeServiceTest {
                         .isEqualTo(ErrorCode.PAYMENT_NOT_FOUND));
     }
 
+    @Test
+    @DisplayName("getPayment - 타인 결제 조회 시 PAYMENT_ACCESS_DENIED 예외가 발생한다")
+    void getPayment_accessDenied() {
+        Payment payment = new Payment(order, order.getTotalPrice());
+        ReflectionTestUtils.setField(payment, "id", PAYMENT_ID);
+
+        given(paymentRepository.findById(PAYMENT_ID)).willReturn(Optional.of(payment));
+
+        assertThatThrownBy(() -> paymentFacadeService.getPayment(OTHER_MEMBER_ID, PAYMENT_ID))
+                .isInstanceOf(PaymentException.class)
+                .satisfies(e -> assertThat(((PaymentException) e).getErrorCode())
+                        .isEqualTo(ErrorCode.PAYMENT_ACCESS_DENIED));
+    }
+
     // ── getPaymentByOrder ─────────────────────────────────────────────────────
 
     @Test
@@ -160,5 +174,27 @@ class PaymentFacadeServiceTest {
                 .isInstanceOf(PaymentException.class)
                 .satisfies(e -> assertThat(((PaymentException) e).getErrorCode())
                         .isEqualTo(ErrorCode.PAYMENT_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("getPaymentByOrder - 주문이 없으면 ORDER_NOT_FOUND 예외가 발생한다")
+    void getPaymentByOrder_orderNotFound() {
+        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> paymentFacadeService.getPaymentByOrder(MEMBER_ID, ORDER_ID))
+                .isInstanceOf(OrderException.class)
+                .satisfies(e -> assertThat(((OrderException) e).getErrorCode())
+                        .isEqualTo(ErrorCode.ORDER_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("getPaymentByOrder - 타인 주문 결제 조회 시 PAYMENT_ACCESS_DENIED 예외가 발생한다")
+    void getPaymentByOrder_accessDenied() {
+        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+
+        assertThatThrownBy(() -> paymentFacadeService.getPaymentByOrder(OTHER_MEMBER_ID, ORDER_ID))
+                .isInstanceOf(PaymentException.class)
+                .satisfies(e -> assertThat(((PaymentException) e).getErrorCode())
+                        .isEqualTo(ErrorCode.PAYMENT_ACCESS_DENIED));
     }
 }
