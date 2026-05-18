@@ -40,7 +40,7 @@ public class OrderController {
                     request.getRecipientName(), request.getPhone(),
                     request.getAddress(), request.getAddressDetail());
         } else {
-            order = orderService.createDirect(memberId, request.getProductId(), request.getQuantity(),
+            order = orderService.createDirect(memberId, request.getProductId(), request.getQuantity().intValue(),
                     request.getRecipientName(), request.getPhone(),
                     request.getAddress(), request.getAddressDetail());
         }

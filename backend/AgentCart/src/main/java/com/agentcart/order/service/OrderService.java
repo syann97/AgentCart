@@ -13,6 +13,7 @@ import com.agentcart.order.domain.OrderItem;
 import com.agentcart.order.domain.OrderStatus;
 import com.agentcart.order.repository.OrderRepository;
 import com.agentcart.product.domain.Product;
+import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,6 +69,10 @@ public class OrderService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
 
+        if (product.getStatus() != ProductStatus.ACTIVE) {
+            throw new ProductException(ErrorCode.PRODUCT_NOT_AVAILABLE);
+        }
+
         product.decreaseStock(quantity);
 
         BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
@@ -96,7 +101,9 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<Order> getOrders(Long memberId, Pageable pageable) {
-        return orderRepository.findByMemberId(memberId, pageable);
+        Page<Order> page = orderRepository.findByMemberId(memberId, pageable);
+        page.getContent().forEach(o -> o.getItems().size());
+        return page;
     }
 
     @Transactional(readOnly = true)
@@ -119,7 +126,7 @@ public class OrderService {
     }
 
     private Order findOrder(Long orderId) {
-        return orderRepository.findById(orderId)
+        return orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new OrderException(ErrorCode.ORDER_NOT_FOUND));
     }
 

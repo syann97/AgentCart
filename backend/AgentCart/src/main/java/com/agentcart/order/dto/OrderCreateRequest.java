@@ -16,8 +16,7 @@ public class OrderCreateRequest {
 
     private Long productId;
 
-    @Min(value = 1, message = "수량은 1 이상이어야 합니다")
-    private int quantity;
+    private Integer quantity;
 
     @NotBlank(message = "수령인 이름을 입력해주세요")
     private String recipientName;
@@ -33,7 +32,7 @@ public class OrderCreateRequest {
     @AssertTrue(message = "장바구니 주문(cartItemIds) 또는 바로구매(productId + quantity) 중 하나만 입력해주세요")
     public boolean isValidOrderType() {
         boolean hasCartItems = cartItemIds != null && !cartItemIds.isEmpty();
-        boolean hasDirect = productId != null && quantity >= 1;
+        boolean hasDirect = productId != null && quantity != null && quantity >= 1;
         return hasCartItems ^ hasDirect;
     }
 

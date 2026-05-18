@@ -166,7 +166,7 @@ class OrderServiceTest {
         OrderItem item = buildOrderItem(order, product, 3);
         order.addItem(item);
 
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
 
         orderService.cancel(MEMBER_ID, ORDER_ID);
 
@@ -178,7 +178,7 @@ class OrderServiceTest {
     @DisplayName("cancel - throws ORDER_NOT_CANCELLABLE when order is SHIPPED")
     void cancel_shippedOrder_throwsException() {
         Order order = buildOrder(OrderStatus.SHIPPED);
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.cancel(MEMBER_ID, ORDER_ID))
                 .isInstanceOf(OrderException.class)
@@ -189,7 +189,7 @@ class OrderServiceTest {
     @DisplayName("cancel - throws ORDER_ACCESS_DENIED when order belongs to another member")
     void cancel_otherMembersOrder_throwsException() {
         Order order = buildOrder(OrderStatus.PENDING);
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.cancel(999L, ORDER_ID))
                 .isInstanceOf(OrderException.class)
@@ -199,7 +199,7 @@ class OrderServiceTest {
     @Test
     @DisplayName("cancel - throws ORDER_NOT_FOUND when order does not exist")
     void cancel_orderNotFound_throwsException() {
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.empty());
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.cancel(MEMBER_ID, ORDER_ID))
                 .isInstanceOf(OrderException.class)
@@ -227,7 +227,7 @@ class OrderServiceTest {
     @DisplayName("getOrder - returns order when it belongs to member")
     void getOrder_ownOrder_returnsOrder() {
         Order order = buildOrder(OrderStatus.PENDING);
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
 
         Order result = orderService.getOrder(MEMBER_ID, ORDER_ID);
 
@@ -238,7 +238,7 @@ class OrderServiceTest {
     @DisplayName("getOrder - throws ORDER_ACCESS_DENIED when order belongs to another member")
     void getOrder_otherMembersOrder_throwsException() {
         Order order = buildOrder(OrderStatus.PENDING);
-        given(orderRepository.findById(ORDER_ID)).willReturn(Optional.of(order));
+        given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
 
         assertThatThrownBy(() -> orderService.getOrder(999L, ORDER_ID))
                 .isInstanceOf(OrderException.class)
