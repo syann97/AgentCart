@@ -65,6 +65,10 @@ public class Order extends BaseTimeEntity {
         this.totalPrice = totalPrice;
     }
 
+    public void changeStatus(OrderStatus status) {
+        this.status = status;
+    }
+
     public void cancel() {
         this.status = OrderStatus.CANCELLED;
     }

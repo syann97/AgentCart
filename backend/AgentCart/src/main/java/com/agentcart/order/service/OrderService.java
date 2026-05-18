@@ -10,6 +10,7 @@ import com.agentcart.member.domain.Member;
 import com.agentcart.member.repository.MemberRepository;
 import com.agentcart.order.domain.Order;
 import com.agentcart.order.domain.OrderItem;
+import com.agentcart.order.domain.OrderStatus;
 import com.agentcart.order.repository.OrderRepository;
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.repository.ProductRepository;
@@ -102,6 +103,13 @@ public class OrderService {
     public Order getOrder(Long memberId, Long orderId) {
         Order order = findOrder(orderId);
         checkAccess(memberId, order);
+        return order;
+    }
+
+    @Transactional
+    public Order updateStatus(Long orderId, OrderStatus status) {
+        Order order = findOrder(orderId);
+        order.changeStatus(status);
         return order;
     }
 
