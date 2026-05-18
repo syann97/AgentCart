@@ -20,7 +20,10 @@ public enum ErrorCode {
     INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "Insufficient stock"),
     CART_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "Cart item not found"),
     PRODUCT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST, "Product is not available for purchase"),
-    EXCEEDS_STOCK(HttpStatus.BAD_REQUEST, "Requested quantity exceeds available stock");
+    EXCEEDS_STOCK(HttpStatus.BAD_REQUEST, "Requested quantity exceeds available stock"),
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "Order not found"),
+    ORDER_NOT_CANCELLABLE(HttpStatus.BAD_REQUEST, "Order cannot be cancelled in its current status"),
+    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access to this order is denied");
 
     private final HttpStatus status;
     private final String message;

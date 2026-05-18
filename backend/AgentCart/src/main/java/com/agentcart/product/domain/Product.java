@@ -72,6 +72,13 @@ public class Product extends BaseTimeEntity {
         }
     }
 
+    public void restoreStock(int qty) {
+        this.stock += qty;
+        if (this.status == ProductStatus.SOLD_OUT) {
+            this.status = ProductStatus.ACTIVE;
+        }
+    }
+
     public void update(String name, String description, BigDecimal price,
                        String category, String brand, int stock) {
         this.name = name;
