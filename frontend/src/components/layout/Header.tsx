@@ -31,6 +31,9 @@ export function Header() {
               <Link href="/cart" className="hover:text-blue-600">
                 장바구니
               </Link>
+              <Link href="/orders" className="hover:text-blue-600">
+                주문 내역
+              </Link>
               <span className="text-gray-500">{member?.name}</span>
               <button onClick={handleLogout} className="text-gray-500 hover:text-red-500">
                 로그아웃
