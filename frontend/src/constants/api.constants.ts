@@ -25,6 +25,11 @@ export const API_ENDPOINTS = {
     root: '/api/orders',
     detail: (id: number) => `/api/orders/${id}`,
   },
+  payments: {
+    root: '/api/payments',
+    detail: (id: number) => `/api/payments/${id}`,
+    byOrder: (orderId: number) => `/api/payments/order/${orderId}`,
+  },
 } as const;
 
 export const TOKEN_KEYS = {

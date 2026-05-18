@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useOrder } from '@/features/order/hooks/use-order';
 import { useCancelOrder } from '@/features/order/hooks/use-cancel-order';
+import { usePay } from '@/features/payment/hooks/use-pay';
 import type { OrderStatus } from '@/features/order/types/order.types';
 
 const STATUS_LABEL: Record<OrderStatus, string> = {
@@ -31,12 +32,18 @@ interface Props {
 
 export default function OrderDetailPage({ params }: Props) {
   const { id } = use(params);
+  return <OrderDetailContent orderId={Number(id)} />;
+}
+
+export function OrderDetailContent({ orderId }: { orderId: number }) {
   const router = useRouter();
-  const orderId = Number(id);
 
   const { data, isLoading, isError } = useOrder(orderId);
   const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder({
     onSuccess: () => router.push('/orders'),
+  });
+  const { mutate: pay, isPending: isPaying } = usePay({
+    onSuccess: () => router.refresh(),
   });
 
   if (isLoading) {
@@ -59,10 +66,7 @@ export default function OrderDetailPage({ params }: Props) {
   return (
     <div className="max-w-lg">
       <div className="flex items-center gap-3 mb-6">
-        <Link
-          href="/orders"
-          className="text-sm text-gray-500 hover:text-gray-700"
-        >
+        <Link href="/orders" className="text-sm text-gray-500 hover:text-gray-700">
           ← 주문 내역
         </Link>
         <h1 className="text-2xl font-bold">주문 #{order.id}</h1>
@@ -124,7 +128,16 @@ export default function OrderDetailPage({ params }: Props) {
       </section>
 
       {isCancellable && (
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          {order.status === 'PENDING' && (
+            <button
+              onClick={() => pay({ orderId: order.id })}
+              disabled={isPaying}
+              className="px-4 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isPaying ? '결제 중...' : '결제하기'}
+            </button>
+          )}
           <button
             onClick={() => cancelOrder(order.id)}
             disabled={isCancelling}
