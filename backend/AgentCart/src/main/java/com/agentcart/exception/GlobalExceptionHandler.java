@@ -36,6 +36,14 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(code.name(), code.getMessage()));
     }
 
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<ApiResponse<Void>> handleOrderException(OrderException e) {
+        ErrorCode code = e.getErrorCode();
+        return ResponseEntity
+                .status(code.getStatus())
+                .body(ApiResponse.error(code.name(), code.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException e) {
         Map<String, String> fields = new LinkedHashMap<>();
