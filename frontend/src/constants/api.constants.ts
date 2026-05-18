@@ -36,5 +36,6 @@ export const QUERY_KEYS = {
   product: (id: number) => ['products', id] as const,
   cart: ['cart'] as const,
   orders: ['orders'] as const,
+  order: (id: number) => ['orders', id] as const,
   recommendations: ['recommendations'] as const,
 } as const;
