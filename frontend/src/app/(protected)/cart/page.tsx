@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/features/cart/hooks/use-cart';
 import { CartItemRow } from '@/features/cart/components/CartItemRow';
@@ -10,6 +10,14 @@ import type { CartItem } from '@/features/cart/types/cart.types';
 export default function CartPage() {
   const { data, isLoading, isError } = useCart();
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    if (!data) return;
+    const selectableIds = data.data.items
+      .filter((item) => item.productStatus !== 'SOLD_OUT')
+      .map((item) => item.id);
+    setSelectedIds(new Set(selectableIds));
+  }, [data]);
 
   const items: CartItem[] = data?.data.items ?? [];
   const selectableItems = items.filter((item) => item.productStatus !== 'SOLD_OUT');
