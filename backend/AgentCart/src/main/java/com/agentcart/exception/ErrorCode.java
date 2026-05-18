@@ -23,7 +23,11 @@ public enum ErrorCode {
     EXCEEDS_STOCK(HttpStatus.BAD_REQUEST, "Requested quantity exceeds available stock"),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "Order not found"),
     ORDER_NOT_CANCELLABLE(HttpStatus.BAD_REQUEST, "Order cannot be cancelled in its current status"),
-    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access to this order is denied");
+    ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access to this order is denied"),
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Payment not found"),
+    PAYMENT_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "Payment has already been completed"),
+    PAYMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access to this payment is denied"),
+    PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Payment processing failed");
 
     private final HttpStatus status;
     private final String message;
