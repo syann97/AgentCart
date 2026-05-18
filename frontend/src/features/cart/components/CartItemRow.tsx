@@ -21,9 +21,11 @@ const STATUS_CLASS: Record<CartItem['productStatus'], string> = {
 
 interface CartItemRowProps {
   item: CartItem;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
 }
 
-export function CartItemRow({ item }: CartItemRowProps) {
+export function CartItemRow({ item, checked, onCheckedChange }: CartItemRowProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [quantity, setQuantity] = useState(item.quantity);
   const [inputValue, setInputValue] = useState(String(item.quantity));
@@ -91,59 +93,71 @@ export function CartItemRow({ item }: CartItemRowProps) {
   return (
     <>
       <div className={`border rounded-lg p-4 ${isSoldOut ? 'opacity-60' : ''}`}>
-        <div className="flex justify-between items-start mb-1">
-          <h3 className="font-semibold text-gray-900">{item.productName}</h3>
-          <span className={`text-xs px-2 py-0.5 rounded-full ml-2 shrink-0 ${STATUS_CLASS[item.productStatus]}`}>
-            {STATUS_LABEL[item.productStatus]}
-          </span>
-        </div>
-
-        <p className="text-sm text-gray-500 mb-4">₩{item.productPrice.toLocaleString()}</p>
-
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleDecrease}
-                disabled={isPending || isSoldOut}
-                aria-label="수량 감소"
-                className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-lg font-medium"
-              >
-                -
-              </button>
-              <input
-                type="number"
-                min={1}
-                value={inputValue}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                disabled={isPending || isSoldOut}
-                aria-label="수량"
-                className="w-16 px-2 py-1.5 border rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
-              />
-              <button
-                onClick={handleIncrease}
-                disabled={isPending || isSoldOut}
-                aria-label="수량 증가"
-                className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-lg font-medium"
-              >
-                +
-              </button>
+        <div className="flex items-start gap-3 mb-1">
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => onCheckedChange(e.target.checked)}
+            disabled={isSoldOut}
+            aria-label="상품 선택"
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 accent-blue-600 disabled:cursor-not-allowed"
+          />
+          <div className="flex-1">
+            <div className="flex justify-between items-start mb-1">
+              <h3 className="font-semibold text-gray-900">{item.productName}</h3>
+              <span className={`text-xs px-2 py-0.5 rounded-full ml-2 shrink-0 ${STATUS_CLASS[item.productStatus]}`}>
+                {STATUS_LABEL[item.productStatus]}
+              </span>
             </div>
-            {error && <p className="text-xs text-red-500">{error}</p>}
-          </div>
 
-          <div className="flex items-center gap-4">
-            <p className="text-sm font-semibold text-gray-900">
-              소계: ₩{item.subtotal.toLocaleString()}
-            </p>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              disabled={isPending}
-              className="text-sm text-red-500 hover:text-red-700 disabled:opacity-40"
-            >
-              삭제
-            </button>
+            <p className="text-sm text-gray-500 mb-4">₩{item.productPrice.toLocaleString()}</p>
+
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDecrease}
+                    disabled={isPending || isSoldOut}
+                    aria-label="수량 감소"
+                    className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-lg font-medium"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onBlur={handleInputBlur}
+                    disabled={isPending || isSoldOut}
+                    aria-label="수량"
+                    className="w-16 px-2 py-1.5 border rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                  />
+                  <button
+                    onClick={handleIncrease}
+                    disabled={isPending || isSoldOut}
+                    aria-label="수량 증가"
+                    className="w-8 h-8 rounded border text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-lg font-medium"
+                  >
+                    +
+                  </button>
+                </div>
+                {error && <p className="text-xs text-red-500">{error}</p>}
+              </div>
+
+              <div className="flex items-center gap-4">
+                <p className="text-sm font-semibold text-gray-900">
+                  소계: ₩{item.subtotal.toLocaleString()}
+                </p>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  disabled={isPending}
+                  className="text-sm text-red-500 hover:text-red-700 disabled:opacity-40"
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

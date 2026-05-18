@@ -1,14 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useClearCart } from '../hooks/use-clear-cart';
 import { Button } from '@/components/ui/Button';
+import type { CartItem } from '../types/cart.types';
 
 interface CartSummaryProps {
-  totalPrice: number;
+  selectedItems: CartItem[];
 }
 
-export function CartSummary({ totalPrice }: CartSummaryProps) {
+export function CartSummary({ selectedItems }: CartSummaryProps) {
+  const router = useRouter();
+  const selectedTotal = selectedItems.reduce((sum, item) => sum + item.subtotal, 0);
+  const hasSelection = selectedItems.length > 0;
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const { mutate: clearCart, isPending } = useClearCart();
 
@@ -21,8 +26,10 @@ export function CartSummary({ totalPrice }: CartSummaryProps) {
     <>
       <div className="border rounded-lg p-4">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-gray-700">총 상품 금액</span>
-          <span className="text-xl font-bold text-gray-900">₩{totalPrice.toLocaleString()}</span>
+          <span className="text-gray-700">
+            선택 상품 금액 ({selectedItems.length}개)
+          </span>
+          <span className="text-xl font-bold text-gray-900">₩{selectedTotal.toLocaleString()}</span>
         </div>
 
         <div className="flex justify-end gap-2">
@@ -33,12 +40,15 @@ export function CartSummary({ totalPrice }: CartSummaryProps) {
           >
             전체 비우기
           </Button>
-          <button
-            disabled
-            className="rounded-md py-2 px-4 text-sm font-medium bg-blue-600 text-white opacity-40 cursor-not-allowed"
+          <Button
+            disabled={!hasSelection}
+            onClick={() => {
+              const ids = selectedItems.map((item) => item.id).join(',');
+              router.push(`/orders/new?cartItemIds=${ids}`);
+            }}
           >
             주문하기
-          </button>
+          </Button>
         </div>
       </div>
 
