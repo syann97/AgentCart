@@ -6,6 +6,8 @@ import com.agentcart.product.dto.ProductCreateRequest;
 import com.agentcart.product.dto.ProductResponse;
 import com.agentcart.product.dto.ProductSummaryResponse;
 import com.agentcart.product.dto.ProductUpdateRequest;
+import com.agentcart.product.dto.StockAdjustRequest;
+import com.agentcart.product.dto.StockAdjustResponse;
 import com.agentcart.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,14 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
             @PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.ok(ProductResponse.from(productService.update(id, request))));
+    }
+
+    @PatchMapping("/{id}/stock")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<StockAdjustResponse>> adjustStock(
+            @PathVariable Long id, @Valid @RequestBody StockAdjustRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                StockAdjustResponse.from(productService.adjustStock(id, request.delta()))));
     }
 
     @DeleteMapping("/{id}")

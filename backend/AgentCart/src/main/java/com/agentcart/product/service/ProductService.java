@@ -72,6 +72,18 @@ public class ProductService {
     }
 
     @Transactional
+    public Product adjustStock(Long productId, int delta) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+        if (delta > 0) {
+            product.restoreStock(delta);
+        } else if (delta < 0) {
+            product.decreaseStock(-delta);
+        }
+        return product;
+    }
+
+    @Transactional
     public void delete(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
