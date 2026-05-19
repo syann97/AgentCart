@@ -271,6 +271,63 @@ class ProductIntegrationTest {
                 .andExpect(status().isForbidden());
     }
 
+    // ── PATCH /api/products/{id}/stock ───────────────────────────────────────
+
+    @Test
+    @DisplayName("PATCH /api/products/{id}/stock - ADMIN: 재고 증가 → 200, 재고 반영")
+    void adjustStock_increaseByAdmin_returns200() throws Exception {
+        Product saved = saveProduct("Laptop", "electronics");
+
+        mockMvc.perform(patch("/api/products/{id}/stock", saved.getId())
+                        .header("Authorization", "Bearer " + adminToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"delta\":50,\"reason\":\"신규 입고\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.id").value(saved.getId()))
+                .andExpect(jsonPath("$.data.stock").value(60))
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"));
+    }
+
+    @Test
+    @DisplayName("PATCH /api/products/{id}/stock - ADMIN: 재고 감소 → 200, 재고 반영")
+    void adjustStock_decreaseByAdmin_returns200() throws Exception {
+        Product saved = saveProduct("Laptop", "electronics");
+
+        mockMvc.perform(patch("/api/products/{id}/stock", saved.getId())
+                        .header("Authorization", "Bearer " + adminToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"delta\":-5,\"reason\":\"재고 오류 보정\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.stock").value(5))
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"));
+    }
+
+    @Test
+    @DisplayName("PATCH /api/products/{id}/stock - ADMIN: 재고 초과 감소 → 400 INSUFFICIENT_STOCK")
+    void adjustStock_exceedingStock_returns400() throws Exception {
+        Product saved = saveProduct("Laptop", "electronics");
+
+        mockMvc.perform(patch("/api/products/{id}/stock", saved.getId())
+                        .header("Authorization", "Bearer " + adminToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"delta\":-100,\"reason\":\"오류 보정\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("INSUFFICIENT_STOCK"));
+    }
+
+    @Test
+    @DisplayName("PATCH /api/products/{id}/stock - MEMBER 접근 → 403")
+    void adjustStock_asMember_returns403() throws Exception {
+        Product saved = saveProduct("Laptop", "electronics");
+
+        mockMvc.perform(patch("/api/products/{id}/stock", saved.getId())
+                        .header("Authorization", "Bearer " + memberToken())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"delta\":10,\"reason\":\"테스트\"}"))
+                .andExpect(status().isForbidden());
+    }
+
     // ── POST /api/products (embedding) ───────────────────────────────────────
 
     @Test
