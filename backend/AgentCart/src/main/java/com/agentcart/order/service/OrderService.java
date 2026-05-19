@@ -49,7 +49,8 @@ public class OrderService {
         orderRepository.save(order);
 
         for (CartItem cartItem : cartItems) {
-            Product product = cartItem.getProduct();
+            Product product = productRepository.findByIdForUpdate(cartItem.getProduct().getId())
+                    .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
             product.decreaseStock(cartItem.getQuantity());
             OrderItem item = new OrderItem(order, product, cartItem.getQuantity());
             order.addItem(item);
@@ -66,7 +67,7 @@ public class OrderService {
                               String recipientName, String phone,
                               String address, String addressDetail) {
         Member member = findMember(memberId);
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdForUpdate(productId)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
 
         if (product.getStatus() != ProductStatus.ACTIVE) {
@@ -94,7 +95,9 @@ public class OrderService {
         }
 
         for (OrderItem item : order.getItems()) {
-            item.getProduct().restoreStock(item.getQuantity());
+            Product product = productRepository.findByIdForUpdate(item.getProduct().getId())
+                    .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+            product.restoreStock(item.getQuantity());
         }
         order.cancel();
     }

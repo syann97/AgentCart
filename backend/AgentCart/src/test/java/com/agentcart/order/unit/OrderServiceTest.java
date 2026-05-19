@@ -82,7 +82,7 @@ class OrderServiceTest {
     @DisplayName("createDirect - creates order and decreases stock")
     void createDirect_validRequest_createsOrder() {
         given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.of(member));
-        given(productRepository.findById(PRODUCT_ID)).willReturn(Optional.of(product));
+        given(productRepository.findByIdForUpdate(PRODUCT_ID)).willReturn(Optional.of(product));
         given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
 
         Order result = orderService.createDirect(MEMBER_ID, PRODUCT_ID, 3, RECIPIENT, PHONE, ADDRESS, ADDRESS_DETAIL);
@@ -106,7 +106,7 @@ class OrderServiceTest {
     @DisplayName("createDirect - throws PRODUCT_NOT_FOUND when product does not exist")
     void createDirect_productNotFound_throwsException() {
         given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.of(member));
-        given(productRepository.findById(PRODUCT_ID)).willReturn(Optional.empty());
+        given(productRepository.findByIdForUpdate(PRODUCT_ID)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> orderService.createDirect(MEMBER_ID, PRODUCT_ID, 1, RECIPIENT, PHONE, ADDRESS, null))
                 .isInstanceOf(ProductException.class)
@@ -117,7 +117,7 @@ class OrderServiceTest {
     @DisplayName("createDirect - throws INSUFFICIENT_STOCK when quantity exceeds stock")
     void createDirect_insufficientStock_throwsException() {
         given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.of(member));
-        given(productRepository.findById(PRODUCT_ID)).willReturn(Optional.of(product));
+        given(productRepository.findByIdForUpdate(PRODUCT_ID)).willReturn(Optional.of(product));
 
         assertThatThrownBy(() -> orderService.createDirect(MEMBER_ID, PRODUCT_ID, 11, RECIPIENT, PHONE, ADDRESS, null))
                 .isInstanceOf(ProductException.class)
@@ -136,6 +136,7 @@ class OrderServiceTest {
 
         given(memberRepository.findById(MEMBER_ID)).willReturn(Optional.of(member));
         given(cartItemRepository.findAllById(List.of(CART_ITEM_ID))).willReturn(List.of(cartItem));
+        given(productRepository.findByIdForUpdate(PRODUCT_ID)).willReturn(Optional.of(product));
         given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
 
         Order result = orderService.createFromCart(MEMBER_ID, List.of(CART_ITEM_ID), RECIPIENT, PHONE, ADDRESS, ADDRESS_DETAIL);
@@ -167,6 +168,7 @@ class OrderServiceTest {
         order.addItem(item);
 
         given(orderRepository.findByIdWithItems(ORDER_ID)).willReturn(Optional.of(order));
+        given(productRepository.findByIdForUpdate(PRODUCT_ID)).willReturn(Optional.of(product));
 
         orderService.cancel(MEMBER_ID, ORDER_ID);
 
