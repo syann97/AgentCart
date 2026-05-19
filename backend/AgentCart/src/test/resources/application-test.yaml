@@ -21,7 +21,6 @@ spring:
       # Infrastructure
       - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
-      - org.redisson.spring.starter.RedissonAutoConfigurationV4
       # Spring AI — all model/vector auto-configs disabled; tests do not need real AI connections
       - org.springframework.ai.vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
       - org.springframework.ai.model.anthropic.autoconfigure.AnthropicChatAutoConfiguration

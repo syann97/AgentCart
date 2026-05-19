@@ -32,6 +32,7 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final InventoryLockService inventoryLockService;
 
     @Transactional
     public Order createFromCart(Long memberId, List<Long> cartItemIds,
@@ -44,22 +45,28 @@ public class OrderService {
             throw new OrderException(ErrorCode.ORDER_NOT_FOUND);
         }
 
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        Order order = new Order(member, BigDecimal.ZERO, recipientName, phone, address, addressDetail);
-        orderRepository.save(order);
+        List<Long> productIds = cartItems.stream()
+                .map(c -> c.getProduct().getId())
+                .toList();
 
-        for (CartItem cartItem : cartItems) {
-            Product product = productRepository.findByIdForUpdate(cartItem.getProduct().getId())
-                    .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
-            product.decreaseStock(cartItem.getQuantity());
-            OrderItem item = new OrderItem(order, product, cartItem.getQuantity());
-            order.addItem(item);
-            totalPrice = totalPrice.add(item.getPriceAtOrder().multiply(BigDecimal.valueOf(item.getQuantity())));
-        }
+        return inventoryLockService.withLocks(productIds, () -> {
+            Order order = new Order(member, BigDecimal.ZERO, recipientName, phone, address, addressDetail);
+            orderRepository.save(order);
 
-        order.updateTotalPrice(totalPrice);
-        cartItemRepository.deleteAll(cartItems);
-        return order;
+            BigDecimal total = BigDecimal.ZERO;
+            for (CartItem cartItem : cartItems) {
+                Product product = productRepository.findByIdForUpdate(cartItem.getProduct().getId())
+                        .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+                product.decreaseStock(cartItem.getQuantity());
+                OrderItem item = new OrderItem(order, product, cartItem.getQuantity());
+                order.addItem(item);
+                total = total.add(item.getPriceAtOrder().multiply(BigDecimal.valueOf(item.getQuantity())));
+            }
+
+            order.updateTotalPrice(total);
+            cartItemRepository.deleteAll(cartItems);
+            return order;
+        });
     }
 
     @Transactional
@@ -67,22 +74,23 @@ public class OrderService {
                               String recipientName, String phone,
                               String address, String addressDetail) {
         Member member = findMember(memberId);
-        Product product = productRepository.findByIdForUpdate(productId)
-                .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        if (product.getStatus() != ProductStatus.ACTIVE) {
-            throw new ProductException(ErrorCode.PRODUCT_NOT_AVAILABLE);
-        }
+        return inventoryLockService.withLocks(List.of(productId), () -> {
+            Product product = productRepository.findByIdForUpdate(productId)
+                    .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        product.decreaseStock(quantity);
+            if (product.getStatus() != ProductStatus.ACTIVE) {
+                throw new ProductException(ErrorCode.PRODUCT_NOT_AVAILABLE);
+            }
 
-        BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-        Order order = new Order(member, totalPrice, recipientName, phone, address, addressDetail);
-        orderRepository.save(order);
+            product.decreaseStock(quantity);
 
-        OrderItem item = new OrderItem(order, product, quantity);
-        order.addItem(item);
-        return order;
+            BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+            Order order = new Order(member, totalPrice, recipientName, phone, address, addressDetail);
+            orderRepository.save(order);
+            order.addItem(new OrderItem(order, product, quantity));
+            return order;
+        });
     }
 
     @Transactional
@@ -94,12 +102,19 @@ public class OrderService {
             throw new OrderException(ErrorCode.ORDER_NOT_CANCELLABLE);
         }
 
-        for (OrderItem item : order.getItems()) {
-            Product product = productRepository.findByIdForUpdate(item.getProduct().getId())
-                    .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
-            product.restoreStock(item.getQuantity());
-        }
-        order.cancel();
+        List<Long> productIds = order.getItems().stream()
+                .map(item -> item.getProduct().getId())
+                .toList();
+
+        inventoryLockService.withLocks(productIds, () -> {
+            for (OrderItem item : order.getItems()) {
+                Product product = productRepository.findByIdForUpdate(item.getProduct().getId())
+                        .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+                product.restoreStock(item.getQuantity());
+            }
+            order.cancel();
+            return null;
+        });
     }
 
     @Transactional(readOnly = true)
