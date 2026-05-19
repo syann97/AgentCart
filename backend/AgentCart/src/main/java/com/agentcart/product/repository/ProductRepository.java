@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -25,4 +26,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
            "LOWER(p.brand) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(p.category) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Product> search(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query(value = "SELECT id, MATCH(name, description, category, brand) " +
+                   "AGAINST (:keyword IN BOOLEAN MODE) AS score " +
+                   "FROM products " +
+                   "WHERE MATCH(name, description, category, brand) AGAINST (:keyword IN BOOLEAN MODE) " +
+                   "ORDER BY score DESC LIMIT :limit", nativeQuery = true)
+    List<Object[]> bm25Search(@Param("keyword") String keyword, @Param("limit") int limit);
 }
