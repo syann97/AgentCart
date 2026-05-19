@@ -14,6 +14,7 @@ import com.agentcart.order.domain.Order;
 import com.agentcart.order.domain.OrderItem;
 import com.agentcart.order.domain.OrderStatus;
 import com.agentcart.order.repository.OrderRepository;
+import com.agentcart.order.service.InventoryLockService;
 import com.agentcart.order.service.OrderService;
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.domain.ProductStatus;
@@ -33,10 +34,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -45,6 +49,7 @@ class OrderServiceTest {
     @Mock private CartItemRepository cartItemRepository;
     @Mock private ProductRepository productRepository;
     @Mock private MemberRepository memberRepository;
+    @Mock private InventoryLockService inventoryLockService;
 
     @InjectMocks
     private OrderService orderService;
@@ -74,6 +79,9 @@ class OrderServiceTest {
                 .category("electronics").brand("BrandA").stock(10).status(ProductStatus.ACTIVE)
                 .build();
         ReflectionTestUtils.setField(product, "id", PRODUCT_ID);
+
+        lenient().when(inventoryLockService.withLocks(anyList(), any()))
+                .thenAnswer(inv -> ((Supplier<?>) inv.getArgument(1)).get());
     }
 
     // ── createDirect ───────────────────────────────────────────────────────────

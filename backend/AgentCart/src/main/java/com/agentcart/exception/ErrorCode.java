@@ -27,7 +27,8 @@ public enum ErrorCode {
     PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Payment not found"),
     PAYMENT_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "Payment has already been completed"),
     PAYMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Access to this payment is denied"),
-    PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Payment processing failed");
+    PAYMENT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Payment processing failed"),
+    LOCK_ACQUISITION_FAILED(HttpStatus.CONFLICT, "Failed to acquire inventory lock, please retry");
 
     private final HttpStatus status;
     private final String message;
