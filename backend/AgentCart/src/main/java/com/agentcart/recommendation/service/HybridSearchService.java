@@ -2,6 +2,7 @@ package com.agentcart.recommendation.service;
 
 import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
+import com.agentcart.recommendation.dto.VectorSearchResult;
 import com.agentcart.recommendation.repository.RecommendationVectorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,6 +20,7 @@ public class HybridSearchService {
     private static final int RRF_K = 60;
     static final int SEARCH_LIMIT = 50;
     private static final double RRF_SCORE_THRESHOLD = 0.01;
+    private static final double MIN_VECTOR_SIMILARITY = 0.5;
 
     private final ProductRepository productRepository;
 
@@ -26,8 +29,8 @@ public class HybridSearchService {
 
     public List<SearchCandidate> search(String keyword, float[] queryEmbedding) {
         List<Long> bm25Ids = fetchBm25Ids(keyword);
-        List<Long> vectorIds = fetchVectorIds(queryEmbedding);
-        return fuse(bm25Ids, vectorIds);
+        List<VectorSearchResult> vectorResults = fetchVectorResults(queryEmbedding);
+        return fuse(bm25Ids, vectorResults);
     }
 
     private List<Long> fetchBm25Ids(String keyword) {
@@ -39,21 +42,26 @@ public class HybridSearchService {
         return ids;
     }
 
-    private List<Long> fetchVectorIds(float[] queryEmbedding) {
+    private List<VectorSearchResult> fetchVectorResults(float[] queryEmbedding) {
         if (vectorRepository == null || queryEmbedding == null) {
             log.info("HybridSearch Vector: skipped (vectorRepository={}, embedding={})",
                     vectorRepository != null ? "ok" : "null",
                     queryEmbedding != null ? "ok" : "null");
             return List.of();
         }
-        List<Long> ids = vectorRepository.findTopBySimilarity(queryEmbedding, SEARCH_LIMIT);
-        log.info("HybridSearch Vector: hits={} ids={}", ids.size(), ids);
-        return ids;
+        List<VectorSearchResult> results = vectorRepository.findTopBySimilarity(queryEmbedding, SEARCH_LIMIT, MIN_VECTOR_SIMILARITY);
+        log.info("HybridSearch Vector: hits={} (minSimilarity={}) results={}",
+                results.size(), MIN_VECTOR_SIMILARITY,
+                results.stream().map(r -> r.productId() + "(" + String.format("%.2f", r.similarity()) + ")").toList());
+        return results;
     }
 
-    List<SearchCandidate> fuse(List<Long> bm25Ids, List<Long> vectorIds) {
+    List<SearchCandidate> fuse(List<Long> bm25Ids, List<VectorSearchResult> vectorResults) {
         Map<Long, Integer> bm25Ranks = rankMap(bm25Ids);
+        List<Long> vectorIds = vectorResults.stream().map(VectorSearchResult::productId).toList();
         Map<Long, Integer> vectorRanks = rankMap(vectorIds);
+        Map<Long, Double> vectorSimilarities = vectorResults.stream()
+                .collect(Collectors.toMap(VectorSearchResult::productId, VectorSearchResult::similarity));
 
         Set<Long> all = new LinkedHashSet<>();
         all.addAll(bm25Ids);
@@ -63,8 +71,9 @@ public class HybridSearchService {
                 .map(id -> {
                     int bm25Rank = bm25Ranks.getOrDefault(id, 0);
                     int vectorRank = vectorRanks.getOrDefault(id, 0);
-                    double score = rrfScore(bm25Rank) + rrfScore(vectorRank);
-                    return new SearchCandidate(id, bm25Rank, vectorRank, score);
+                    double similarity = vectorSimilarities.getOrDefault(id, 0.0);
+                    double score = rrfScore(bm25Rank) + rrfScore(vectorRank) * similarity;
+                    return new SearchCandidate(id, bm25Rank, vectorRank, similarity, score);
                 })
                 .filter(c -> c.rrfScore() >= RRF_SCORE_THRESHOLD)
                 .sorted(Comparator.comparingDouble(SearchCandidate::rrfScore).reversed())
@@ -77,7 +86,7 @@ public class HybridSearchService {
 
         return raw.stream()
                 .map(c -> new SearchCandidate(c.productId(), c.bm25Rank(), c.vectorRank(),
-                        c.rrfScore() / maxScore))
+                        c.vectorSimilarity(), c.rrfScore() / maxScore))
                 .toList();
     }
 

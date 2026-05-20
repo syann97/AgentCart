@@ -135,7 +135,7 @@ class LlmReasoningServiceTest {
     }
 
     private ValidatedCandidate candidate(long productId) {
-        SearchCandidate sc = new SearchCandidate(productId, 1, 1, 0.05);
+        SearchCandidate sc = new SearchCandidate(productId, 1, 1, 0.0, 0.05);
         Product product = Product.builder()
                 .name("테스트 상품").category("전자제품")
                 .price(BigDecimal.valueOf(100000)).stock(10).build();

@@ -67,7 +67,7 @@ class DbValidatorTest {
     }
 
     private SearchCandidate candidate(long productId) {
-        return new SearchCandidate(productId, 1, 1, 0.05);
+        return new SearchCandidate(productId, 1, 1, 0.0, 0.05);
     }
 
     private Product activeProduct() {
