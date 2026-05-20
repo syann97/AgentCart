@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -24,18 +26,21 @@ import java.util.stream.Collectors;
 public class LlmReasoningService {
 
     @Autowired(required = false)
+    @Qualifier("openAiChatModel")
     private ChatModel chatModel;
 
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final Semaphore semaphore = new Semaphore(3);
 
     public Map<Long, LlmReasonResult> generateReasons(List<ValidatedCandidate> candidates, String enrichedQuery) {
         List<CompletableFuture<Map.Entry<Long, LlmReasonResult>>> futures = candidates.stream()
                 .map(c -> CompletableFuture
                         .supplyAsync(() -> doGenerate(c, enrichedQuery), executor)
-                        .orTimeout(5, TimeUnit.SECONDS)
+                        .orTimeout(10, TimeUnit.SECONDS)
                         .exceptionally(e -> {
                             log.warn("LlmReasoningService timeout/failure for productId={}: {}",
-                                    c.candidate().productId(), e.getMessage());
+                                    c.candidate().productId(),
+                                    e.getCause() != null ? e.getCause().getMessage() : e.getClass().getSimpleName());
                             return fallbackEntry(c);
                         }))
                 .toList();
@@ -51,10 +56,18 @@ public class LlmReasoningService {
             return fallbackEntry(candidate);
         }
         try {
-            String promptText = buildPrompt(enrichedQuery, candidate.product());
-            String response = chatModel.call(new Prompt(promptText))
-                    .getResult().getOutput().getText();
-            return Map.entry(productId, parse(response, candidate.product()));
+            semaphore.acquire();
+            try {
+                String promptText = buildPrompt(enrichedQuery, candidate.product());
+                String response = chatModel.call(new Prompt(promptText))
+                        .getResult().getOutput().getText();
+                return Map.entry(productId, parse(response, candidate.product()));
+            } finally {
+                semaphore.release();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return fallbackEntry(candidate);
         } catch (Exception e) {
             log.warn("LlmReasoningService generation failed for productId={}: {}", productId, e.getMessage());
             return fallbackEntry(candidate);
@@ -71,7 +84,8 @@ public class LlmReasoningService {
                 - 브랜드: %s
                 - 가격: %s원
 
-                위 상품을 추천하는 이유를 한국어로 작성하세요.
+                이 상품이 검색어와 관련이 있으면 추천 이유를 한국어로 작성하세요.
+                관련이 없으면 첫 줄에 IRRELEVANT 라고만 작성하세요.
                 형식:
                 REASON: <추천 이유 한 문장>
                 CONDITIONS: <특징1>|<특징2>|<특징3>""",
@@ -86,6 +100,10 @@ public class LlmReasoningService {
     private LlmReasonResult parse(String response, Product product) {
         if (response == null || response.isBlank()) {
             return fallback(product);
+        }
+        if (response.trim().toUpperCase().startsWith("IRRELEVANT")) {
+            log.info("LlmReasoningService: IRRELEVANT product='{}'", product.getName());
+            return new LlmReasonResult("", List.of(), false);
         }
         try {
             String reason = null;
@@ -104,14 +122,14 @@ public class LlmReasoningService {
             if (reason == null || reason.isBlank()) {
                 return fallback(product);
             }
-            return new LlmReasonResult(reason, conditions);
+            return new LlmReasonResult(reason, conditions, true);
         } catch (Exception e) {
             return fallback(product);
         }
     }
 
     private LlmReasonResult fallback(Product product) {
-        return new LlmReasonResult(product.getCategory() + " 카테고리에서 검색된 상품입니다.", List.of());
+        return new LlmReasonResult(product.getCategory() + " 카테고리에서 검색된 상품입니다.", List.of(), true);
     }
 
     private Map.Entry<Long, LlmReasonResult> fallbackEntry(ValidatedCandidate candidate) {

@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RecommendationService {
 
-    private static final int TOP_N = 10;
+    private static final int TOP_N = 5;
 
     private final RecommendationHistoryRepository historyRepository;
     private final MemberService memberService;
@@ -57,16 +57,15 @@ public class RecommendationService {
     private List<RecommendationResult> buildResults(List<ValidatedCandidate> validated,
                                                     Map<Long, LlmReasonResult> reasons) {
         return validated.stream()
-                .map(vc -> {
-                    LlmReasonResult r = reasons.getOrDefault(vc.candidate().productId(),
-                            new LlmReasonResult(vc.product().getCategory() + " 카테고리에서 검색된 상품입니다.", List.of()));
-                    return new RecommendationResult(
-                            vc.candidate().productId(),
-                            vc.product().getName(),
-                            r.reason(),
-                            r.conditions(),
-                            vc.candidate().rrfScore());
-                })
+                .map(vc -> Map.entry(vc, reasons.getOrDefault(vc.candidate().productId(),
+                        new LlmReasonResult(vc.product().getCategory() + " 카테고리에서 검색된 상품입니다.", List.of(), true))))
+                .filter(e -> e.getValue().relevant())
+                .map(e -> new RecommendationResult(
+                        e.getKey().candidate().productId(),
+                        e.getKey().product().getName(),
+                        e.getValue().reason(),
+                        e.getValue().conditions(),
+                        e.getKey().candidate().rrfScore()))
                 .toList();
     }
 
