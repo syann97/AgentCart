@@ -10,3 +10,11 @@ export interface RecommendationStreamChunk {
   type: 'partial' | 'complete' | 'error';
   data: Partial<RecommendationResult>;
 }
+
+export interface RecommendationHistoryItem {
+  productId: number;
+  productName: string;
+  reason: string;
+  score: number;
+  recommendedAt: string;
+}

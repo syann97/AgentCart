@@ -54,6 +54,11 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
+        // SSE EventSource cannot send Authorization header — fall back to query param
+        String queryToken = request.getParameter("token");
+        if (StringUtils.hasText(queryToken)) {
+            return queryToken;
+        }
         return null;
     }
 
