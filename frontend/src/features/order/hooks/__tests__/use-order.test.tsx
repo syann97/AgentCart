@@ -48,8 +48,8 @@ describe('useOrder', () => {
   });
 
   it('id로 주문 상세를 조회한다', async () => {
-    vi.mocked(useAuthStore).mockImplementation((selector: (s: unknown) => unknown) =>
-      selector({ member: mockMember }),
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({ member: mockMember } as any),
     );
     vi.mocked(orderApi.getOrder).mockResolvedValue(mockResponse);
 
@@ -63,8 +63,8 @@ describe('useOrder', () => {
   });
 
   it('미인증 상태에서는 조회하지 않는다', async () => {
-    vi.mocked(useAuthStore).mockImplementation((selector: (s: unknown) => unknown) =>
-      selector({ member: null }),
+    vi.mocked(useAuthStore).mockImplementation((selector) =>
+      selector({ member: null } as any),
     );
 
     const { wrapper } = createWrapper();
