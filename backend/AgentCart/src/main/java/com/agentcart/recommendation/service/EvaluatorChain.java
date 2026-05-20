@@ -23,6 +23,8 @@ public class EvaluatorChain {
     private final RuleFilterValidator ruleFilterValidator;
     private final LlmCrossValidator llmCrossValidator;
 
+    private static final int LLM_CROSS_VALIDATE_LIMIT = 10;
+
     public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, String query, Long memberId) {
         List<ValidatedCandidate> result = new ArrayList<>();
         for (SearchCandidate candidate : candidates) {
@@ -33,9 +35,13 @@ public class EvaluatorChain {
             if (!consistencyValidator.validate(candidate)) continue;
             if (!ruleFilterValidator.validate(candidate, product, memberId)) continue;
 
-            llmCrossValidator.validate(candidate, product, query);
             result.add(new ValidatedCandidate(candidate, product));
         }
-        return result;
+
+        // Stage 4: LLM cross-validation — synchronous filter on top candidates
+        return result.stream()
+                .limit(LLM_CROSS_VALIDATE_LIMIT)
+                .filter(vc -> llmCrossValidator.validate(vc.candidate(), vc.product(), query))
+                .toList();
     }
 }

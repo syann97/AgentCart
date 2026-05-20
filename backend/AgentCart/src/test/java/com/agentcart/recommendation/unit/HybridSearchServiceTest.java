@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +55,7 @@ class HybridSearchServiceTest {
         assertThat(candidate.productId()).isEqualTo(1L);
         assertThat(candidate.bm25Rank()).isEqualTo(1);
         assertThat(candidate.vectorRank()).isEqualTo(0);
-        assertThat(candidate.rrfScore()).isCloseTo(1.0 / 61, within(1e-6));
+        assertThat(candidate.rrfScore()).isCloseTo(1.0, within(1e-6));
     }
 
     @Test
@@ -73,7 +74,7 @@ class HybridSearchServiceTest {
         assertThat(candidate.productId()).isEqualTo(2L);
         assertThat(candidate.bm25Rank()).isEqualTo(0);
         assertThat(candidate.vectorRank()).isEqualTo(1);
-        assertThat(candidate.rrfScore()).isCloseTo(1.0 / 61, within(1e-6));
+        assertThat(candidate.rrfScore()).isCloseTo(1.0, within(1e-6));
     }
 
     @Test
@@ -95,12 +96,10 @@ class HybridSearchServiceTest {
         SearchCandidate bm25Only = results.stream().filter(c -> c.productId() == 1L).findFirst().orElseThrow();
         SearchCandidate vectorOnly = results.stream().filter(c -> c.productId() == 2L).findFirst().orElseThrow();
 
-        // 둘 다 매칭 = 1/(60+2) + 1/(60+2) ≈ 0.0323
-        assertThat(both.rrfScore()).isCloseTo(2.0 / 62, within(1e-6));
-        // BM25만 = 1/(60+1) ≈ 0.0164
-        assertThat(bm25Only.rrfScore()).isCloseTo(1.0 / 61, within(1e-6));
-        // Vector만 = 1/(60+1) ≈ 0.0164
-        assertThat(vectorOnly.rrfScore()).isCloseTo(1.0 / 61, within(1e-6));
+        // 정규화 후: both(2/62이 max) → 1.0, single-source → (1/61)/(2/62) = 31/61
+        assertThat(both.rrfScore()).isCloseTo(1.0, within(1e-6));
+        assertThat(bm25Only.rrfScore()).isCloseTo(31.0 / 61, within(1e-6));
+        assertThat(vectorOnly.rrfScore()).isCloseTo(31.0 / 61, within(1e-6));
 
         // 둘 다 매칭이 가장 높은 점수
         assertThat(both.rrfScore()).isGreaterThan(bm25Only.rrfScore());
@@ -121,6 +120,23 @@ class HybridSearchServiceTest {
         assertThat(results.get(0).productId()).isEqualTo(1L);
         assertThat(results.get(1).productId()).isEqualTo(2L);
         assertThat(results.get(0).rrfScore()).isGreaterThan(results.get(1).rrfScore());
+    }
+
+    @Test
+    @DisplayName("raw RRF score 0.01 미만 상품 - 정규화 전 제외 (rank 41: 1/101 < 0.01)")
+    void fuse_belowRawThreshold_excluded() {
+        // BM25 rank 1~50, no vector → rank 41: 1/(60+41)=1/101≈0.0099 < 0.01 → 제외
+        List<Object[]> bm25 = new ArrayList<>();
+        for (long i = 1; i <= 50; i++) bm25.add(new Object[]{i, 0.1});
+        given(productRepository.bm25Search(anyString(), anyInt())).willReturn(bm25);
+        given(vectorRepository.findTopBySimilarity(any(), anyInt())).willReturn(List.<Long>of());
+
+        List<SearchCandidate> results = hybridSearchService.search("query", new float[]{0.1f});
+
+        // rank 1~40: 1/(60+N) >= 0.01 → 포함, rank 41~50: < 0.01 → 제외
+        assertThat(results).hasSize(40);
+        assertThat(results).extracting(SearchCandidate::productId)
+                .doesNotContain(41L, 42L, 43L, 44L, 45L, 46L, 47L, 48L, 49L, 50L);
     }
 
     private static float[] any() {
