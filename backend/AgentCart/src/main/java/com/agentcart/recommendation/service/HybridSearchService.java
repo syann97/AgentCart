@@ -4,17 +4,20 @@ import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.repository.RecommendationVectorRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HybridSearchService {
 
     private static final int RRF_K = 60;
     static final int SEARCH_LIMIT = 50;
+    private static final double RRF_SCORE_THRESHOLD = 0.01;
 
     private final ProductRepository productRepository;
 
@@ -28,17 +31,24 @@ public class HybridSearchService {
     }
 
     private List<Long> fetchBm25Ids(String keyword) {
-        return productRepository.bm25Search(keyword, SEARCH_LIMIT)
+        List<Long> ids = productRepository.bm25Search(keyword, SEARCH_LIMIT)
                 .stream()
                 .map(row -> ((Number) row[0]).longValue())
                 .toList();
+        log.info("HybridSearch BM25: keyword='{}' hits={} ids={}", keyword, ids.size(), ids);
+        return ids;
     }
 
     private List<Long> fetchVectorIds(float[] queryEmbedding) {
         if (vectorRepository == null || queryEmbedding == null) {
+            log.info("HybridSearch Vector: skipped (vectorRepository={}, embedding={})",
+                    vectorRepository != null ? "ok" : "null",
+                    queryEmbedding != null ? "ok" : "null");
             return List.of();
         }
-        return vectorRepository.findTopBySimilarity(queryEmbedding, SEARCH_LIMIT);
+        List<Long> ids = vectorRepository.findTopBySimilarity(queryEmbedding, SEARCH_LIMIT);
+        log.info("HybridSearch Vector: hits={} ids={}", ids.size(), ids);
+        return ids;
     }
 
     List<SearchCandidate> fuse(List<Long> bm25Ids, List<Long> vectorIds) {
@@ -49,15 +59,25 @@ public class HybridSearchService {
         all.addAll(bm25Ids);
         all.addAll(vectorIds);
 
-        return all.stream()
+        List<SearchCandidate> raw = all.stream()
                 .map(id -> {
                     int bm25Rank = bm25Ranks.getOrDefault(id, 0);
                     int vectorRank = vectorRanks.getOrDefault(id, 0);
                     double score = rrfScore(bm25Rank) + rrfScore(vectorRank);
                     return new SearchCandidate(id, bm25Rank, vectorRank, score);
                 })
+                .filter(c -> c.rrfScore() >= RRF_SCORE_THRESHOLD)
                 .sorted(Comparator.comparingDouble(SearchCandidate::rrfScore).reversed())
                 .limit(SEARCH_LIMIT)
+                .toList();
+
+        if (raw.isEmpty()) return raw;
+        double maxScore = raw.get(0).rrfScore();
+        if (maxScore <= 0) return raw;
+
+        return raw.stream()
+                .map(c -> new SearchCandidate(c.productId(), c.bm25Rank(), c.vectorRank(),
+                        c.rrfScore() / maxScore))
                 .toList();
     }
 
