@@ -1,7 +1,6 @@
 package com.agentcart.recommendation.service;
 
 import com.agentcart.member.service.MemberService;
-import com.agentcart.recommendation.domain.RecommendationHistory;
 import com.agentcart.recommendation.dto.*;
 import com.agentcart.recommendation.repository.RecommendationHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,9 +51,7 @@ public class RecommendationService {
 
         Map<Long, LlmReasonResult> reasons = llmReasoningService.generateReasons(validated, enriched.enrichedQuery());
 
-        List<RecommendationResult> results = buildResults(validated, reasons);
-        saveHistory(query, memberId, results);
-        return results;
+        return buildResults(validated, reasons);
     }
 
     private List<RecommendationResult> buildResults(List<ValidatedCandidate> validated,
@@ -71,13 +68,6 @@ public class RecommendationService {
                             vc.candidate().rrfScore());
                 })
                 .toList();
-    }
-
-    private void saveHistory(String query, Long memberId, List<RecommendationResult> results) {
-        List<RecommendationHistory> histories = results.stream()
-                .map(r -> RecommendationHistory.of(memberId, query, r.productId(), r.productName(), r.reason(), r.score()))
-                .toList();
-        historyRepository.saveAll(histories);
     }
 
     private float[] embed(String text) {

@@ -4,9 +4,12 @@ import com.agentcart.common.ApiResponse;
 import com.agentcart.member.service.MemberService;
 import com.agentcart.recommendation.dto.RecommendationHistoryResponse;
 import com.agentcart.recommendation.dto.RecommendationResult;
+import com.agentcart.recommendation.dto.RecommendationServedEvent;
+import com.agentcart.recommendation.service.RecommendationEventProducer;
 import com.agentcart.recommendation.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -28,6 +32,9 @@ public class RecommendationController {
 
     private final RecommendationService recommendationService;
     private final MemberService memberService;
+
+    @Autowired(required = false)
+    private RecommendationEventProducer eventProducer;
 
     @GetMapping("/history")
     @PreAuthorize("isAuthenticated()")
@@ -50,6 +57,7 @@ public class RecommendationController {
                     emitter.send(SseEmitter.event()
                             .data(Map.of("type", "complete", "data", result),
                                     MediaType.APPLICATION_JSON));
+                    publishEvent(query, memberId, result);
                 }
                 emitter.complete();
             } catch (Exception e) {
@@ -59,5 +67,17 @@ public class RecommendationController {
         });
 
         return emitter;
+    }
+
+    private void publishEvent(String query, Long memberId, RecommendationResult result) {
+        if (eventProducer == null) return;
+        eventProducer.publish(new RecommendationServedEvent(
+                UUID.randomUUID().toString(),
+                memberId,
+                query,
+                result.productId(),
+                result.productName(),
+                result.reason(),
+                result.score()));
     }
 }

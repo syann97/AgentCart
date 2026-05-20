@@ -24,7 +24,8 @@ export function useSse(url: string, options: UseSseOptions = {}) {
     if (!enabled) return;
 
     const token = tokenUtils.get();
-    const fullUrl = token ? `${url}?token=${encodeURIComponent(token)}` : url;
+    const separator = url.includes('?') ? '&' : '?';
+    const fullUrl = token ? `${url}${separator}token=${encodeURIComponent(token)}` : url;
 
     const es = new EventSource(fullUrl, { withCredentials: true });
     esRef.current = es;
