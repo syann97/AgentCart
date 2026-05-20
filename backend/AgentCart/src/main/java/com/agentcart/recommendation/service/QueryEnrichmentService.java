@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
@@ -27,6 +28,7 @@ public class QueryEnrichmentService {
     private final ObjectMapper objectMapper;
 
     @Autowired(required = false)
+    @Qualifier("openAiChatModel")
     private ChatModel chatModel;
 
     public QueryEnrichmentService(StringRedisTemplate redisTemplate, ObjectMapper objectMapper) {
@@ -55,11 +57,15 @@ public class QueryEnrichmentService {
         }
         try {
             String promptText = String.format("""
-                    당신은 한국어 쇼핑 검색 전문가입니다.
-                    다음 검색어를 분석하여 관련 키워드로 확장하고 JSON 형식으로만 응답하세요.
-                    다른 설명 없이 JSON만 출력하세요.
-                    형식: {"enrichedQuery": "확장된 키워드들 공백구분", "categories": ["카테고리1", "카테고리2"]}
-                    검색어: %s""", query);
+                    You are a shopping search expert.
+                    Analyze the following search query and expand it with specific English product keywords.
+                    Rules:
+                    - Output ONLY JSON, no explanation.
+                    - enrichedQuery must contain specific product names, materials, or use-case terms (e.g. "cat food dog toy pet leash" not "gift accessories smart").
+                    - Avoid generic tech terms (smart, wireless, premium, portable) unless the query is specifically about electronics.
+                    - Focus on the actual product category the user wants.
+                    Format: {"enrichedQuery": "space separated english keywords", "categories": ["category1", "category2"]}
+                    Query: %s""", query);
             String response = chatModel.call(new Prompt(promptText))
                     .getResult().getOutput().getText();
             return parseJson(response, query);
