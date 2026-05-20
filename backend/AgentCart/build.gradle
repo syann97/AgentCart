@@ -46,6 +46,7 @@ dependencies {
     // Spring AI — 버전은 BOM 관리
     implementation 'org.springframework.ai:spring-ai-starter-model-anthropic'
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
     implementation 'org.springframework.ai:spring-ai-starter-vector-store-pgvector'  // 오타 수정
 
     // Data

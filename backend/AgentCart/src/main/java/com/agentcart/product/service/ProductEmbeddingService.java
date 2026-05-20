@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnBean(EmbeddingModel.class)
 public class ProductEmbeddingService {
 
-    private static final String MODEL = "text-embedding-3-small";
+    private static final String MODEL = "bge-m3";
 
     @Value("${app.embedding.timeout-seconds:5}")
     private int timeoutSeconds;
@@ -53,12 +53,10 @@ public class ProductEmbeddingService {
     }
 
     private String buildText(Product product) {
-        return String.join(" ",
-                product.getName(),
-                product.getDescription() != null ? product.getDescription() : "",
+        return String.format("카테고리: %s 브랜드: %s 상품명: %s",
                 product.getCategory(),
-                product.getBrand() != null ? product.getBrand() : ""
-        ).trim();
+                product.getBrand() != null ? product.getBrand() : "",
+                product.getName());
     }
 
     @PreDestroy

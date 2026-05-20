@@ -50,6 +50,14 @@ services:
     depends_on:
       - redis
 
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+
 volumes:
   mysql-data:
   postgres-data:
+  ollama-data:
