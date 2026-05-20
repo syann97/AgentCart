@@ -70,4 +70,11 @@ public class ProductController {
         productService.delete(id);
         return ResponseEntity.ok(ApiResponse.ok(null));
     }
+
+    @PostMapping("/reembed")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<String>> reEmbed() {
+        int count = productService.reEmbedAll();
+        return ResponseEntity.ok(ApiResponse.ok("Re-embedded " + count + " products"));
+    }
 }

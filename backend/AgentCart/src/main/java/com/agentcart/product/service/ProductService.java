@@ -1,5 +1,7 @@
 package com.agentcart.product.service;
 
+import java.util.List;
+
 import com.agentcart.exception.ErrorCode;
 import com.agentcart.exception.ProductException;
 import com.agentcart.product.domain.Product;
@@ -88,5 +90,13 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
         productRepository.delete(product);
+    }
+
+    @Transactional(readOnly = true)
+    public int reEmbedAll() {
+        if (embeddingService == null) return 0;
+        List<Product> products = productRepository.findAll();
+        products.forEach(p -> embeddingService.createOrUpdate(p.getId(), p));
+        return products.size();
     }
 }
