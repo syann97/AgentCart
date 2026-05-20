@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class RecommendationService {
     private final LlmReasoningService llmReasoningService;
 
     @Autowired(required = false)
+    @Qualifier("ollamaEmbeddingModel")
     private EmbeddingModel embeddingModel;
 
     @Transactional(readOnly = true)

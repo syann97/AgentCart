@@ -6,8 +6,8 @@ import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-@ConditionalOnBean(EmbeddingModel.class)
 public class ProductEmbeddingService {
 
     private static final String MODEL = "bge-m3";
@@ -29,15 +28,16 @@ public class ProductEmbeddingService {
     private final ProductEmbeddingRepository embeddingRepository;
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
-    public ProductEmbeddingService(EmbeddingModel embeddingModel,
-                                   @Autowired(required = false) ProductEmbeddingRepository embeddingRepository) {
+    public ProductEmbeddingService(
+            @Autowired(required = false) @Qualifier("ollamaEmbeddingModel") EmbeddingModel embeddingModel,
+            @Autowired(required = false) ProductEmbeddingRepository embeddingRepository) {
         this.embeddingModel = embeddingModel;
         this.embeddingRepository = embeddingRepository;
     }
 
     public void createOrUpdate(Long productId, Product product) {
-        if (embeddingRepository == null) {
-            log.debug("ProductEmbeddingRepository not available — skipping embedding for product {}", productId);
+        if (embeddingModel == null || embeddingRepository == null) {
+            log.debug("Embedding skipped for product {} — model={}, repo={}", productId, embeddingModel != null, embeddingRepository != null);
             return;
         }
         try {
