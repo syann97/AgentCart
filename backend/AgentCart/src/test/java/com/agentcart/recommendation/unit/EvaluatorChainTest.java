@@ -91,7 +91,7 @@ class EvaluatorChainTest {
     }
 
     private SearchCandidate candidate(long productId) {
-        return new SearchCandidate(productId, 1, 1, 0.5);
+        return new SearchCandidate(productId, 1, 1, 0.0, 0.5);
     }
 
     private Product product(long id) {

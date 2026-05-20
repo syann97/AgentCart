@@ -36,6 +36,6 @@ class ConsistencyValidatorTest {
     }
 
     private SearchCandidate candidate(double rrfScore) {
-        return new SearchCandidate(1L, 1, 1, rrfScore);
+        return new SearchCandidate(1L, 1, 1, 0.0, rrfScore);
     }
 }

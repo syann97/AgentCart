@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.agentcart.recommendation.dto.VectorSearchResult;
+
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -19,12 +21,16 @@ public class RecommendationVectorRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Long> findTopBySimilarity(float[] queryVector, int limit) {
+    public List<VectorSearchResult> findTopBySimilarity(float[] queryVector, int limit, double minSimilarity) {
         return jdbcTemplate.query(
-                "SELECT product_id FROM product_embeddings " +
-                "ORDER BY embedding <=> CAST(:queryVector AS vector) ASC LIMIT :limit",
-                Map.of("queryVector", toVectorString(queryVector), "limit", limit),
-                (rs, rowNum) -> rs.getLong("product_id")
+                "SELECT product_id, similarity FROM (" +
+                "  SELECT product_id, 1 - (embedding <=> CAST(:queryVector AS vector)) AS similarity" +
+                "  FROM product_embeddings" +
+                ") sub " +
+                "WHERE similarity >= :minSimilarity " +
+                "ORDER BY similarity DESC LIMIT :limit",
+                Map.of("queryVector", toVectorString(queryVector), "limit", limit, "minSimilarity", minSimilarity),
+                (rs, rowNum) -> new VectorSearchResult(rs.getLong("product_id"), rs.getDouble("similarity"))
         );
     }
 
