@@ -60,8 +60,7 @@ public class RecommendationService {
                                                     Map<Long, LlmReasonResult> reasons) {
         return validated.stream()
                 .map(vc -> Map.entry(vc, reasons.getOrDefault(vc.candidate().productId(),
-                        new LlmReasonResult(vc.product().getCategory() + " 카테고리에서 검색된 상품입니다.", List.of(), true))))
-                .filter(e -> e.getValue().relevant())
+                        new LlmReasonResult(vc.product().getCategory() + " 카테고리에서 검색된 상품입니다.", List.of()))))
                 .map(e -> new RecommendationResult(
                         e.getKey().candidate().productId(),
                         e.getKey().product().getName(),
