@@ -84,8 +84,7 @@ public class LlmReasoningService {
                 - 브랜드: %s
                 - 가격: %s원
 
-                이 상품이 검색어와 관련이 있으면 추천 이유를 한국어로 작성하세요.
-                관련이 없으면 첫 줄에 IRRELEVANT 라고만 작성하세요.
+                이 상품에 대한 추천 이유를 한국어로 한 문장으로 작성하세요.
                 형식:
                 REASON: <추천 이유 한 문장>
                 CONDITIONS: <특징1>|<특징2>|<특징3>""",
@@ -100,10 +99,6 @@ public class LlmReasoningService {
     private LlmReasonResult parse(String response, Product product) {
         if (response == null || response.isBlank()) {
             return fallback(product);
-        }
-        if (response.trim().toUpperCase().startsWith("IRRELEVANT")) {
-            log.info("LlmReasoningService: IRRELEVANT product='{}'", product.getName());
-            return new LlmReasonResult("", List.of(), false);
         }
         try {
             String reason = null;
@@ -122,14 +117,14 @@ public class LlmReasoningService {
             if (reason == null || reason.isBlank()) {
                 return fallback(product);
             }
-            return new LlmReasonResult(reason, conditions, true);
+            return new LlmReasonResult(reason, conditions);
         } catch (Exception e) {
             return fallback(product);
         }
     }
 
     private LlmReasonResult fallback(Product product) {
-        return new LlmReasonResult(product.getCategory() + " 카테고리에서 검색된 상품입니다.", List.of(), true);
+        return new LlmReasonResult(product.getCategory() + " 카테고리에서 검색된 상품입니다.", List.of());
     }
 
     private Map.Entry<Long, LlmReasonResult> fallbackEntry(ValidatedCandidate candidate) {

@@ -64,7 +64,7 @@ class LlmReasoningServiceTest {
         LlmReasonResult reason = result.get(1L);
         assertThat(reason.reason()).isEqualTo("고성능 노트북으로 업무에 적합합니다.");
         assertThat(reason.conditions()).containsExactly("가벼운 무게", "긴 배터리", "고해상도 디스플레이");
-        assertThat(reason.relevant()).isTrue();
+        assertThat(reason.reason()).isNotBlank();
     }
 
     @Test
@@ -77,7 +77,7 @@ class LlmReasoningServiceTest {
         assertThat(result).containsKey(1L);
         assertThat(result.get(1L).reason()).contains("전자제품 카테고리에서 검색된 상품입니다.");
         assertThat(result.get(1L).conditions()).isEmpty();
-        assertThat(result.get(1L).relevant()).isTrue();
+        assertThat(result.get(1L).reason()).isNotBlank();
     }
 
     @Test
@@ -105,8 +105,8 @@ class LlmReasoningServiceTest {
     }
 
     @Test
-    @DisplayName("LLM IRRELEVANT 응답 - relevant=false 반환")
-    void generateReasons_irrelevantResponse_markedAsIrrelevant() {
+    @DisplayName("LLM IRRELEVANT 응답 - fallback으로 추천 이유 반환 (이중 필터링 금지)")
+    void generateReasons_irrelevantResponse_returnsFallback() {
         given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
         given(chatResponse.getResult()).willReturn(generation);
         given(generation.getOutput()).willReturn(assistantMessage);
@@ -114,8 +114,8 @@ class LlmReasoningServiceTest {
 
         Map<Long, LlmReasonResult> result = service.generateReasons(List.of(candidate(1L)), "과일 선물");
 
-        assertThat(result.get(1L).relevant()).isFalse();
-        assertThat(result.get(1L).reason()).isEmpty();
+        assertThat(result.get(1L).reason()).contains("카테고리에서 검색된 상품입니다.");
+        assertThat(result.get(1L).conditions()).isEmpty();
     }
 
     @Test
