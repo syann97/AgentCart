@@ -21,8 +21,9 @@ public class LlmCrossValidator {
         if (chatModel == null) return true;
         try {
             String promptText = String.format(
-                    "Query: %s\nProduct: %s (%s)\nIs this product relevant to the query? Answer YES or NO only.",
-                    query, product.getName(), product.getCategory());
+                    "Query: %s\nProduct: %s (%s)\nDescription: %s\nIs this product relevant to the query? Answer YES or NO only.",
+                    query, product.getName(), product.getCategory(),
+                    product.getDescription() != null ? product.getDescription() : "");
             String response = chatModel.call(new Prompt(promptText))
                     .getResult().getOutput().getText();
             boolean relevant = response != null && response.trim().toUpperCase().startsWith("YES");
