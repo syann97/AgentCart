@@ -21,6 +21,8 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.mockito.ArgumentCaptor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -127,6 +129,24 @@ class QueryEnrichmentServiceTest {
 
         assertThat(result.enrichedQuery()).isEqualTo("운동화 스니커즈");
         assertThat(result.categories()).containsExactly("신발");
+    }
+
+    @Test
+    @DisplayName("프롬프트에 번들 타입 추론 금지 지침 포함")
+    void enrich_prompt_containsBundleTypeRestriction() {
+        given(valueOps.get(anyString())).willReturn(null);
+        given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
+        given(chatResponse.getResult()).willReturn(generation);
+        given(generation.getOutput()).willReturn(assistantMessage);
+        given(assistantMessage.getText())
+                .willReturn("{\"enrichedQuery\":\"apple kiwi strawberry fresh fruit\",\"categories\":[\"groceries\"]}");
+        ArgumentCaptor<Prompt> captor = ArgumentCaptor.forClass(Prompt.class);
+
+        service.enrich("과일 선물");
+
+        verify(chatModel).call(captor.capture());
+        String promptContent = captor.getValue().getInstructions().get(0).getText();
+        assertThat(promptContent).contains("Do NOT infer a product bundle type");
     }
 
     @Test

@@ -61,9 +61,10 @@ public class QueryEnrichmentService {
                     Analyze the following search query and expand it with specific English product keywords.
                     Rules:
                     - Output ONLY JSON, no explanation.
-                    - enrichedQuery must contain specific product names, materials, or use-case terms (e.g. "cat food dog toy pet leash" not "gift accessories smart").
+                    - enrichedQuery must expand to actual individual product names or ingredient-level keywords that are likely to exist as standalone products in a general e-commerce catalog.
+                    - Do NOT infer a product bundle type (e.g. "gift basket", "gift set", "kit", "bundle") unless the query explicitly mentions it.
                     - Avoid generic tech terms (smart, wireless, premium, portable) unless the query is specifically about electronics.
-                    - Focus on the actual product category the user wants.
+                    - Focus on the actual individual products the user wants, not how they might be packaged.
                     Format: {"enrichedQuery": "space separated english keywords", "categories": ["category1", "category2"]}
                     Query: %s""", query);
             String response = chatModel.call(new Prompt(promptText))
