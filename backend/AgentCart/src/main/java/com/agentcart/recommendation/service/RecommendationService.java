@@ -45,7 +45,8 @@ public class RecommendationService {
         EnrichedQuery enriched = queryEnrichmentService.enrich(query);
         float[] embedding = embed(enriched.enrichedQuery());
 
-        List<SearchCandidate> candidates = hybridSearchService.search(enriched.enrichedQuery(), embedding);
+        String bm25Query = enriched.bm25Keywords() != null ? enriched.bm25Keywords() : enriched.enrichedQuery();
+        List<SearchCandidate> candidates = hybridSearchService.search(bm25Query, embedding);
 
         List<ValidatedCandidate> validated = evaluatorChain
                 .filter(candidates, enriched.enrichedQuery(), memberId)
