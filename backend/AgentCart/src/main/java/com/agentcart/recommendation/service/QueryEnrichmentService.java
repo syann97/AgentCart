@@ -57,16 +57,17 @@ public class QueryEnrichmentService {
         }
         try {
             String promptText = String.format("""
-                    You are a shopping search expert.
-                    Analyze the following search query and expand it with specific English product keywords.
-                    Rules:
-                    - Output ONLY JSON, no explanation.
-                    - enrichedQuery must expand to actual individual product names or ingredient-level keywords that are likely to exist as standalone products in a general e-commerce catalog.
-                    - Do NOT infer a product bundle type (e.g. "gift basket", "gift set", "kit", "bundle") unless the query explicitly mentions it.
-                    - Avoid generic tech terms (smart, wireless, premium, portable) unless the query is specifically about electronics.
-                    - Focus on the actual individual products the user wants, not how they might be packaged.
-                    Format: {"enrichedQuery": "space separated english keywords", "categories": ["category1", "category2"]}
-                    Query: %s""", query);
+                    당신은 쇼핑 검색 전문가입니다.
+                    아래 검색어를 분석하여 관련 한국어 키워드로 의미를 확장하세요.
+                    규칙:
+                    - JSON만 출력하세요. 설명 없이.
+                    - enrichedQuery는 쇼핑몰 카탈로그에 실제로 존재할 법한 개별 상품명 또는 성분 수준의 한국어 키워드로 확장하세요.
+                    - 검색어에 명시되지 않은 경우 묶음 상품(선물세트, 기프트박스, 번들, 패키지)으로 추론하지 마세요.
+                    - 검색어가 전자기기에 관한 것이 아니라면 스마트, 무선, 프리미엄, 휴대용 같은 일반적인 수식어는 추가하지 마세요.
+                    - 포장 방식이 아닌 사용자가 원하는 실제 개별 상품에 집중하세요.
+                    - 검색어가 영어인 경우에도 enrichedQuery는 반드시 한국어로 출력하세요.
+                    형식: {"enrichedQuery": "공백으로 구분된 한국어 키워드", "categories": ["카테고리1", "카테고리2"]}
+                    검색어: %s""", query);
             String response = chatModel.call(new Prompt(promptText))
                     .getResult().getOutput().getText();
             return parseJson(response, query);

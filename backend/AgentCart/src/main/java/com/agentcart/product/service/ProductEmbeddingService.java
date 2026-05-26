@@ -53,10 +53,11 @@ public class ProductEmbeddingService {
     }
 
     private String buildText(Product product) {
-        return String.format("카테고리: %s 브랜드: %s 상품명: %s",
+        return String.format("카테고리: %s 브랜드: %s 상품명: %s 설명: %s",
                 product.getCategory(),
                 product.getBrand() != null ? product.getBrand() : "",
-                product.getName());
+                product.getName(),
+                product.getDescription() != null ? product.getDescription() : "");
     }
 
     @PreDestroy
