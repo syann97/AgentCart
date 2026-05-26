@@ -51,11 +51,12 @@ class QueryEnrichmentServiceTest {
     @DisplayName("캐시 hit - LLM 호출 없이 캐시 결과 반환")
     void enrich_cacheHit_returnsCachedWithoutLlm() {
         given(valueOps.get(anyString()))
-                .willReturn("{\"enrichedQuery\":\"유아 아기 장난감\",\"categories\":[\"완구\"]}");
+                .willReturn("{\"enrichedQuery\":\"유아 아기 장난감\",\"bm25Keywords\":\"baby toy infant\",\"categories\":[\"완구\"]}");
 
         EnrichedQuery result = service.enrich("돌잔치 선물");
 
         assertThat(result.enrichedQuery()).isEqualTo("유아 아기 장난감");
+        assertThat(result.bm25Keywords()).isEqualTo("baby toy infant");
         assertThat(result.categories()).containsExactly("완구");
         verifyNoInteractions(chatModel);
     }
@@ -68,11 +69,12 @@ class QueryEnrichmentServiceTest {
         given(chatResponse.getResult()).willReturn(generation);
         given(generation.getOutput()).willReturn(assistantMessage);
         given(assistantMessage.getText())
-                .willReturn("{\"enrichedQuery\":\"노트북 컴퓨터 laptop\",\"categories\":[\"전자제품\"]}");
+                .willReturn("{\"enrichedQuery\":\"노트북 컴퓨터\",\"bm25Keywords\":\"laptop computer notebook\",\"categories\":[\"전자제품\"]}");
 
         EnrichedQuery result = service.enrich("노트북");
 
-        assertThat(result.enrichedQuery()).isEqualTo("노트북 컴퓨터 laptop");
+        assertThat(result.enrichedQuery()).isEqualTo("노트북 컴퓨터");
+        assertThat(result.bm25Keywords()).isEqualTo("laptop computer notebook");
         assertThat(result.categories()).containsExactly("전자제품");
         verify(valueOps).set(anyString(), anyString(), eq(5L), eq(TimeUnit.MINUTES));
     }
@@ -123,7 +125,7 @@ class QueryEnrichmentServiceTest {
         given(chatResponse.getResult()).willReturn(generation);
         given(generation.getOutput()).willReturn(assistantMessage);
         given(assistantMessage.getText())
-                .willReturn("물론이죠!\n{\"enrichedQuery\":\"운동화 스니커즈\",\"categories\":[\"신발\"]}\n감사합니다.");
+                .willReturn("물론이죠!\n{\"enrichedQuery\":\"운동화 스니커즈\",\"bm25Keywords\":\"sneakers running shoes\",\"categories\":[\"신발\"]}\n감사합니다.");
 
         EnrichedQuery result = service.enrich("운동화");
 
@@ -139,14 +141,14 @@ class QueryEnrichmentServiceTest {
         given(chatResponse.getResult()).willReturn(generation);
         given(generation.getOutput()).willReturn(assistantMessage);
         given(assistantMessage.getText())
-                .willReturn("{\"enrichedQuery\":\"apple kiwi strawberry fresh fruit\",\"categories\":[\"groceries\"]}");
+                .willReturn("{\"enrichedQuery\":\"사과 키위 딸기 신선 과일\",\"bm25Keywords\":\"apple kiwi strawberry fresh fruit\",\"categories\":[\"groceries\"]}");
         ArgumentCaptor<Prompt> captor = ArgumentCaptor.forClass(Prompt.class);
 
         service.enrich("과일 선물");
 
         verify(chatModel).call(captor.capture());
         String promptContent = captor.getValue().getInstructions().get(0).getText();
-        assertThat(promptContent).contains("Do NOT infer a product bundle type");
+        assertThat(promptContent).contains("묶음 상품");
     }
 
     @Test
@@ -154,11 +156,11 @@ class QueryEnrichmentServiceTest {
     void enrich_sameQueryTwice_secondCallUsesCache() {
         given(valueOps.get(anyString()))
                 .willReturn(null)
-                .willReturn("{\"enrichedQuery\":\"노트북 컴퓨터\",\"categories\":[]}");
+                .willReturn("{\"enrichedQuery\":\"노트북 컴퓨터\",\"bm25Keywords\":\"laptop computer\",\"categories\":[]}");
         given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
         given(chatResponse.getResult()).willReturn(generation);
         given(generation.getOutput()).willReturn(assistantMessage);
-        given(assistantMessage.getText()).willReturn("{\"enrichedQuery\":\"노트북 컴퓨터\",\"categories\":[]}");
+        given(assistantMessage.getText()).willReturn("{\"enrichedQuery\":\"노트북 컴퓨터\",\"bm25Keywords\":\"laptop computer\",\"categories\":[]}");
 
         service.enrich("노트북");
         service.enrich("노트북");
