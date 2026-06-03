@@ -1,5 +1,6 @@
 package com.agentcart.recommendation.service;
 
+import com.agentcart.order.repository.OrderItemRepository;
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.repository.ProductRepository;
@@ -11,7 +12,9 @@ import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class EvaluatorChain {
 
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ConsistencyValidator consistencyValidator;
     private final RuleFilterValidator ruleFilterValidator;
     private final LlmCrossValidator llmCrossValidator;
@@ -32,6 +36,8 @@ public class EvaluatorChain {
         Set<Long> ids = candidates.stream().map(SearchCandidate::productId).collect(Collectors.toSet());
         Map<Long, Product> productMap = productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, p -> p));
+        Set<Long> recentlyOrdered = new HashSet<>(
+                orderItemRepository.findProductIdsOrderedByMemberSince(memberId, LocalDateTime.now().minusDays(7)));
 
         List<ValidatedCandidate> result = new ArrayList<>();
         for (SearchCandidate candidate : candidates) {
@@ -39,7 +45,7 @@ public class EvaluatorChain {
             if (product == null || product.getStatus() != ProductStatus.ACTIVE) continue;
 
             if (!consistencyValidator.validate(candidate)) continue;
-            if (!ruleFilterValidator.validate(candidate, product, memberId)) continue;
+            if (!ruleFilterValidator.validate(candidate, product, recentlyOrdered)) continue;
 
             result.add(new ValidatedCandidate(candidate, product));
         }

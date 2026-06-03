@@ -1,5 +1,6 @@
 package com.agentcart.recommendation.unit;
 
+import com.agentcart.order.repository.OrderItemRepository;
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.repository.ProductRepository;
@@ -30,6 +31,7 @@ import static org.mockito.BDDMockito.given;
 class EvaluatorChainTest {
 
     @Mock private ProductRepository productRepository;
+    @Mock private OrderItemRepository orderItemRepository;
     @Mock private ConsistencyValidator consistencyValidator;
     @Mock private RuleFilterValidator ruleFilterValidator;
     @Mock private LlmCrossValidator llmCrossValidator;
@@ -44,8 +46,9 @@ class EvaluatorChainTest {
         Product p1 = product(1L), p2 = product(2L);
 
         given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(any())).willReturn(true);
-        given(ruleFilterValidator.validate(any(), any(), anyLong())).willReturn(true);
+        given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
         given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
         given(llmCrossValidator.validate(c2, p2, "query")).willReturn(true);
 
@@ -62,8 +65,9 @@ class EvaluatorChainTest {
         Product p1 = product(1L);
 
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(c1)).willReturn(true);
-        given(ruleFilterValidator.validate(c1, p1, 1L)).willReturn(true);
+        given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
         given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
 
         List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), "query", 1L);
@@ -78,8 +82,9 @@ class EvaluatorChainTest {
         Product p1 = product(1L), p2 = product(2L);
 
         given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(any())).willReturn(true);
-        given(ruleFilterValidator.validate(any(), any(), anyLong())).willReturn(true);
+        given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
         given(llmCrossValidator.validate(any(), any(), anyString())).willReturn(true);
 
         List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), "query", 1L);
