@@ -50,9 +50,16 @@ public class HybridSearchService {
             return List.of();
         }
         List<VectorSearchResult> results = vectorRepository.findTopBySimilarity(queryEmbedding, SEARCH_LIMIT, MIN_VECTOR_SIMILARITY);
-        log.info("HybridSearch Vector: hits={} (minSimilarity={}) results={}",
-                results.size(), MIN_VECTOR_SIMILARITY,
-                results.stream().map(r -> r.productId() + "(" + String.format("%.2f", r.similarity()) + ")").toList());
+        if (log.isInfoEnabled()) {
+            Set<Long> ids = results.stream().map(VectorSearchResult::productId).collect(Collectors.toSet());
+            Map<Long, String> nameMap = productRepository.findAllById(ids).stream()
+                    .collect(Collectors.toMap(p -> p.getId(), p -> p.getName()));
+            log.info("HybridSearch Vector: hits={} (minSimilarity={}) results={}",
+                    results.size(), MIN_VECTOR_SIMILARITY,
+                    results.stream()
+                            .map(r -> r.productId() + " '" + nameMap.getOrDefault(r.productId(), "?") + "'(" + String.format("%.2f", r.similarity()) + ")")
+                            .toList());
+        }
         return results;
     }
 
