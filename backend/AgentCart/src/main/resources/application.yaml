@@ -3,6 +3,10 @@ spring:
     name: AgentCart
   profiles:
     active: local
+  datasource:
+    hikari:
+      max-lifetime: 1740000    # 29분 — DB wait_timeout(기본 8h)보다 짧게 유지
+      keepalive-time: 60000    # 60초마다 idle 커넥션 keepalive 쿼리 전송
   jpa:
     hibernate:
       ddl-auto: validate

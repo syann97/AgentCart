@@ -25,6 +25,8 @@ public class PgVectorJdbcConfig {
         config.setUsername(username);
         config.setPassword(password);
         config.setPoolName("HikariPool-pgvector");
+        config.setMaxLifetime(1740000);
+        config.setKeepaliveTime(60000);
         return new NamedParameterJdbcTemplate(new HikariDataSource(config));
     }
 }
