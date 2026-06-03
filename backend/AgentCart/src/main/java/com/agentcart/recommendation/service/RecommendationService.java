@@ -49,7 +49,7 @@ public class RecommendationService {
         List<SearchCandidate> candidates = hybridSearchService.search(bm25Query, embedding);
 
         List<ValidatedCandidate> validated = evaluatorChain
-                .filter(candidates, enriched.enrichedQuery(), memberId)
+                .filter(candidates, memberId)
                 .stream().limit(TOP_N).toList();
 
         Map<Long, LlmReasonResult> reasons = llmReasoningService.generateReasons(validated, enriched.enrichedQuery());

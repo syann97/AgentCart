@@ -28,9 +28,9 @@ public class LlmCrossValidator {
                     .getResult().getOutput().getText();
             boolean relevant = response != null && response.trim().toUpperCase().startsWith("YES");
             if (relevant) {
-                log.info("LlmCrossValidator: ACCEPTED productId={} query='{}'", candidate.productId(), query);
+                log.info("LlmCrossValidator: ACCEPTED productId={} name='{}' query='{}'", candidate.productId(), product.getName(), query);
             } else {
-                log.info("LlmCrossValidator: REJECTED productId={} query='{}'", candidate.productId(), query);
+                log.info("LlmCrossValidator: REJECTED productId={} name='{}' query='{}'", candidate.productId(), product.getName(), query);
             }
             return relevant;
         } catch (Exception e) {
