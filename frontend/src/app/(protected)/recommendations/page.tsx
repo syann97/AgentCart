@@ -11,7 +11,7 @@ export default function RecommendationsPage() {
   const [submittedQuery, setSubmittedQuery] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
 
-  const { results, isConnected, isComplete } = useRecommendationStream(submittedQuery, isStreaming);
+  const { results, isComplete } = useRecommendationStream(submittedQuery, isStreaming);
   const { data: history, isLoading: historyLoading } = useRecommendationHistory();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,7 +22,7 @@ export default function RecommendationsPage() {
     setIsStreaming(true);
   };
 
-  const isSearching = isStreaming && isConnected && !isComplete;
+  const isSearching = isStreaming && !isComplete;
 
   if (isComplete && isStreaming) {
     setIsStreaming(false);
