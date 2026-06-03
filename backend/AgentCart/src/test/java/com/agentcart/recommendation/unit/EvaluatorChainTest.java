@@ -8,7 +8,6 @@ import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.EvaluatorChain;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
-import com.agentcart.recommendation.service.evaluator.LlmCrossValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,14 +33,13 @@ class EvaluatorChainTest {
     @Mock private OrderItemRepository orderItemRepository;
     @Mock private ConsistencyValidator consistencyValidator;
     @Mock private RuleFilterValidator ruleFilterValidator;
-    @Mock private LlmCrossValidator llmCrossValidator;
 
     @InjectMocks
     private EvaluatorChain evaluatorChain;
 
     @Test
-    @DisplayName("LLM 거절 상품 - 결과에서 제외")
-    void filter_llmRejected_excludedFromResult() {
+    @DisplayName("3단계 필터 모두 통과 — 결과에 포함")
+    void filter_allPassValidators_included() {
         SearchCandidate c1 = candidate(1L), c2 = candidate(2L);
         Product p1 = product(1L), p2 = product(2L);
 
@@ -49,47 +47,56 @@ class EvaluatorChainTest {
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
-        given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
-        given(llmCrossValidator.validate(c2, p2, "query")).willReturn(true);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), "query", 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L);
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).candidate().productId()).isEqualTo(2L);
+        assertThat(result).hasSize(2);
     }
 
     @Test
-    @DisplayName("LLM 전체 거절 - 빈 결과 반환")
-    void filter_allLlmRejected_emptyResult() {
+    @DisplayName("ACTIVE 아닌 상품 — 결과에서 제외")
+    void filter_inactiveProduct_excluded() {
+        SearchCandidate c1 = candidate(1L);
+        Product p1 = product(1L);
+        ReflectionTestUtils.setField(p1, "status", ProductStatus.INACTIVE);
+
+        given(productRepository.findAllById(any())).willReturn(List.of(p1));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("ConsistencyValidator 실패 — 결과에서 제외")
+    void filter_consistencyRejected_excluded() {
+        SearchCandidate c1 = candidate(1L);
+        Product p1 = product(1L);
+
+        given(productRepository.findAllById(any())).willReturn(List.of(p1));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+        given(consistencyValidator.validate(c1)).willReturn(false);
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("RuleFilterValidator 실패 — 결과에서 제외")
+    void filter_ruleRejected_excluded() {
         SearchCandidate c1 = candidate(1L);
         Product p1 = product(1L);
 
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(c1)).willReturn(true);
-        given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
-        given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
+        given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(false);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), "query", 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
 
         assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("LLM 전체 승인 - 모든 상품 포함")
-    void filter_allLlmAccepted_allIncluded() {
-        SearchCandidate c1 = candidate(1L), c2 = candidate(2L);
-        Product p1 = product(1L), p2 = product(2L);
-
-        given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
-        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
-        given(consistencyValidator.validate(any())).willReturn(true);
-        given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
-        given(llmCrossValidator.validate(any(), any(), anyString())).willReturn(true);
-
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), "query", 1L);
-
-        assertThat(result).hasSize(2);
     }
 
     private SearchCandidate candidate(long productId) {

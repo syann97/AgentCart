@@ -7,7 +7,6 @@ import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
-import com.agentcart.recommendation.service.evaluator.LlmCrossValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -28,11 +27,8 @@ public class EvaluatorChain {
     private final OrderItemRepository orderItemRepository;
     private final ConsistencyValidator consistencyValidator;
     private final RuleFilterValidator ruleFilterValidator;
-    private final LlmCrossValidator llmCrossValidator;
 
-    private static final int LLM_CROSS_VALIDATE_LIMIT = 10;
-
-    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, String query, Long memberId) {
+    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, Long memberId) {
         Set<Long> ids = candidates.stream().map(SearchCandidate::productId).collect(Collectors.toSet());
         Map<Long, Product> productMap = productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, p -> p));
@@ -50,10 +46,6 @@ public class EvaluatorChain {
             result.add(new ValidatedCandidate(candidate, product));
         }
 
-        // Stage 4: LLM cross-validation — synchronous filter on top candidates
-        return result.stream()
-                .limit(LLM_CROSS_VALIDATE_LIMIT)
-                .filter(vc -> llmCrossValidator.validate(vc.candidate(), vc.product(), query))
-                .toList();
+        return result;
     }
 }
