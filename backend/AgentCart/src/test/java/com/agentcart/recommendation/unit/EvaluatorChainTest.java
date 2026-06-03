@@ -2,11 +2,11 @@ package com.agentcart.recommendation.unit;
 
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.domain.ProductStatus;
+import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.EvaluatorChain;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
-import com.agentcart.recommendation.service.evaluator.DbValidator;
 import com.agentcart.recommendation.service.evaluator.LlmCrossValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class EvaluatorChainTest {
 
-    @Mock private DbValidator dbValidator;
+    @Mock private ProductRepository productRepository;
     @Mock private ConsistencyValidator consistencyValidator;
     @Mock private RuleFilterValidator ruleFilterValidator;
     @Mock private LlmCrossValidator llmCrossValidator;
@@ -44,8 +43,7 @@ class EvaluatorChainTest {
         SearchCandidate c1 = candidate(1L), c2 = candidate(2L);
         Product p1 = product(1L), p2 = product(2L);
 
-        given(dbValidator.validate(c1)).willReturn(Optional.of(p1));
-        given(dbValidator.validate(c2)).willReturn(Optional.of(p2));
+        given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
         given(consistencyValidator.validate(any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), anyLong())).willReturn(true);
         given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
@@ -63,7 +61,7 @@ class EvaluatorChainTest {
         SearchCandidate c1 = candidate(1L);
         Product p1 = product(1L);
 
-        given(dbValidator.validate(c1)).willReturn(Optional.of(p1));
+        given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(consistencyValidator.validate(c1)).willReturn(true);
         given(ruleFilterValidator.validate(c1, p1, 1L)).willReturn(true);
         given(llmCrossValidator.validate(c1, p1, "query")).willReturn(false);
@@ -79,8 +77,7 @@ class EvaluatorChainTest {
         SearchCandidate c1 = candidate(1L), c2 = candidate(2L);
         Product p1 = product(1L), p2 = product(2L);
 
-        given(dbValidator.validate(c1)).willReturn(Optional.of(p1));
-        given(dbValidator.validate(c2)).willReturn(Optional.of(p2));
+        given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
         given(consistencyValidator.validate(any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), anyLong())).willReturn(true);
         given(llmCrossValidator.validate(any(), any(), anyString())).willReturn(true);
