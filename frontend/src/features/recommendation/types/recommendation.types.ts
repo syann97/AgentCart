@@ -1,6 +1,7 @@
 export interface RecommendationResult {
   productId: number;
   productName: string;
+  price: number;
   reason: string;
   conditions: string[];
   score: number;

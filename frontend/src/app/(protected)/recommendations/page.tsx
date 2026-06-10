@@ -124,6 +124,7 @@ function RecommendationCard({ result }: { result: RecommendationResult }) {
           {(result.score * 100).toFixed(1)}%
         </span>
       </div>
+      <p className="text-base font-bold text-gray-900 mb-1">₩{result.price.toLocaleString()}</p>
       <p className="text-sm text-gray-600 mb-2">{result.reason}</p>
       {result.conditions.length > 0 && (
         <div className="flex flex-wrap gap-1.5">

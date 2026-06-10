@@ -65,6 +65,7 @@ public class RecommendationService {
                 .map(e -> new RecommendationResult(
                         e.getKey().candidate().productId(),
                         e.getKey().product().getName(),
+                        e.getKey().product().getPrice(),
                         e.getValue().reason(),
                         e.getValue().conditions(),
                         e.getKey().candidate().rrfScore()))
