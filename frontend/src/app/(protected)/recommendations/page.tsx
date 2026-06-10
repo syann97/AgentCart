@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { useRecommendationStream } from '@/features/recommendation/hooks/use-recommendation-stream';
 import { useRecommendationHistory } from '@/features/recommendation/hooks/use-recommendation-history';
@@ -113,7 +114,10 @@ export default function RecommendationsPage() {
 
 function RecommendationCard({ result }: { result: RecommendationResult }) {
   return (
-    <div className="border rounded-lg p-4">
+    <Link
+      href={`/products/${result.productId}`}
+      className="block border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
+    >
       <div className="flex justify-between items-start mb-1">
         <h3 className="font-semibold text-gray-900">{result.productName}</h3>
         <span className="text-xs text-blue-600 font-medium ml-2 shrink-0">
@@ -130,7 +134,7 @@ function RecommendationCard({ result }: { result: RecommendationResult }) {
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
