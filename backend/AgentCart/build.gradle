@@ -83,6 +83,10 @@ dependencies {
 
     // env
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
+
+    // Source: https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
+    implementation 'org.apache.lucene:lucene-core:10.4.0'
 }
 
 dependencyManagement {

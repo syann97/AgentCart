@@ -9,6 +9,7 @@ import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class EvaluatorChain {
@@ -38,14 +40,28 @@ public class EvaluatorChain {
         List<ValidatedCandidate> result = new ArrayList<>();
         for (SearchCandidate candidate : candidates) {
             Product product = productMap.get(candidate.productId());
-            if (product == null || product.getStatus() != ProductStatus.ACTIVE) continue;
+            if (product == null) {
+                log.debug("REJECTED reason=PRODUCT_NOT_FOUND productId={}", candidate.productId());
+                continue;
+            }
+            if (product.getStatus() != ProductStatus.ACTIVE) {
+                log.debug("REJECTED reason=INACTIVE productId={} productName={}", product.getId(), product.getName());
+                continue;
+            }
 
-            if (!consistencyValidator.validate(candidate)) continue;
-            if (!ruleFilterValidator.validate(candidate, product, recentlyOrdered)) continue;
+            if (!consistencyValidator.validate(candidate)) {
+                log.debug("REJECTED reason=CONSISTENCY_FAIL productId={} productName={}", product.getId(), product.getName());
+                continue;
+            }
+            if (!ruleFilterValidator.validate(candidate, product, recentlyOrdered)) {
+                log.debug("REJECTED reason=RECENTLY_ORDERED productId={} productName={}", product.getId(), product.getName());
+                continue;
+            }
 
             result.add(new ValidatedCandidate(candidate, product));
         }
 
+        log.debug("filter result: input={} passed={}", candidates.size(), result.size());
         return result;
     }
 }
