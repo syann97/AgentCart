@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -132,6 +133,38 @@ class LlmReasoningServiceTest {
 
         assertThat(result).hasSize(3);
         assertThat(result).containsKeys(1L, 2L, 3L);
+    }
+
+    @Test
+    @DisplayName("프롬프트에 실제 가격 숫자 대신 가격대 레이블 포함 (#140 1계층)")
+    void generateReasons_prompt_containsPriceTierInsteadOfRawPrice() {
+        String llmResponse = "REASON: 추천 이유입니다.\nCONDITIONS: 특징1";
+        given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
+        given(chatResponse.getResult()).willReturn(generation);
+        given(generation.getOutput()).willReturn(assistantMessage);
+        given(assistantMessage.getText()).willReturn(llmResponse);
+
+        service.generateReasons(List.of(candidate(1L)), "노트북");
+
+        ArgumentCaptor<Prompt> captor = ArgumentCaptor.forClass(Prompt.class);
+        org.mockito.Mockito.verify(chatModel).call(captor.capture());
+        String prompt = captor.getValue().getContents();
+        assertThat(prompt).contains("가격대: 중가");
+        assertThat(prompt).doesNotContain("100000");
+    }
+
+    @Test
+    @DisplayName("CONDITIONS의 가격 숫자 조건 필터링 (#140 2계층)")
+    void generateReasons_conditionsWithRawPrice_filtered() {
+        String llmResponse = "REASON: 추천 이유입니다.\nCONDITIONS: 가성비|79.99원|99,000 원|튼튼한 내구성";
+        given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
+        given(chatResponse.getResult()).willReturn(generation);
+        given(generation.getOutput()).willReturn(assistantMessage);
+        given(assistantMessage.getText()).willReturn(llmResponse);
+
+        Map<Long, LlmReasonResult> result = service.generateReasons(List.of(candidate(1L)), "노트북");
+
+        assertThat(result.get(1L).conditions()).containsExactly("가성비", "튼튼한 내구성");
     }
 
     private ValidatedCandidate candidate(long productId) {

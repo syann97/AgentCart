@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,6 +30,8 @@ public class LlmReasoningService {
     @Autowired(required = false)
     @Qualifier("openAiChatModel")
     private ChatModel chatModel;
+
+    private static final Pattern PRICE_PATTERN = Pattern.compile("\\d[\\d,.]*\\s*원");
 
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     private final Semaphore semaphore = new Semaphore(3);
@@ -82,7 +86,7 @@ public class LlmReasoningService {
                 - 설명: %s
                 - 카테고리: %s
                 - 브랜드: %s
-                - 가격: %s원
+                - 가격대: %s
 
                 이 상품에 대한 추천 이유를 한국어로 한 문장으로 작성하세요.
                 형식:
@@ -93,7 +97,17 @@ public class LlmReasoningService {
                 product.getDescription() != null ? product.getDescription() : "",
                 product.getCategory(),
                 product.getBrand() != null ? product.getBrand() : "",
-                product.getPrice());
+                priceTier(product));
+    }
+
+    // 실제 가격 숫자가 프롬프트에 노출되지 않도록 가격대 레이블로 변환 (#140)
+    private String priceTier(Product product) {
+        BigDecimal price = product.getPrice();
+        if (price.compareTo(BigDecimal.valueOf(10_000)) < 0) return "저가";
+        if (price.compareTo(BigDecimal.valueOf(50_000)) < 0) return "중저가";
+        if (price.compareTo(BigDecimal.valueOf(150_000)) < 0) return "중가";
+        if (price.compareTo(BigDecimal.valueOf(500_000)) < 0) return "고가";
+        return "프리미엄";
     }
 
     private LlmReasonResult parse(String response, Product product) {
@@ -110,7 +124,10 @@ public class LlmReasoningService {
                     String condStr = line.substring("CONDITIONS:".length()).trim();
                     for (String c : condStr.split("\\|")) {
                         String trimmed = c.trim();
-                        if (!trimmed.isBlank()) conditions.add(trimmed);
+                        // LLM이 가격 숫자를 그대로 복사한 조건 제거 (#140 2계층 방어)
+                        if (!trimmed.isBlank() && !PRICE_PATTERN.matcher(trimmed).find()) {
+                            conditions.add(trimmed);
+                        }
                     }
                 }
             }
