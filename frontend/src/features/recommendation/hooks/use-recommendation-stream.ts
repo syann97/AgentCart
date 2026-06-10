@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSse } from '@/hooks/use-sse';
 import { API_BASE_URL, API_ENDPOINTS } from '@/constants/api.constants';
 import type { RecommendationResult, RecommendationStreamChunk } from '../types/recommendation.types';
 
-export function useRecommendationStream(query: string, enabled: boolean) {
+export function useRecommendationStream() {
+  const [query, setQuery] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
   const [results, setResults] = useState<RecommendationResult[]>([]);
   const [isComplete, setIsComplete] = useState(false);
 
@@ -13,13 +15,21 @@ export function useRecommendationStream(query: string, enabled: boolean) {
     ? `${API_BASE_URL}${API_ENDPOINTS.recommendations.stream}?query=${encodeURIComponent(query)}`
     : '';
 
-  useEffect(() => {
+  // 검색 시작 — 리셋과 연결 시작을 한 핸들러에서 원자적으로 처리
+  const start = (q: string) => {
+    setQuery(q);
     setResults([]);
     setIsComplete(false);
-  }, [url]);
+    setIsStreaming(true);
+  };
 
-  const { isConnected, close } = useSse(url, {
-    enabled: enabled && !!query,
+  const finish = () => {
+    setIsComplete(true);
+    setIsStreaming(false);
+  };
+
+  const { close } = useSse(url, {
+    enabled: isStreaming && !!query,
     onMessage: (raw) => {
       try {
         const chunk: RecommendationStreamChunk = JSON.parse(raw);
@@ -27,15 +37,15 @@ export function useRecommendationStream(query: string, enabled: boolean) {
           setResults((prev) => [...prev, chunk.data as RecommendationResult]);
         }
         if (chunk.type === 'error') {
-          setIsComplete(true);
+          finish();
           close();
         }
       } catch {
         // non-JSON keep-alive 무시
       }
     },
-    onError: () => setIsComplete(true),
+    onError: () => finish(),
   });
 
-  return { results, isConnected, isComplete };
+  return { results, isComplete, isSearching: isStreaming && !isComplete, start };
 }

@@ -28,8 +28,8 @@ describe('useRecommendationStream', () => {
     vi.mocked(useSse).mockReturnValue({ isConnected: false, close: mockClose });
   });
 
-  it('enabled=false이면 SSE 연결 옵션이 false로 전달된다', () => {
-    renderHook(() => useRecommendationStream('돌잔치', false));
+  it('start 호출 전에는 SSE 연결 옵션이 false로 전달된다', () => {
+    renderHook(() => useRecommendationStream());
 
     expect(vi.mocked(useSse)).toHaveBeenCalledWith(
       expect.any(String),
@@ -37,22 +37,32 @@ describe('useRecommendationStream', () => {
     );
   });
 
-  it('query 변경 시 results가 초기화된다', () => {
+  it('start 호출 시 SSE 연결이 활성화되고 isSearching=true가 된다', () => {
+    const { result } = renderHook(() => useRecommendationStream());
+
+    act(() => { result.current.start('돌잔치'); });
+
+    expect(vi.mocked(useSse)).toHaveBeenLastCalledWith(
+      expect.stringContaining(encodeURIComponent('돌잔치')),
+      expect.objectContaining({ enabled: true }),
+    );
+    expect(result.current.isSearching).toBe(true);
+  });
+
+  it('새 검색 시작 시 results가 초기화된다', () => {
     let capturedOnMessage: ((data: string) => void) | undefined;
     vi.mocked(useSse).mockImplementation((_url, options) => {
       capturedOnMessage = options?.onMessage;
       return { isConnected: true, close: mockClose };
     });
 
-    const { result, rerender } = renderHook(
-      ({ query }) => useRecommendationStream(query, true),
-      { initialProps: { query: '돌잔치' } },
-    );
+    const { result } = renderHook(() => useRecommendationStream());
 
+    act(() => { result.current.start('돌잔치'); });
     act(() => { capturedOnMessage?.(completeChunk); });
     expect(result.current.results).toHaveLength(1);
 
-    rerender({ query: '생일선물' });
+    act(() => { result.current.start('생일선물'); });
 
     expect(result.current.results).toHaveLength(0);
   });
@@ -64,8 +74,9 @@ describe('useRecommendationStream', () => {
       return { isConnected: true, close: mockClose };
     });
 
-    const { result } = renderHook(() => useRecommendationStream('돌잔치', true));
+    const { result } = renderHook(() => useRecommendationStream());
 
+    act(() => { result.current.start('돌잔치'); });
     act(() => { capturedOnMessage?.(completeChunk); });
 
     expect(result.current.results).toHaveLength(1);
@@ -80,8 +91,9 @@ describe('useRecommendationStream', () => {
       return { isConnected: true, close: mockClose };
     });
 
-    const { result } = renderHook(() => useRecommendationStream('돌잔치', true));
+    const { result } = renderHook(() => useRecommendationStream());
 
+    act(() => { result.current.start('돌잔치'); });
     act(() => { capturedOnMessage?.(makeChunk('error', {})); });
 
     expect(result.current.isComplete).toBe(true);
@@ -95,10 +107,37 @@ describe('useRecommendationStream', () => {
       return { isConnected: false, close: mockClose };
     });
 
-    const { result } = renderHook(() => useRecommendationStream('돌잔치', true));
+    const { result } = renderHook(() => useRecommendationStream());
 
+    act(() => { result.current.start('돌잔치'); });
     act(() => { capturedOnError?.(new Event('error')); });
 
     expect(result.current.isComplete).toBe(true);
+  });
+
+  it('이전 검색 완료 후 재검색 시 isSearching=true, 연결 enabled=true가 유지된다 (#137 회귀)', () => {
+    let capturedOnError: ((err: Event) => void) | undefined;
+    vi.mocked(useSse).mockImplementation((_url, options) => {
+      capturedOnError = options?.onError;
+      return { isConnected: false, close: mockClose };
+    });
+
+    const { result } = renderHook(() => useRecommendationStream());
+
+    // 1번째 검색 정상 완료 → isComplete=true 상태에서
+    act(() => { result.current.start('돌잔치'); });
+    act(() => { capturedOnError?.(new Event('error')); });
+    expect(result.current.isComplete).toBe(true);
+    expect(result.current.isSearching).toBe(false);
+
+    // 2번째 검색 시작 — 리셋이 원자적이라 stale isComplete로 죽지 않아야 함
+    act(() => { result.current.start('신발 추천'); });
+
+    expect(result.current.isComplete).toBe(false);
+    expect(result.current.isSearching).toBe(true);
+    expect(vi.mocked(useSse)).toHaveBeenLastCalledWith(
+      expect.stringContaining(encodeURIComponent('신발 추천')),
+      expect.objectContaining({ enabled: true }),
+    );
   });
 });
