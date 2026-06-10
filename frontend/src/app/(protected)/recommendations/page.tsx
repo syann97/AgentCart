@@ -9,9 +9,8 @@ import type { RecommendationResult } from '@/features/recommendation/types/recom
 export default function RecommendationsPage() {
   const [input, setInput] = useState('');
   const [submittedQuery, setSubmittedQuery] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
 
-  const { results, isComplete } = useRecommendationStream(submittedQuery, isStreaming);
+  const { results, isComplete, isSearching, start } = useRecommendationStream();
   const { data: history, isLoading: historyLoading } = useRecommendationHistory();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,14 +18,8 @@ export default function RecommendationsPage() {
     const q = input.trim();
     if (!q) return;
     setSubmittedQuery(q);
-    setIsStreaming(true);
+    start(q);
   };
-
-  const isSearching = isStreaming && !isComplete;
-
-  if (isComplete && isStreaming) {
-    setIsStreaming(false);
-  }
 
   return (
     <div className="max-w-3xl">
