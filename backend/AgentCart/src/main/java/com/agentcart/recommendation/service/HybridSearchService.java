@@ -19,7 +19,7 @@ public class HybridSearchService {
 
     private static final int RRF_K = 60;
     static final int SEARCH_LIMIT = 50;
-    private static final double RRF_SCORE_THRESHOLD = 0.01;
+    private static final double RRF_SCORE_THRESHOLD = 0.005;
     private static final double MIN_VECTOR_SIMILARITY = 0.5;
 
     private final ProductRepository productRepository;
