@@ -72,12 +72,10 @@ Validation order:
 1. DbValidator
 2. ConsistencyValidator
 3. RuleFilterValidator
-4. LlmCrossValidator
 
 Rules:
 
 - Step 1~3 failure → discard result
-- Step 4 failure → log only
 
 ---
 
