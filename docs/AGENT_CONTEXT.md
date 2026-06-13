@@ -30,13 +30,14 @@ LLM usage is optional and should be minimized.
 
 Validation order:
 
-1. DbValidator
+1. Product existence & ACTIVE status (inline in EvaluatorChain via findAllById)
 2. ConsistencyValidator
 3. RuleFilterValidator
+4. PriceConstraintValidator
 
 Rules:
 
-- Step 1~3 failures → discard result
+- Step 1~4 failures → discard result
 
 ---
 
