@@ -8,6 +8,7 @@ import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.EvaluatorChain;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
+import com.agentcart.recommendation.service.evaluator.PriceConstraintValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class EvaluatorChainTest {
     @Mock private OrderItemRepository orderItemRepository;
     @Mock private ConsistencyValidator consistencyValidator;
     @Mock private RuleFilterValidator ruleFilterValidator;
+    @Mock private PriceConstraintValidator priceConstraintValidator;
 
     @InjectMocks
     private EvaluatorChain evaluatorChain;
@@ -47,8 +49,9 @@ class EvaluatorChainTest {
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
+        given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L, null, null);
 
         assertThat(result).hasSize(2);
     }
@@ -63,7 +66,7 @@ class EvaluatorChainTest {
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null);
 
         assertThat(result).isEmpty();
     }
@@ -78,7 +81,7 @@ class EvaluatorChainTest {
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(consistencyValidator.validate(c1)).willReturn(false);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null);
 
         assertThat(result).isEmpty();
     }
@@ -94,7 +97,24 @@ class EvaluatorChainTest {
         given(consistencyValidator.validate(c1)).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(false);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L);
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("PriceConstraintValidator 실패 — 결과에서 제외")
+    void filter_priceRejected_excluded() {
+        SearchCandidate c1 = candidate(1L);
+        Product p1 = product(1L);
+
+        given(productRepository.findAllById(any())).willReturn(List.of(p1));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+        given(consistencyValidator.validate(c1)).willReturn(true);
+        given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
+        given(priceConstraintValidator.validate(any(), any(), any())).willReturn(false);
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, 5000L);
 
         assertThat(result).isEmpty();
     }
