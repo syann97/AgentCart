@@ -167,4 +167,57 @@ class QueryEnrichmentServiceTest {
 
         verify(chatModel, times(1)).call(any(Prompt.class));
     }
+
+    @Test
+    @DisplayName("가격 상한 조건 - maxPrice 추출, minPrice는 null")
+    void enrich_maxPriceOnly_extractsMaxPrice() {
+        givenLlmResponse("{\"enrichedQuery\":\"노트북\",\"bm25Keywords\":\"노트북\",\"categories\":[\"전자제품\"],\"minPrice\":null,\"maxPrice\":100000}");
+
+        EnrichedQuery result = service.enrich("10만원 이하 노트북");
+
+        assertThat(result.minPrice()).isNull();
+        assertThat(result.maxPrice()).isEqualTo(100000L);
+    }
+
+    @Test
+    @DisplayName("가격 범위 조건 - minPrice, maxPrice 모두 추출")
+    void enrich_priceRange_extractsMinAndMaxPrice() {
+        givenLlmResponse("{\"enrichedQuery\":\"가방\",\"bm25Keywords\":\"가방\",\"categories\":[\"패션\"],\"minPrice\":50000,\"maxPrice\":150000}");
+
+        EnrichedQuery result = service.enrich("5만원에서 15만원 사이 가방");
+
+        assertThat(result.minPrice()).isEqualTo(50000L);
+        assertThat(result.maxPrice()).isEqualTo(150000L);
+    }
+
+    @Test
+    @DisplayName("가격 조건 미지정 - minPrice, maxPrice 모두 null")
+    void enrich_noPriceCondition_pricesAreNull() {
+        givenLlmResponse("{\"enrichedQuery\":\"운동화\",\"bm25Keywords\":\"운동화\",\"categories\":[\"신발\"]}");
+
+        EnrichedQuery result = service.enrich("운동화");
+
+        assertThat(result.minPrice()).isNull();
+        assertThat(result.maxPrice()).isNull();
+    }
+
+    @Test
+    @DisplayName("가격 조건이 캐시 직렬화에 포함됨 - 캐시된 JSON 라운드트립 검증")
+    void enrich_priceConstraint_serializedToCache() {
+        givenLlmResponse("{\"enrichedQuery\":\"노트북\",\"bm25Keywords\":\"노트북\",\"categories\":[\"전자제품\"],\"minPrice\":null,\"maxPrice\":100000}");
+        ArgumentCaptor<String> cached = ArgumentCaptor.forClass(String.class);
+
+        service.enrich("10만원 이하 노트북");
+
+        verify(valueOps).set(anyString(), cached.capture(), eq(5L), eq(TimeUnit.MINUTES));
+        assertThat(cached.getValue()).contains("\"maxPrice\":100000");
+    }
+
+    private void givenLlmResponse(String json) {
+        given(valueOps.get(anyString())).willReturn(null);
+        given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
+        given(chatResponse.getResult()).willReturn(generation);
+        given(generation.getOutput()).willReturn(assistantMessage);
+        given(assistantMessage.getText()).willReturn(json);
+    }
 }

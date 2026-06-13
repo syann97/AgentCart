@@ -67,7 +67,9 @@ public class QueryEnrichmentService {
                     - 검색어에 명시되지 않은 경우 묶음 상품(선물세트, 번들)으로 추론하지 마세요.
                     - 검색어가 전자기기에 관한 것이 아니라면 스마트, 무선, 프리미엄 같은 일반 수식어는 추가하지 마세요.
                     - 포장 방식이 아닌 사용자가 원하는 실제 개별 상품에 집중하세요.
-                    형식: {"enrichedQuery": "공백으로 구분된 한국어 키워드", "bm25Keywords": "공백으로 구분된 한국어 키워드", "categories": ["카테고리1"]}
+                    - minPrice / maxPrice: 검색어에 가격 조건이 있으면 원(KRW) 단위 정수로 추출하세요. 예: "10만원 이하" → maxPrice 100000, "5만원 이상" → minPrice 50000, "5만~15만원" → minPrice 50000, maxPrice 150000. 가격 조건이 없으면 null로 두세요.
+                    - 가격 조건 문구(예: "10만원 이하")는 enrichedQuery, bm25Keywords 키워드에 포함하지 마세요.
+                    형식: {"enrichedQuery": "공백으로 구분된 한국어 키워드", "bm25Keywords": "공백으로 구분된 한국어 키워드", "categories": ["카테고리1"], "minPrice": null, "maxPrice": null}
                     검색어: %s""", query);
             String response = chatModel.call(new Prompt(promptText))
                     .getResult().getOutput().getText();
@@ -108,7 +110,7 @@ public class QueryEnrichmentService {
     }
 
     private EnrichedQuery fallback(String query) {
-        return new EnrichedQuery(query, query, List.of());
+        return new EnrichedQuery(query, query, List.of(), null, null);
     }
 
     private String hash(String query) {
