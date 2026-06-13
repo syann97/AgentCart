@@ -7,6 +7,7 @@ import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
+import com.agentcart.recommendation.service.evaluator.PriceConstraintValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,10 @@ public class EvaluatorChain {
     private final OrderItemRepository orderItemRepository;
     private final ConsistencyValidator consistencyValidator;
     private final RuleFilterValidator ruleFilterValidator;
+    private final PriceConstraintValidator priceConstraintValidator;
 
-    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, Long memberId) {
+    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, Long memberId,
+                                           Long minPrice, Long maxPrice) {
         Set<Long> ids = candidates.stream().map(SearchCandidate::productId).collect(Collectors.toSet());
         Map<Long, Product> productMap = productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, p -> p));
@@ -55,6 +58,11 @@ public class EvaluatorChain {
             }
             if (!ruleFilterValidator.validate(candidate, product, recentlyOrdered)) {
                 log.debug("REJECTED reason=RECENTLY_ORDERED productId={} productName={}", product.getId(), product.getName());
+                continue;
+            }
+            if (!priceConstraintValidator.validate(product, minPrice, maxPrice)) {
+                log.debug("REJECTED reason=PRICE_OUT_OF_RANGE productId={} productName={} price={} min={} max={}",
+                        product.getId(), product.getName(), product.getPrice(), minPrice, maxPrice);
                 continue;
             }
 
