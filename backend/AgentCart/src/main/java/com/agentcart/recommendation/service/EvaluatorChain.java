@@ -7,7 +7,6 @@ import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.evaluator.CategoryValidator;
-import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
 import com.agentcart.recommendation.service.evaluator.PriceConstraintValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class EvaluatorChain {
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
     private final CategoryValidator categoryValidator;
-    private final ConsistencyValidator consistencyValidator;
     private final RuleFilterValidator ruleFilterValidator;
     private final PriceConstraintValidator priceConstraintValidator;
 
@@ -57,10 +55,6 @@ public class EvaluatorChain {
             if (!categoryValidator.validate(product, categories)) {
                 log.debug("REJECTED reason=CATEGORY_MISMATCH productId={} productName={} category={} wanted={}",
                         product.getId(), product.getName(), product.getCategory(), categories);
-                continue;
-            }
-            if (!consistencyValidator.validate(candidate)) {
-                log.debug("REJECTED reason=CONSISTENCY_FAIL productId={} productName={}", product.getId(), product.getName());
                 continue;
             }
             if (!ruleFilterValidator.validate(candidate, product, recentlyOrdered)) {
