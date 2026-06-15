@@ -43,7 +43,9 @@ public class RecommendationService {
 
     public List<RecommendationResult> recommend(String query, Long memberId) {
         EnrichedQuery enriched = queryEnrichmentService.enrich(query);
-        float[] embedding = embed(enriched.enrichedQuery());
+        // 벡터 arm은 자연어 원본 질의를 임베딩(상품 임베딩이 자연어 라벨 기반이라 키워드 나열보다 정합이 높음, #162).
+        // BM25 arm은 확장 키워드를 사용해 키워드 매칭을 유지.
+        float[] embedding = embed(query);
 
         String bm25Query = enriched.bm25Keywords() != null ? enriched.bm25Keywords() : enriched.enrichedQuery();
         List<SearchCandidate> candidates = hybridSearchService.search(bm25Query, embedding);
