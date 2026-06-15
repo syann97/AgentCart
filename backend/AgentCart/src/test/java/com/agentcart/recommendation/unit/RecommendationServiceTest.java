@@ -92,7 +92,18 @@ class RecommendationServiceTest {
 
         recommendationService.recommend(QUERY, MEMBER_ID);
 
-        verify(evaluatorChain).filter(any(), eq(MEMBER_ID), eq(50000L), eq(150000L));
+        verify(evaluatorChain).filter(any(), eq(MEMBER_ID), eq(50000L), eq(150000L), any());
+    }
+
+    @Test
+    @DisplayName("categories - evaluatorChain.filter로 그대로 전달")
+    void recommend_categories_passedToEvaluatorChain() {
+        given(queryEnrichmentService.enrich(QUERY))
+                .willReturn(new EnrichedQuery("쿼리", "키워드", List.of("패션·의류"), null, null));
+
+        recommendationService.recommend(QUERY, MEMBER_ID);
+
+        verify(evaluatorChain).filter(any(), eq(MEMBER_ID), any(), any(), eq(List.of("패션·의류")));
     }
 
     @Test
@@ -114,7 +125,7 @@ class RecommendationServiceTest {
     void recommend_noValidatedCandidates_returnsEmpty() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any())).willReturn(List.of());
+        given(evaluatorChain.filter(any(), any(), any(), any(), any())).willReturn(List.of());
 
         List<RecommendationResult> results = recommendationService.recommend(QUERY, MEMBER_ID);
 
@@ -128,7 +139,7 @@ class RecommendationServiceTest {
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
         List<ValidatedCandidate> seven = new ArrayList<>();
         for (long i = 1; i <= 7; i++) seven.add(validated(i, "상품" + i, "전자제품", 10000, 0.9));
-        given(evaluatorChain.filter(any(), any(), any(), any())).willReturn(seven);
+        given(evaluatorChain.filter(any(), any(), any(), any(), any())).willReturn(seven);
 
         List<RecommendationResult> results = recommendationService.recommend(QUERY, MEMBER_ID);
 
@@ -140,7 +151,7 @@ class RecommendationServiceTest {
     void recommend_missingLlmReason_usesFallbackReason() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any()))
+        given(evaluatorChain.filter(any(), any(), any(), any(), any()))
                 .willReturn(List.of(validated(1L, "무선 이어폰", "전자제품", 89000, 0.95)));
         given(llmReasoningService.generateReasons(any(), any())).willReturn(Map.of());
 
@@ -161,7 +172,7 @@ class RecommendationServiceTest {
     void recommend_withLlmReason_usesGeneratedReason() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any()))
+        given(evaluatorChain.filter(any(), any(), any(), any(), any()))
                 .willReturn(List.of(validated(1L, "무선 이어폰", "전자제품", 89000, 0.95)));
         given(llmReasoningService.generateReasons(any(), any()))
                 .willReturn(Map.of(1L, new LlmReasonResult("출퇴근에 적합합니다", List.of("노이즈캔슬링", "장시간 배터리"))));

@@ -24,6 +24,11 @@ public class QueryEnrichmentService {
     private static final String CACHE_PREFIX = "rec:query:";
     private static final long CACHE_TTL_MINUTES = 5;
 
+    // 상품 카탈로그의 실제 카테고리 값(고정). LLM이 임의 카테고리를 만들지 않도록 폐쇄형 분류로 제약.
+    private static final String CATEGORY_TAXONOMY =
+            "캠핑·아웃도어, 문구·오피스, 주방용품, 가전, 뷰티·헬스, 패션·의류, 여행용품, "
+            + "스포츠·피트니스, 반려동물용품, 유아동, 디지털·IT기기, 생활용품, 인테리어·소품";
+
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
@@ -69,8 +74,10 @@ public class QueryEnrichmentService {
                     - 포장 방식이 아닌 사용자가 원하는 실제 개별 상품에 집중하세요.
                     - minPrice / maxPrice: 검색어에 가격 조건이 있으면 원(KRW) 단위 정수로 추출하세요. 예: "10만원 이하" → maxPrice 100000, "5만원 이상" → minPrice 50000, "5만~15만원" → minPrice 50000, maxPrice 150000. 가격 조건이 없으면 null로 두세요.
                     - 가격 조건 문구(예: "10만원 이하")는 enrichedQuery, bm25Keywords 키워드에 포함하지 마세요.
-                    형식: {"enrichedQuery": "공백으로 구분된 한국어 키워드", "bm25Keywords": "공백으로 구분된 한국어 키워드", "categories": ["카테고리1"], "minPrice": null, "maxPrice": null}
-                    검색어: %s""", query);
+                    - categories: 아래 고정 카테고리 목록 중에서만 0개 이상 선택하세요. 목록에 없는 새 카테고리명을 만들지 말고, 적합한 것이 없으면 빈 배열 []로 두세요. 검색어 의미에 가장 가까운 카테고리를 고르세요(예: "여자 악세사리" → 패션·의류).
+                    카테고리 목록: %s
+                    형식: {"enrichedQuery": "공백으로 구분된 한국어 키워드", "bm25Keywords": "공백으로 구분된 한국어 키워드", "categories": ["패션·의류"], "minPrice": null, "maxPrice": null}
+                    검색어: %s""", CATEGORY_TAXONOMY, query);
             String response = chatModel.call(new Prompt(promptText))
                     .getResult().getOutput().getText();
             return parseJson(response, query);

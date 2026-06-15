@@ -31,13 +31,14 @@ LLM usage is optional and should be minimized.
 Validation order:
 
 1. Product existence & ACTIVE status (inline in EvaluatorChain via findAllById)
-2. ConsistencyValidator
-3. RuleFilterValidator
-4. PriceConstraintValidator
+2. CategoryValidator (질의에서 추출한 categories와 상품 카테고리 일치; categories 비었으면 통과)
+3. ConsistencyValidator
+4. RuleFilterValidator
+5. PriceConstraintValidator
 
 Rules:
 
-- Step 1~4 failures → discard result
+- Step 1~5 failures → discard result
 
 ---
 

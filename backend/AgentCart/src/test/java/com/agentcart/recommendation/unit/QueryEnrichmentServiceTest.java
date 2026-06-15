@@ -152,6 +152,26 @@ class QueryEnrichmentServiceTest {
     }
 
     @Test
+    @DisplayName("프롬프트에 고정 카테고리 택소노미 제약 포함")
+    void enrich_prompt_containsCategoryTaxonomy() {
+        given(valueOps.get(anyString())).willReturn(null);
+        given(chatModel.call(any(Prompt.class))).willReturn(chatResponse);
+        given(chatResponse.getResult()).willReturn(generation);
+        given(generation.getOutput()).willReturn(assistantMessage);
+        given(assistantMessage.getText())
+                .willReturn("{\"enrichedQuery\":\"귀걸이 목걸이\",\"bm25Keywords\":\"귀걸이 목걸이\",\"categories\":[\"패션·의류\"]}");
+        ArgumentCaptor<Prompt> captor = ArgumentCaptor.forClass(Prompt.class);
+
+        service.enrich("여자 악세사리 선물");
+
+        verify(chatModel).call(captor.capture());
+        String promptContent = captor.getValue().getInstructions().get(0).getText();
+        assertThat(promptContent).contains("카테고리 목록");
+        assertThat(promptContent).contains("패션·의류");
+        assertThat(promptContent).contains("반려동물용품");
+    }
+
+    @Test
     @DisplayName("동일 쿼리 두 번 요청 - 두 번째는 캐시에서 반환")
     void enrich_sameQueryTwice_secondCallUsesCache() {
         given(valueOps.get(anyString()))
