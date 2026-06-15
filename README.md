@@ -177,3 +177,4 @@ docker exec -it <ollama-container> ollama pull bge-m3
 | [docs/PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md) | 프로젝트 개요 |
 | [docs/BACKEND_CONTEXT.md](docs/BACKEND_CONTEXT.md) | 백엔드 스택 |
 | [docs/AGENT_CONTEXT.md](docs/AGENT_CONTEXT.md) | Agent 파이프라인 규칙 |
+| [docs/RECOMMENDATION_SCENARIOS.md](docs/RECOMMENDATION_SCENARIOS.md) | 추천 지원 시나리오 & 범위 |
