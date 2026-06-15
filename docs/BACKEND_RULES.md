@@ -71,13 +71,12 @@ Validation order:
 
 1. Product existence & ACTIVE status (inline in EvaluatorChain via findAllById)
 2. CategoryValidator
-3. ConsistencyValidator
-4. RuleFilterValidator
-5. PriceConstraintValidator
+3. RuleFilterValidator
+4. PriceConstraintValidator
 
 Rules:
 
-- Step 1~5 failure → discard result
+- Step 1~4 failure → discard result
 
 ---
 

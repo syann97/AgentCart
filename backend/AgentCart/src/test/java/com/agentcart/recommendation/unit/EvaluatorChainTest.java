@@ -8,7 +8,6 @@ import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.EvaluatorChain;
 import com.agentcart.recommendation.service.evaluator.CategoryValidator;
-import com.agentcart.recommendation.service.evaluator.ConsistencyValidator;
 import com.agentcart.recommendation.service.evaluator.PriceConstraintValidator;
 import com.agentcart.recommendation.service.evaluator.RuleFilterValidator;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +33,6 @@ class EvaluatorChainTest {
     @Mock private ProductRepository productRepository;
     @Mock private OrderItemRepository orderItemRepository;
     @Mock private CategoryValidator categoryValidator;
-    @Mock private ConsistencyValidator consistencyValidator;
     @Mock private RuleFilterValidator ruleFilterValidator;
     @Mock private PriceConstraintValidator priceConstraintValidator;
 
@@ -50,7 +48,6 @@ class EvaluatorChainTest {
         given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(categoryValidator.validate(any(), any())).willReturn(true);
-        given(consistencyValidator.validate(any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
@@ -90,22 +87,6 @@ class EvaluatorChainTest {
     }
 
     @Test
-    @DisplayName("ConsistencyValidator 실패 — 결과에서 제외")
-    void filter_consistencyRejected_excluded() {
-        SearchCandidate c1 = candidate(1L);
-        Product p1 = product(1L);
-
-        given(productRepository.findAllById(any())).willReturn(List.of(p1));
-        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
-        given(categoryValidator.validate(any(), any())).willReturn(true);
-        given(consistencyValidator.validate(c1)).willReturn(false);
-
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of());
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
     @DisplayName("RuleFilterValidator 실패 — 결과에서 제외")
     void filter_ruleRejected_excluded() {
         SearchCandidate c1 = candidate(1L);
@@ -114,7 +95,6 @@ class EvaluatorChainTest {
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(categoryValidator.validate(any(), any())).willReturn(true);
-        given(consistencyValidator.validate(c1)).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(false);
 
         List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of());
@@ -131,7 +111,6 @@ class EvaluatorChainTest {
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
         given(categoryValidator.validate(any(), any())).willReturn(true);
-        given(consistencyValidator.validate(c1)).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(false);
 
