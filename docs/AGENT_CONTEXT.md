@@ -38,6 +38,7 @@ Validation order:
 Rules:
 
 - Step 1~4 failures → discard result
+- 카테고리 필터가 결과를 전부 비우면 카테고리 없이 1회 재시도(graceful fallback); 그 외 하드 규칙(재고·가격)은 유지
 
 ---
 

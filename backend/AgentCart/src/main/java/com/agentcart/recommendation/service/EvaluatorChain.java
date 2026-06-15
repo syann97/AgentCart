@@ -40,6 +40,20 @@ public class EvaluatorChain {
         Set<Long> recentlyOrdered = new HashSet<>(
                 orderItemRepository.findProductIdsOrderedByMemberSince(memberId, LocalDateTime.now().minusDays(7)));
 
+        List<ValidatedCandidate> result = evaluate(candidates, productMap, recentlyOrdered, minPrice, maxPrice, categories);
+
+        // 카테고리 hard filter가 결과를 전부 비우면(카탈로그에 해당 카테고리 상품 부재 등),
+        // 카테고리 없이 재시도하여 빈 화면 대신 차선 후보를 회수 (#167). 그 외 하드 규칙(재고·가격)은 유지.
+        if (result.isEmpty() && categories != null && !categories.isEmpty()) {
+            log.debug("category filter emptied result — retrying without category filter (#167)");
+            result = evaluate(candidates, productMap, recentlyOrdered, minPrice, maxPrice, List.of());
+        }
+        return result;
+    }
+
+    private List<ValidatedCandidate> evaluate(List<SearchCandidate> candidates, Map<Long, Product> productMap,
+                                              Set<Long> recentlyOrdered, Long minPrice, Long maxPrice,
+                                              List<String> categories) {
         List<ValidatedCandidate> result = new ArrayList<>();
         for (SearchCandidate candidate : candidates) {
             Product product = productMap.get(candidate.productId());

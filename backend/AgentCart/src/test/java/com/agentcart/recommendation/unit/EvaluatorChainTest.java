@@ -25,6 +25,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,18 +73,40 @@ class EvaluatorChainTest {
     }
 
     @Test
-    @DisplayName("CategoryValidator 실패 — 결과에서 제외")
-    void filter_categoryMismatch_excluded() {
+    @DisplayName("일부만 카테고리 일치 — 불일치 후보만 제외(fallback 미발동)")
+    void filter_partialCategoryMatch_excludesMismatchOnly() {
+        SearchCandidate c1 = candidate(1L), c2 = candidate(2L);
+        Product p1 = product(1L), p2 = product(2L);
+
+        given(productRepository.findAllById(any())).willReturn(List.of(p1, p2));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+        given(categoryValidator.validate(eq(p1), any())).willReturn(true);
+        given(categoryValidator.validate(eq(p2), any())).willReturn(false);
+        given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
+        given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L, null, null, List.of("패션·의류"));
+
+        assertThat(result).extracting(vc -> vc.candidate().productId()).containsExactly(1L);
+    }
+
+    @Test
+    @DisplayName("카테고리 필터로 전부 제외 — 카테고리 없이 재시도하여 회수(graceful fallback) (#167)")
+    void filter_categoryEmptiesResult_fallsBackWithoutCategory() {
         SearchCandidate c1 = candidate(1L);
         Product p1 = product(1L);
 
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
-        given(categoryValidator.validate(any(), any())).willReturn(false);
+        // 1차(카테고리 지정): 전부 reject → 2차(빈 카테고리 재시도): 통과
+        given(categoryValidator.validate(any(), eq(List.of("패션·의류")))).willReturn(false);
+        given(categoryValidator.validate(any(), eq(List.of()))).willReturn(true);
+        given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
+        given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
         List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of("패션·의류"));
 
-        assertThat(result).isEmpty();
+        assertThat(result).hasSize(1);
     }
 
     @Test
