@@ -23,6 +23,9 @@ public class HybridSearchService {
     // bge-m3 코사인 분포상 0.5는 과도하게 높아 리콜이 붕괴함 → 0.4로 완화 (#162). 노이즈는 카테고리 필터/RRF로 제어.
     private static final double MIN_VECTOR_SIMILARITY = 0.4;
 
+    // 범용 포장/선물 토큰은 ngram bigram으로 대량 매칭되어 BM25 과매칭을 유발 → 불용어 처리 (#163).
+    private static final Set<String> BM25_STOPWORDS = Set.of("세트", "선물", "묶음", "패키지");
+
     private final ProductRepository productRepository;
 
     @Autowired(required = false)
@@ -35,12 +38,24 @@ public class HybridSearchService {
     }
 
     private List<Long> fetchBm25Ids(String keyword) {
-        List<Long> ids = productRepository.bm25Search(keyword, SEARCH_LIMIT)
+        String cleaned = sanitizeBm25Keyword(keyword);
+        List<Long> ids = productRepository.bm25Search(cleaned, SEARCH_LIMIT)
                 .stream()
                 .map(row -> ((Number) row[0]).longValue())
                 .toList();
-        log.info("HybridSearch BM25: keyword='{}' hits={} ids={}", keyword, ids.size(), ids);
+        log.info("HybridSearch BM25: keyword='{}' cleaned='{}' hits={} ids={}", keyword, cleaned, ids.size(), ids);
         return ids;
+    }
+
+    // 중복 토큰 제거 + 범용 불용어 제거로 BM25 과매칭 완화 (#163). 토큰이 전부 제거되면 원본 유지(fallback).
+    private String sanitizeBm25Keyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) return keyword;
+        LinkedHashSet<String> tokens = new LinkedHashSet<>();
+        for (String token : keyword.trim().split("\\s+")) {
+            if (!token.isBlank() && !BM25_STOPWORDS.contains(token)) tokens.add(token);
+        }
+        String cleaned = String.join(" ", tokens);
+        return cleaned.isBlank() ? keyword : cleaned;
     }
 
     private List<VectorSearchResult> fetchVectorResults(float[] queryEmbedding) {

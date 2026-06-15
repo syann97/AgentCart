@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class HybridSearchServiceTest {
@@ -155,6 +157,45 @@ class HybridSearchServiceTest {
         assertThat(vectorOnly.rrfScore()).isCloseTo(0.8, within(1e-6));
         assertThat(vectorOnly.vectorSimilarity()).isCloseTo(0.8, within(1e-6));
         assertThat(bm25Only.rrfScore()).isGreaterThan(vectorOnly.rrfScore());
+    }
+
+    @Test
+    @DisplayName("BM25 조회 - 중복 토큰/범용 불용어(세트·선물) 제거된 키워드로 검색")
+    void search_bm25Keyword_dedupedAndStopwordsRemoved() {
+        given(productRepository.bm25Search(anyString(), anyInt())).willReturn(List.of());
+        given(vectorRepository.findTopBySimilarity(any(), anyInt(), anyDouble())).willReturn(List.of());
+
+        hybridSearchService.search("여자 귀걸이 여자 목걸이 세트 선물", new float[]{0.1f});
+
+        ArgumentCaptor<String> kw = ArgumentCaptor.forClass(String.class);
+        verify(productRepository).bm25Search(kw.capture(), anyInt());
+        assertThat(kw.getValue()).isEqualTo("여자 귀걸이 목걸이");
+    }
+
+    @Test
+    @DisplayName("BM25 조회 - 불용어 없는 질의는 그대로(회귀 없음)")
+    void search_bm25Keyword_noStopwords_unchanged() {
+        given(productRepository.bm25Search(anyString(), anyInt())).willReturn(List.of());
+        given(vectorRepository.findTopBySimilarity(any(), anyInt(), anyDouble())).willReturn(List.of());
+
+        hybridSearchService.search("겨울 방한 장갑", new float[]{0.1f});
+
+        ArgumentCaptor<String> kw = ArgumentCaptor.forClass(String.class);
+        verify(productRepository).bm25Search(kw.capture(), anyInt());
+        assertThat(kw.getValue()).isEqualTo("겨울 방한 장갑");
+    }
+
+    @Test
+    @DisplayName("BM25 조회 - 전부 불용어면 원본 유지(fallback)")
+    void search_bm25Keyword_allStopwords_keepsOriginal() {
+        given(productRepository.bm25Search(anyString(), anyInt())).willReturn(List.of());
+        given(vectorRepository.findTopBySimilarity(any(), anyInt(), anyDouble())).willReturn(List.of());
+
+        hybridSearchService.search("세트 선물", new float[]{0.1f});
+
+        ArgumentCaptor<String> kw = ArgumentCaptor.forClass(String.class);
+        verify(productRepository).bm25Search(kw.capture(), anyInt());
+        assertThat(kw.getValue()).isEqualTo("세트 선물");
     }
 
     private static float[] any() {
