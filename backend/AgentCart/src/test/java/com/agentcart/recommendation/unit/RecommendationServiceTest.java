@@ -107,6 +107,17 @@ class RecommendationServiceTest {
     }
 
     @Test
+    @DisplayName("벡터 arm - enrichedQuery가 아닌 원본 질의를 임베딩 (#162)")
+    void recommend_vectorArm_embedsOriginalQuery() {
+        given(queryEnrichmentService.enrich(QUERY))
+                .willReturn(new EnrichedQuery("확장된 쿼리", "bm25 키워드", List.of(), null, null));
+
+        recommendationService.recommend(QUERY, MEMBER_ID);
+
+        verify(embeddingModel).embed(QUERY);
+    }
+
+    @Test
     @DisplayName("임베딩 실패 - null 임베딩으로 검색 진행")
     void recommend_embeddingFails_searchesWithNullEmbedding() {
         given(queryEnrichmentService.enrich(QUERY))
