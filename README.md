@@ -16,14 +16,14 @@ Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입�
 
 | 영역 | 현재 구성 | 기준 파일 |
 |---|---|---|
-| Backend | Java 25, Spring Boot 4.0.6, Spring AI 2.0.0-M5 | [build.gradle](backend/AgentCart/build.gradle) |
+| Backend | Java 25, Spring Boot 4.0.6, Spring AI 2.0.1 | [build.gradle](backend/AgentCart/build.gradle) |
 | Frontend | Next.js 15.5.18, React 19.1.0, TypeScript | [package.json](frontend/package.json) |
 | Chat / Embedding | 로컬 설정 기준 OpenAI `gpt-4o-mini` / Ollama `bge-m3` | [Backend Context](docs/BACKEND_CONTEXT.md) |
 | 저장소 | MySQL, PostgreSQL + pgvector, Redis | [Compose](docker-compose.yml) |
 | 이벤트 | Kafka, 추천 이력 Consumer | [Infrastructure Context](docs/INFRA_CONTEXT.md) |
 | 테스트 | JUnit·Mockito·Testcontainers, Vitest·Testing Library | [개발 가이드](docs/DEVELOPMENT.md) |
 
-라이브러리의 세부 버전은 빌드 파일과 lockfile을 기준으로 확인합니다. Spring AI 안정 버전 전환은 후속 호환성 검증 작업이며 현재 적용된 상태가 아닙니다.
+라이브러리의 세부 버전은 빌드 파일과 lockfile을 기준으로 확인합니다. Spring AI는 안정 버전 `2.0.1`을 사용합니다.
 
 ## 추천 흐름
 

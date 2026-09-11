@@ -46,7 +46,7 @@ class ProductEmbeddingServiceTest {
 
         embeddingService.createOrUpdate(1L, buildProduct());
 
-        then(embeddingRepository).should().upsertEmbedding(eq(1L), same(vector), eq("text-embedding-3-small"));
+        then(embeddingRepository).should().upsertEmbedding(eq(1L), same(vector), eq("bge-m3"));
     }
 
     @Test
