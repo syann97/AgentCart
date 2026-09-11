@@ -1,4 +1,6 @@
-# Code Review Skill
+# 코드 리뷰 작업 가이드
+
+이 파일은 도구 중립적인 저장소 참고 문서입니다. 요구사항과 [공통 개발 규칙](../../DEVELOPMENT.md), 변경 영역의 context·rules를 기준으로 실제 diff를 검토합니다.
 
 ## Goal
 
@@ -26,6 +28,7 @@ Review code for correctness, simplicity, and maintainability.
 4. Check test coverage.
 5. Check unnecessary complexity.
 6. Verify regression risks.
+7. Verify documentation describes current and planned behavior separately.
 
 ## Verification
 
@@ -33,6 +36,7 @@ Review code for correctness, simplicity, and maintainability.
 - Complexity is justified.
 - Tests cover important behavior.
 - No unnecessary changes exist.
+- Report unrun tests and unresolved assumptions explicitly.
 
 ## Anti-Patterns
 

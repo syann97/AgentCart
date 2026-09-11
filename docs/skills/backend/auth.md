@@ -1,4 +1,6 @@
-# Backend Auth Skill
+# Backend 인증 작업 가이드
+
+이 파일은 도구 중립적인 저장소 참고 문서입니다. 실제 token 저장·cookie·SSE 인증 동작은 [AUTH](../../AUTH.md), 공통 범위와 검증 원칙은 [DEVELOPMENT](../../DEVELOPMENT.md)가 기준입니다.
 
 ## Authentication Rules
 
@@ -22,7 +24,7 @@
 
 - Rotate refresh token on refresh
 - Invalidate previous refresh token
-- Remove refresh token on logout
+- 로그아웃에서 Redis token 상태와 browser cookie 정리 여부를 각각 결정
 - Refresh failure must return 401
 
 ---
@@ -46,6 +48,8 @@ Refresh token cookie must:
 - use appropriate SameSite policy
 
 Do not expose refresh tokens in response body.
+
+현재 SSE는 Access token을 query parameter로 전달합니다. 변경할 때 URL·proxy log 노출, CORS, Frontend `EventSource`, Backend filter를 함께 검토합니다.
 
 ---
 
@@ -75,5 +79,8 @@ Verify:
 - login issues access token correctly
 - refresh rotates tokens correctly
 - logout invalidates refresh token
+- cookie 속성과 logout 후 browser/Redis 상태가 계약과 일치
 - unauthorized requests return 401
 - forbidden requests return 403
+
+현재 구현의 한계를 새 규칙이 이미 충족된 것처럼 기록하지 않습니다. 예를 들어 현재 logout은 Redis key를 지우지만 cookie 만료 header는 보내지 않습니다.

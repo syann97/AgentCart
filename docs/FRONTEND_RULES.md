@@ -1,35 +1,26 @@
-# Frontend Rules
+# Frontend 변경 규칙
 
-## SSE Rules
+[공통 개발 규칙](DEVELOPMENT.md)과 [Frontend Context](FRONTEND_CONTEXT.md)를 따릅니다. 개발 원칙과 현재의 구현 한계를 구분합니다.
 
-- Stream recommendation results progressively
-- Do not wait for full response
-- Render partial results immediately
-- Keep UI responsive during streaming
+## SSE
 
----
+- 현재 계약은 [추천 파이프라인](RECOMMENDATION_PIPELINE.md)을 참조합니다. `complete`는 상품 하나이며 전체 요청 종료가 아닙니다.
+- 현재 EventSource는 `token` query parameter를 사용합니다. Axios 인터셉터가 SSE 인증·토큰 갱신을 자동 처리한다고 가정하지 않습니다.
+- 새 계약은 [목표 설계](AGENTIC_RAG_PLAN.md)의 진행·결과·종료·오류 메시지를 Backend와 함께 적용합니다.
+- 0개 결과, 정상 종료, 오류, 재검색, 연결 해제, 다시 검색할 때의 상태를 구분합니다.
+- UI 진행 상태는 사용자가 이해할 수 있는 검색 상태만 보여줍니다. 내부 클래스명이나 모델의 내부 추론을 노출하지 않습니다.
 
-## Authentication Rules
+## 인증과 API
 
-- Store refresh token in HttpOnly cookie only
-- Retry original request after successful token refresh
-- Redirect unauthenticated users to /login
-- Clear authentication state on refresh failure
+- REST는 중앙 [Axios client](../frontend/src/lib/axios.ts)를 사용합니다.
+- AccessToken 저장소, RefreshToken 쿠키, 라우트 보호는 [AUTH](AUTH.md)가 기준입니다.
+- 토큰 갱신 후 원 요청을 재시도하는 경로와 동시 갱신 방지 동작을 함께 검증합니다. 자동 재시도를 추가할 때 횟수와 중복 실행 가능성을 확인합니다.
+- 세션 상태와 토큰 저장소의 정리, 로그인 이동을 별개 책임으로 확인합니다. 현재 모든 401이 자동 로그아웃·redirect로 이어진다고 가정하지 않습니다.
 
----
+## UI와 검증
 
-## UX Rules
-
-- Show recommendation reason clearly
-- Emphasize matched conditions
-- Display loading state during streaming
-- Show meaningful error messages
-- Avoid blocking full-page loading states
-
----
-
-## API Rules
-
-- Use centralized API client
-- Handle 401 responses consistently
-- Avoid duplicate refresh requests
+- 가격은 서버 DTO의 값을 표시합니다. 모델이 작성한 추천 이유에서 가격을 추출하지 않습니다.
+- 추천 점수는 순위 지표입니다. 근거 없이 구매 적합 확률로 설명하지 않습니다.
+- 검색 시작·진행·결과 없음·오류 상태를 구분하고 렌더 함수 본문에서 요청 상태를 변경하지 않습니다.
+- 현재 없는 컴포넌트나 폴더 구조를 문서로 먼저 구현 완료 처리하지 않습니다.
+- [Frontend 테스트 가이드](skills/frontend/testing.md)에 따라 사용자에게 보이는 행동과 연결 정리를 검증합니다.

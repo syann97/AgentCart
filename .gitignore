@@ -66,11 +66,12 @@ docker-compose.override.yml
 ### Flyway ###
 **/db/migration/*-local.sql
 
-### LLM Prompts (민감한 프롬프트만 제외, CLAUDE.md는 공유) ###
+### LLM prompt drafts (공유 인덱스와 범용 템플릿만 추적) ###
 docs/prompts/*.md
+!docs/prompts/README.md
+!docs/prompts/task-template.md
 
 ### Gradle wrapper ###
 # gradlew
 # gradlew.bat
 # gradle/wrapper/gradle-wrapper.properties
-
