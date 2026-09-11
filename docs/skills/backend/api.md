@@ -1,4 +1,6 @@
-# Backend API Skill
+# Backend API 작업 가이드
+
+이 파일은 도구 중립적인 저장소 참고 문서입니다. [공통 개발 규칙](../../DEVELOPMENT.md), [Backend Context](../../BACKEND_CONTEXT.md), [Backend 변경 규칙](../../BACKEND_RULES.md)을 먼저 적용합니다.
 
 ## Goal
 
@@ -32,9 +34,9 @@ Implement backend APIs with minimal and consistent changes.
 
 ## Test Rules
 
-- Add integration tests for APIs
-- Reproduce bugs before fixing
-- Mock only external systems
+- 계약·SQL·보안 경계가 바뀌면 필요한 통합 테스트를 추가
+- 버그 수정이면 가능한 범위에서 먼저 재현
+- Service 단위 테스트는 협력 객체를 mock하고, DB·HTTP 계약은 적절한 slice 또는 Testcontainers로 검증
 
 ## Workflow
 
@@ -52,6 +54,7 @@ Implement backend APIs with minimal and consistent changes.
 - Validation catches invalid input
 - Tests pass
 - No unnecessary code added
+- API 문서·Frontend type·client가 실제 응답과 일치
 
 ## Anti-Patterns
 

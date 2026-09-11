@@ -1,33 +1,29 @@
 # AgentCart Frontend
 
-AI Agent 기반 이커머스 서비스의 프론트엔드.  
-Next.js 15 App Router + React 19 + TypeScript로 구성된다.
+현재 Frontend는 Next.js App Router, React, TypeScript로 회원·상품·장바구니·주문·Mock 결제·추천 화면을 제공합니다. 추천 agent의 단계별 진행 UI는 아직 구현되지 않았습니다.
 
 ## 기술 스택
 
-| 분류 | 기술 | 선택 이유 |
+| 분류 | 기술 | 현재 역할 |
 |------|------|----------|
-| 프레임워크 | Next.js 15 (App Router) | SSR/SSG 유연성, 파일 기반 라우팅, Server Component 지원 |
-| UI | React 19 + Tailwind CSS | 최신 React 동시성 모드, 유틸리티 CSS로 빠른 스타일링 |
-| 서버 상태 | TanStack Query v5 | 캐싱/갱신/무효화 자동 관리, 백엔드 동기화 단순화 |
-| 클라이언트 상태 | Zustand | 보일러플레이트 없음, 인증 상태처럼 전역이지만 단순한 상태에 적합 |
-| HTTP | Axios | Interceptor 기반 토큰 자동 주입·갱신, 에러 핸들링 집중화 |
-| 폼 검증 | React Hook Form + Zod | 비제어 컴포넌트로 성능 최적화, Zod 스키마로 타입과 검증 통합 |
-| 언어 | TypeScript (strict) | 컴파일 타임 오류 차단, 백엔드 DTO와 타입 동기화 |
+| 프레임워크 | Next.js 15.5.18 (App Router) | page와 layout routing |
+| UI | React 19.1.0 + Tailwind CSS 4 | component와 styling |
+| 서버 상태 | TanStack Query v5 | API 상태와 cache |
+| 클라이언트 상태 | Zustand | 현재 인증 member와 상태 |
+| HTTP / stream | Axios / browser `EventSource` | REST token 처리 / 추천 SSE |
+| 폼 검증 | React Hook Form + Zod | 폼 상태와 client 입력 검증 |
+| 테스트 | Vitest, Testing Library, MSW, jsdom | unit·component·hook 검증 |
+
+버전의 기준은 [package.json](package.json)과 [package-lock.json](package-lock.json)입니다. Node.js 버전은 저장소에 고정되어 있지 않습니다.
 
 ## 폴더 구조
 
 ```
 src/
-├── app/                  # Next.js App Router 페이지 및 레이아웃
-│   ├── layout.tsx        # 루트 레이아웃 (Providers, Header 포함)
-│   ├── providers.tsx     # QueryClientProvider 래퍼
-│   ├── error.tsx         # 전역 에러 바운더리
-│   ├── not-found.tsx     # 404 페이지
-│   ├── login/            # 로그인 페이지
-│   ├── products/         # 상품 목록
-│   ├── recommendations/  # AI 추천 (SSE 스트리밍)
-│   └── cart/             # 장바구니
+├── app/                  # Next.js App Router 페이지와 레이아웃
+│   ├── (protected)/      # client auth guard 아래 상품·추천·장바구니·주문
+│   ├── login/
+│   └── register/
 │
 ├── features/             # 도메인별 기능 모음 (FSD 방식 참고)
 │   ├── auth/             # 로그인/인증
@@ -36,34 +32,31 @@ src/
 │   │   ├── hooks/        # useMutation 래퍼
 │   │   └── types/        # DTO, Zod 스키마
 │   ├── product/
-│   ├── recommendation/   # SSE 스트리밍 훅 포함
+│   ├── recommendation/   # SSE 구독 훅과 추천 타입
 │   ├── cart/
 │   ├── order/
-│   └── agent/            # Agent 모니터링 대시보드 (추후 확장)
+│   └── payment/
 │
 ├── components/
 │   ├── ui/               # 재사용 가능한 원자 컴포넌트 (Button, Input 등)
 │   └── layout/           # Header, Footer 등 레이아웃 컴포넌트
 │
-├── shared/               # features 간 공유 코드
-├── entities/             # 백엔드 도메인 모델 타입 (Member, Product, Order)
-├── lib/                  # 외부 라이브러리 설정
-│   ├── axios.ts          # Axios 인스턴스 + Interceptor
-│   └── query-client.ts   # TanStack Query 클라이언트
-│
-├── hooks/                # 전역 커스텀 훅 (use-sse 등)
-├── stores/               # Zustand 스토어
-├── types/                # 전역 타입 (ApiResponse 등)
-├── constants/            # API 엔드포인트, 쿼리 키
-├── utils/                # 순수 유틸 함수 (token 관리 등)
-└── styles/               # 전역 CSS
+├── lib/                  # Axios와 QueryClient 설정
+├── hooks/                # useSse와 auth guard
+├── stores/               # Zustand store
+├── constants/
+├── types/
+├── utils/
+└── test/                 # 공통 테스트 설정
 ```
 
 ### 구조 선택 이유
 
-- **features 기반 분리**: 기능이 추가될 때 해당 폴더만 건드리면 된다. 횡단 관심사는 `shared`로 분리.
-- **lib 분리**: Axios·QueryClient 설정을 한 곳에서 관리하여 테스트 시 모킹이 쉽다.
-- **entities 분리**: 백엔드 도메인 모델을 별도 관리해 타입 변경 시 영향 범위를 최소화한다.
+- page는 `src/app`, 도메인별 API·hook·type·component는 `src/features`에 둡니다.
+- 인증된 page는 `src/app/(protected)`의 `ProtectedLayout`을 거칩니다.
+- 공통 component와 hook, 외부 client 설정은 각각 `components`, `hooks`, `lib`에 있습니다.
+
+`features/agent`, `shared`, `entities`, `styles` 디렉터리는 현재 없습니다. 새 구조는 실제 구현과 import를 같은 변경에서 추가합니다.
 
 ## 인증 흐름
 
@@ -79,25 +72,25 @@ API 요청
   → Axios Response Interceptor
   → POST /api/auth/refresh (쿠키 자동 전송)
   → 새 accessToken 저장 → 원 요청 재시도
-  → 재발급 실패 시 → tokenUtils.clear() → 로그인 페이지로
+  → 재발급 실패 시 → tokenUtils.clear()
 ```
 
-`accessToken`을 `sessionStorage`에 저장하는 이유:  
-`localStorage`는 XSS로 탈취 가능하고, `refresh_token`은 `HttpOnly` 쿠키로 JavaScript 접근 불가.  
-탭 종료 시 자동 만료되는 `sessionStorage`가 보안·UX 균형에 적합하다.
+Zustand 인증 상태는 persist되지 않고 시작할 때 `/api/auth/me`로 복원하지도 않습니다. 새 page load에서는 `sessionStorage` token이 남아 있어도 보호 layout이 로그인 화면으로 보낼 수 있습니다. refresh 실패도 token만 지우며 store 초기화와 redirect를 직접 수행하지 않습니다. 실제 cookie·route guard·SSE token 계약은 [AUTH](../docs/AUTH.md)를 참조합니다.
 
 ## SSE 스트리밍 구조
 
 ```
-useRecommendationStream(enabled)
+useRecommendationStream.start(query)
   → useSse(url, { onMessage })
   → EventSource + withCredentials
-  → JSON 청크 파싱 → results 상태 축적
-  → UI에서 점진적 렌더링
+  → access token을 ?token= query parameter로 전달
+  → type=complete 상품을 results 상태에 축적
+  → 연결 종료/error 경로에서 검색 상태 종료
 ```
 
-`EventSource`는 `Authorization` 헤더를 지원하지 않으므로 `?token=` 쿼리 파라미터로 전달한다.  
-백엔드에서 해당 파라미터를 별도 처리해야 한다.
+Backend는 추천 전체를 계산한 뒤 상품별 `complete` 메시지를 전송합니다. `complete`는 상품 하나이며 전체 요청 종료 event가 아닙니다. 현재 type에는 `partial | complete | error`가 선언되어 있지만 Backend가 세 종류를 모두 보내는 것은 아닙니다.
+
+`status | result | done | error`와 재검색 진행 UI는 [Agentic RAG 목표 설계](../docs/AGENTIC_RAG_PLAN.md)의 후속 구현입니다. 현행 계약은 [추천 파이프라인](../docs/RECOMMENDATION_PIPELINE.md)을 따릅니다.
 
 ## 시작하기
 
@@ -121,11 +114,14 @@ npm run build && npm start
 | 변수 | 설명 | 기본값 |
 |------|------|--------|
 | `NEXT_PUBLIC_API_BASE_URL` | Spring Boot 백엔드 URL | `http://localhost:8080` |
-| `NEXT_PUBLIC_APP_ENV` | 환경 구분 | `development` |
+| `NEXT_PUBLIC_APP_ENV` | 예시 파일에는 있으나 현재 소스에서 읽지 않음 | `development` |
 
-## 향후 확장 포인트
+## 검증
 
-- `src/features/agent/` — Agent 파이프라인 모니터링 대시보드
-- `src/features/recommendation/components/` — SSE 스트리밍 결과 카드 UI
-- `src/components/ui/` — Button, Input, Badge, Skeleton 등 공통 컴포넌트
-- Server Component 활용 — 상품 목록 초기 데이터를 서버에서 fetch
+```powershell
+npm test
+npm run lint
+npm run build
+```
+
+변경 범위에 맞는 Vitest를 먼저 실행하고 type·bundle 경계가 관련되면 build까지 확인합니다. SSE 변경은 메시지 누적, 0개 결과, 오류, 재검색 또는 연결 정리처럼 사용자에게 보이는 상태를 검증합니다. 공통 원칙은 [Frontend 변경 규칙](../docs/FRONTEND_RULES.md)을 따릅니다.

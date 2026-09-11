@@ -1,4 +1,6 @@
-# Security Review Skill
+# 보안 리뷰 작업 가이드
+
+이 파일은 도구 중립적인 저장소 참고 문서입니다. 인증 변경은 [AUTH](../../AUTH.md), 공통 범위와 증거 기준은 [DEVELOPMENT](../../DEVELOPMENT.md)를 함께 확인합니다.
 
 ## Goal
 
@@ -17,6 +19,7 @@ Identify security weaknesses and unsafe implementation patterns.
 - Enforce authorization consistently.
 - Avoid leaking sensitive information.
 - Use secure defaults whenever possible.
+- Trace secrets and tokens through storage, headers, cookies, URLs, logs, and error messages.
 
 ## Workflow
 
@@ -26,6 +29,7 @@ Identify security weaknesses and unsafe implementation patterns.
 4. Verify token/cookie handling.
 5. Verify logging safety.
 6. Verify failure behavior.
+7. Check SSR/client boundaries, CORS, query parameters, and external callbacks when relevant.
 
 ## Verification
 
@@ -41,3 +45,4 @@ Identify security weaknesses and unsafe implementation patterns.
 - Trusting client-provided state
 - Silent authentication fallback
 - Overly broad permissions
+- Secrets or access tokens in query/access logs

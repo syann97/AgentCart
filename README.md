@@ -1,180 +1,67 @@
 # AgentCart
 
-> LLM을 *호출하는* 서비스가 아니라, **역할이 분리된 LLM 파이프라인으로 구매 의사결정을 보조하는** AI 커머스 백엔드.
+Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입니다. 자연어 질의로 상품을 찾고, 추천 이유와 가격을 확인하는 커머스 서비스를 만듭니다.
 
-자연어 질의(예: `"돌잔치 선물 5만원 이하"`)를 입력하면 **Planner → Executor → Evaluator** 파이프라인이 의도를 구조화하고, Hybrid 검색(키워드 + 벡터)으로 후보를 찾고, 규칙 기반으로 검증한 뒤, **재현 가능한 추천 근거**와 함께 SSE로 스트리밍합니다.
+**현재 구현은 질의 확장 → Hybrid 검색 → 규칙 검증 → 추천 이유 생성의 고정형 RAG 파이프라인입니다.** 승인된 다음 목표는 단일 에이전트가 검색 도구를 사용하고 필요할 때 한 번 재검색하는 구조입니다. 도구 호출 루프와 단계별 진행 이벤트는 아직 구현되지 않았습니다.
 
----
+## 현재 구현
 
-## 핵심 특징
+- MySQL FULLTEXT와 pgvector 검색 결과를 순위 기반으로 결합합니다.
+- OpenAI 채팅 모델로 질의를 확장하고 후보별 추천 이유를 생성합니다.
+- 상품 상태, 카테고리, 최근 주문, 가격 조건을 검증합니다. 현재 fallback의 한계는 [추천 파이프라인](docs/RECOMMENDATION_PIPELINE.md)에 기록합니다.
+- 추천 전체 계산 후 상품별 SSE 메시지를 전송하고 Kafka로 추천 이력을 적재합니다.
+- 회원·인증, 상품 CRUD, 장바구니, 주문·재고 처리, Mock 결제가 구현되어 있습니다.
 
-- **Hybrid RAG 검색** — MySQL FULLTEXT(키워드) + pgvector(의미 유사도)를 RRF로 융합
-- **역할 분리 파이프라인** — 의도 분석 / 검색 / 검증을 독립 컴포넌트로 분리해 단계별 디버깅·테스트 가능
-- **Explainability** — 추상 점수가 아닌 추천 이유 문장 + 조건 매칭(conditions)을 함께 제공
-- **이벤트 기반 이력 적재** — 추천 결과를 Kafka로 비동기 발행, Consumer가 멱등 처리 후 이력 저장
-- **SSE 스트리밍** — 검색 결과를 도착하는 대로 클라이언트로 전송
-- **장애 격리** — LLM 호출은 timeout + fallback으로 감싸 LLM 실패 시에도 시스템이 동작
+## 기술 구성
 
----
+| 영역 | 현재 구성 | 기준 파일 |
+|---|---|---|
+| Backend | Java 25, Spring Boot 4.0.6, Spring AI 2.0.0-M5 | [build.gradle](backend/AgentCart/build.gradle) |
+| Frontend | Next.js 15.5.18, React 19.1.0, TypeScript | [package.json](frontend/package.json) |
+| Chat / Embedding | 로컬 설정 기준 OpenAI `gpt-4o-mini` / Ollama `bge-m3` | [Backend Context](docs/BACKEND_CONTEXT.md) |
+| 저장소 | MySQL, PostgreSQL + pgvector, Redis | [Compose](docker-compose.yml) |
+| 이벤트 | Kafka, 추천 이력 Consumer | [Infrastructure Context](docs/INFRA_CONTEXT.md) |
+| 테스트 | JUnit·Mockito·Testcontainers, Vitest·Testing Library | [개발 가이드](docs/DEVELOPMENT.md) |
 
-## 기술 스택
+라이브러리의 세부 버전은 빌드 파일과 lockfile을 기준으로 확인합니다. Spring AI 안정 버전 전환은 후속 호환성 검증 작업이며 현재 적용된 상태가 아닙니다.
 
-| 구분 | 기술 |
-|------|------|
-| Language | Java 25 |
-| Framework | Spring Boot 4.0.6 / Spring Framework 7.0.7 / Spring Security 7.0.5 |
-| AI | Spring AI 2.0.0-M5 (OpenAI · Anthropic · Ollama starter) |
-| Chat LLM | OpenAI `gpt-4o-mini` (Planner / 추천 근거 생성) |
-| Embedding | Ollama `bge-m3` (한국어 임베딩 품질 목적) |
-| Vector Store | PostgreSQL + pgvector 0.8.2 |
-| RDB | MySQL 8.4 (상품 / 주문 / 회원 / 추천 이력) |
-| Cache / Lock | Redis 7.4 + Redisson 4.3.1 (분산 락) |
-| Messaging | Apache Kafka 4.1 (Spring Kafka) |
-| Auth | JJWT 0.13.0 (JWT) |
-| Migration | Flyway (MySQL + PostgreSQL) |
-| Observability | Spring Actuator + Micrometer (Prometheus registry) |
-| Serialization | Jackson 3.x (`tools.jackson`) |
-| Test | JUnit 5 + Testcontainers |
-| Frontend | Next.js 15.5 / React 19 / TypeScript / TanStack Query |
+## 추천 흐름
 
-> Spring AI는 OpenAI·Anthropic·Ollama 스타터를 모두 구성해 두었으며, 현재 채팅 추론은 OpenAI, 임베딩은 Ollama 모델을 사용합니다.
-
----
-
-## 시스템 아키텍처
-
-```
-                        ┌─────────────────────────────┐
-   Browser (Next.js)    │  Authorization: Bearer <AT> │
-        │  SSE          └─────────────────────────────┘
-        ▼
-┌───────────────────────────────────────────────────────────┐
-│                  Spring Boot 4 / Java 25                    │
-│                                                            │
-│  Auth · Member · Product · Cart · Order · Payment          │
-│                                                            │
-│  ┌──────────────── Recommendation ─────────────────────┐  │
-│  │  Planner ──► Executor ──► Evaluator ──► Reasoning    │  │
-│  │  (LLM)       (Hybrid)     (Rule chain)  (LLM)        │  │
-│  └─────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────┘
-        │           │            │            │
-        ▼           ▼            ▼            ▼
-     MySQL       pgvector      Redis        Kafka
-   (도메인)     (임베딩)    (캐시/락/멱등)  (추천 이벤트)
+```text
+GET /api/recommendations/stream?query=...
+  → QueryEnrichmentService: 키워드·가격·카테고리 추출
+  → 원본 질의 임베딩 + HybridSearchService
+  → EvaluatorChain: 후보 검증, 최대 5개 선택
+  → LlmReasoningService: 후보별 추천 이유 생성
+  → 상품별 complete 메시지 전송 후 SSE 연결 종료
+  → recommendation.served 이벤트 → 추천 이력 저장
 ```
 
----
+현재 브라우저 SSE는 `EventSource`와 토큰 query parameter를 사용합니다. 일반 API의 Bearer 헤더 방식과 구분해야 합니다. [인증 가이드](docs/AUTH.md)
 
-## 도메인 구성
+검색 공식·임계값·timeout·SSE의 현행 계약은 [추천 파이프라인](docs/RECOMMENDATION_PIPELINE.md)을 참조합니다.
 
-| 도메인 | 백엔드 | 프론트엔드 | 설명 |
-|--------|:------:|:----------:|------|
-| auth / member | ✅ | ✅ | JWT 인증, 회원 관리 |
-| product | ✅ | ✅ | 상품 CRUD, pgvector 임베딩 |
-| cart | ✅ | ✅ | 장바구니 |
-| order | ✅ | ✅ | 주문 생성/상태, 재고 분산 락 |
-| payment | ✅ | ✅ | Mock 결제 |
-| recommendation | ✅ | ✅ | Agent 파이프라인, SSE, 이력 |
+## 승인된 다음 목표
 
----
+단일 추천 에이전트와 읽기 전용 `searchCatalog` 도구를 도입합니다. 기존 검색·상품 조회·검증을 도구 내부에서 재사용하고, 모델이 검색어와 재검색 여부를 결정합니다.
 
-## 추천 파이프라인 상세
+명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한, 평가 기준은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다. [#173](https://github.com/syann97/AgentCart/issues/173)은 이 설계를 기준으로 문서의 정합성을 먼저 맞추는 작업입니다.
 
-엔트리: `GET /api/recommendations/stream?query=...` (SSE) → `RecommendationService.recommend()`
+## 데이터와 실행
 
-```
-질의 "돌잔치 선물 5만원 이하"
-   │
-   ▼ ① Planner — QueryEnrichmentService (LLM)
-   │   · 한국어 키워드 확장(enrichedQuery / bm25Keywords)
-   │   · 가격 제약(minPrice/maxPrice) 구조화 추출
-   │   · 결과 Redis 캐시(TTL 5분), 실패 시 원본 질의로 fallback
-   │
-   ▼ ② Embedding — Ollama bge-m3 로 enrichedQuery 벡터화
-   │
-   ▼ ③ Executor — HybridSearchService
-   │   · BM25계열: MySQL FULLTEXT MATCH...AGAINST (상위 50)
-   │   · Vector  : pgvector 코사인 유사도 (상위 50, 최소 0.5)
-   │   · 융합    : RRF(k=60) → score = 1/(k+bm25rank) + 1/(k+vecrank)·similarity
-   │             → 임계치 필터 후 max 점수로 정규화
-   │
-   ▼ ④ Evaluator — EvaluatorChain (규칙 기반 4단계, 실패 시 해당 후보 제외)
-   │   1. 상품 존재 & ACTIVE 상태 (findAllById 인라인)
-   │   2. ConsistencyValidator
-   │   3. RuleFilterValidator   (SOLD_OUT / 최근 7일 주문 상품 제외)
-   │   4. PriceConstraintValidator (가격 제약 hard filter)
-   │   → 상위 5개(TOP_N)
-   │
-   ▼ ⑤ Reasoning — LlmReasoningService (LLM)
-   │   · 후보별 추천 이유 + 조건(conditions) 생성
-   │   · 가상 스레드 병렬(동시 3) · 후보당 10초 timeout · 실패 시 fallback 문구
-   │   · 가격 숫자 노출 방지를 위해 가격대 레이블(저가~프리미엄)로 변환
-   │
-   ▼ SSE 로 RecommendationResult 스트리밍
-   │   { productId, productName, price, reason, conditions[], score }
-   │
-   ▼ ⑥ Kafka 발행 — RecommendationEventProducer → topic "recommendation.served"
-       └─ RecommendationServedConsumer: eventId 멱등 처리(Redis, 24h) → 추천 이력 저장
-```
+- [상품 JSON](scripts/data/) 8개 파일에 합계 500개 항목이 있습니다. 실제 DB 적재 수는 별도 확인이 필요합니다.
+- 1차 지원 시나리오와 평가 계획: [추천 시나리오](docs/RECOMMENDATION_SCENARIOS.md)
+- 인프라·로컬 설정·실행 순서: [로컬 실행 가이드](docs/LOCAL_SETUP.md)
+- 프런트엔드 작업 안내: [Frontend README](frontend/README.md)
 
-이력 조회: `GET /api/recommendations/history` (최근 20건)
+현재 임베딩 재생성은 Backend의 `bge-m3` 경로를 기준으로 합니다. 이전 OpenAI 방식인 `scripts/generate_embeddings.py`와 혼용하지 않도록 [실행 가이드](docs/LOCAL_SETUP.md)를 확인합니다.
 
----
+## 문서와 개발 지침
 
-## 인증
+[문서 인덱스](docs/README.md)에서 각 문서의 책임과 읽는 순서를 확인할 수 있습니다.
 
-JWT 기반 Stateless 인증. AccessToken은 `sessionStorage`, RefreshToken은 `HttpOnly` 쿠키 + Redis(TTL 7일)에 저장하며 재발급 시 Rotation을 적용합니다.
-
-> 흐름 다이어그램·Redis 키 구조·토큰 저장 전략 등 상세 내용은 **[docs/AUTH.md](docs/AUTH.md)** 참고.
-
----
-
-## 동시성 · 이벤트
-
-- **재고 분산 락** — `InventoryLockService`가 주문 시 상품 ID 단위로 Redisson 분산 락(`tryLock`, 5초 대기)을 적용해 재고 차감 동시성을 제어합니다.
-- **Kafka 이벤트** — 추천 결과를 동기 응답 경로에서 분리해 비동기로 발행하고, Consumer가 `eventId` 기반 멱등 처리 후 이력을 적재합니다.
-
----
-
-## 데이터셋
-
-- LLM 합성 **한국어 상품 데이터 500개** (추천 시나리오 역설계 기반: 정답 상품 + 노이즈 혼합)
-- 각 상품에 대한 pgvector 임베딩(`bge-m3`, 한국어)
-- 시딩/임베딩 스크립트: [`scripts/`](scripts/)
-
----
-
-## 로컬 실행
-
-```bash
-# 1. 인프라 (MySQL, Redis, PostgreSQL+pgvector, Kafka, Ollama)
-docker compose up -d
-
-# 2. 백엔드
-cd backend/AgentCart
-./gradlew bootRun --args='--spring.profiles.active=local'
-
-# 3. 프론트엔드
-cd frontend
-npm install
-npm run dev
-```
-
-LLM 사용을 위해 환경변수 `OPENAI_API_KEY`(필요 시 `ANTHROPIC_API_KEY`)를 설정하고, Ollama에 임베딩 모델을 준비합니다.
-
-```bash
-docker exec -it <ollama-container> ollama pull bge-m3
-```
-
----
-
-## 문서
-
-| 문서 | 내용 |
-|------|------|
-| [docs/AUTH.md](docs/AUTH.md) | 인증 시스템 상세 가이드 |
-| [docs/PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md) | 프로젝트 개요 |
-| [docs/BACKEND_CONTEXT.md](docs/BACKEND_CONTEXT.md) | 백엔드 스택 |
-| [docs/AGENT_CONTEXT.md](docs/AGENT_CONTEXT.md) | Agent 파이프라인 규칙 |
-| [docs/RECOMMENDATION_SCENARIOS.md](docs/RECOMMENDATION_SCENARIOS.md) | 추천 지원 시나리오 & 범위 |
+- 공통 개발 규칙: [DEVELOPMENT.md](docs/DEVELOPMENT.md)
+- Codex 진입 지침: [AGENTS.md](AGENTS.md)
+- Claude Code 진입 지침: [CLAUDE.md](CLAUDE.md)
+- 작업별 공통 가이드: [docs/skills](docs/skills/README.md)
+- 공유 작업 템플릿: [docs/prompts](docs/prompts/README.md)

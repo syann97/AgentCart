@@ -1,65 +1,11 @@
-# CLAUDE.md
+# Claude Code 작업 지침
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+이 파일은 Claude Code의 프로젝트 진입점입니다. 공통 규칙은 [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)에 있습니다.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+1. [프로젝트 개요](docs/PROJECT_CONTEXT.md)와 공통 개발 규칙을 읽습니다.
+2. 작업 영역의 context·rules와 [필요한 작업 가이드](docs/skills/README.md)를 선택합니다.
+3. 추천 작업은 [현재 동작](docs/RECOMMENDATION_PIPELINE.md)과 [승인된 목표](docs/AGENTIC_RAG_PLAN.md)를 함께 확인합니다.
 
-## 1. Think Before Coding
+`docs/skills`는 도구 중립적인 참조 가이드입니다. Claude Code의 도구나 세션 기능을 사용하는 지시는 이 진입점에서 관리하고, 공통 문서에 특정 코딩 도구 사용을 강제하지 않습니다.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
----
-
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+애플리케이션이 사용하는 채팅 모델은 [Backend Context](docs/BACKEND_CONTEXT.md)의 설정 기준을 따릅니다. Claude Code로 개발한다는 사실이 애플리케이션의 LLM을 결정하지 않습니다.
