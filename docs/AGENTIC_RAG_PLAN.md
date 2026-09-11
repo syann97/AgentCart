@@ -22,7 +22,7 @@ flowchart TD
 
 정상 흐름은 첫 모델 호출에서 검색 인자를 만들고, 검색 결과를 받은 두 번째 호출에서 최종 응답을 생성합니다. 두 번째 호출이 재검색을 선택하면 검색 결과를 받은 세 번째 호출에서 종료합니다. 별도의 추천 이유 생성 호출을 추가하지 않습니다.
 
-이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 실제 연동 API는 의존성 호환성 검증 후 선택합니다.
+이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 실제 도구 연동은 후속 `searchCatalog`·에이전트 구현에서 확정합니다.
 
 ## 명시 조건과 사용자 의도
 

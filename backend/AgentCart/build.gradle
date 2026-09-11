@@ -16,11 +16,10 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }  // Spring AI 2.0.0-M5 필수
 }
 
 ext {
-    set('springAiVersion', '2.0.0-M5')
+    set('springAiVersion', '2.0.1')
 }
 
 dependencies {
