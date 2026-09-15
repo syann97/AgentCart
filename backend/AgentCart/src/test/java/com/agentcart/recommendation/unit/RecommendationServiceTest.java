@@ -2,9 +2,11 @@ package com.agentcart.recommendation.unit;
 
 import com.agentcart.member.service.MemberService;
 import com.agentcart.product.domain.Product;
+import com.agentcart.recommendation.dto.ConditionSource;
 import com.agentcart.recommendation.dto.EnrichedQuery;
 import com.agentcart.recommendation.dto.LlmReasonResult;
 import com.agentcart.recommendation.dto.RecommendationResult;
+import com.agentcart.recommendation.dto.RecommendationRequestContext;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.repository.RecommendationHistoryRepository;
@@ -13,6 +15,7 @@ import com.agentcart.recommendation.service.HybridSearchService;
 import com.agentcart.recommendation.service.LlmReasoningService;
 import com.agentcart.recommendation.service.QueryEnrichmentService;
 import com.agentcart.recommendation.service.RecommendationService;
+import com.agentcart.recommendation.service.RecommendationRequestContextFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -35,6 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class RecommendationServiceTest {
@@ -45,6 +50,7 @@ class RecommendationServiceTest {
     @Mock private RecommendationHistoryRepository historyRepository;
     @Mock private MemberService memberService;
     @Mock private QueryEnrichmentService queryEnrichmentService;
+    @Spy private RecommendationRequestContextFactory requestContextFactory = new RecommendationRequestContextFactory();
     @Mock private HybridSearchService hybridSearchService;
     @Mock private EvaluatorChain evaluatorChain;
     @Mock private LlmReasoningService llmReasoningService;
@@ -92,7 +98,11 @@ class RecommendationServiceTest {
 
         recommendationService.recommend(QUERY, MEMBER_ID);
 
-        verify(evaluatorChain).filter(any(), eq(MEMBER_ID), eq(50000L), eq(150000L), any());
+        ArgumentCaptor<RecommendationRequestContext> context = ArgumentCaptor.forClass(RecommendationRequestContext.class);
+        verify(evaluatorChain).filter(any(), context.capture());
+        assertThat(context.getValue().priceRange().minPrice()).isEqualTo(50000L);
+        assertThat(context.getValue().priceRange().maxPrice()).isEqualTo(150000L);
+        assertThat(context.getValue().priceRange().source()).isEqualTo(ConditionSource.INFERRED);
     }
 
     @Test
@@ -103,7 +113,10 @@ class RecommendationServiceTest {
 
         recommendationService.recommend(QUERY, MEMBER_ID);
 
-        verify(evaluatorChain).filter(any(), eq(MEMBER_ID), any(), any(), eq(List.of("패션·의류")));
+        ArgumentCaptor<RecommendationRequestContext> context = ArgumentCaptor.forClass(RecommendationRequestContext.class);
+        verify(evaluatorChain).filter(any(), context.capture());
+        assertThat(context.getValue().categoryConstraint().categories()).containsExactly("패션·의류");
+        assertThat(context.getValue().categoryConstraint().source()).isEqualTo(ConditionSource.INFERRED);
     }
 
     @Test
@@ -132,11 +145,47 @@ class RecommendationServiceTest {
     }
 
     @Test
+    @DisplayName("충돌 가격 범위 - 검색과 모델 호출 없이 빈 결과 반환")
+    void recommend_conflictingExplicitPrice_skipsSearchAndLlm() {
+        List<RecommendationResult> results = recommendationService.recommend(
+                "5만원 이상 3만원 이하 캠핑용품", MEMBER_ID);
+
+        assertThat(results).isEmpty();
+        verifyNoInteractions(queryEnrichmentService, embeddingModel, hybridSearchService,
+                evaluatorChain, llmReasoningService);
+    }
+
+    @Test
+    @DisplayName("원본 질의와 명시 조건 근거 - 평가와 이유 생성까지 유지")
+    void recommend_explicitConditions_preservesOriginalQueryAndEvidence() {
+        String originalQuery = "5만원 이하 사무용품 선물 추천";
+        given(queryEnrichmentService.enrich(originalQuery))
+                .willReturn(new EnrichedQuery("노트북 선물", "노트북", List.of("디지털·IT기기"),
+                        100_000L, 200_000L));
+        given(evaluatorChain.filter(any(), any(RecommendationRequestContext.class)))
+                .willReturn(List.of(validated(1L, "업무 노트", "문구·오피스", 30_000, 0.9)));
+        given(llmReasoningService.generateReasons(any(), eq(originalQuery))).willReturn(Map.of());
+
+        recommendationService.recommend(originalQuery, MEMBER_ID);
+
+        ArgumentCaptor<RecommendationRequestContext> context = ArgumentCaptor.forClass(RecommendationRequestContext.class);
+        verify(evaluatorChain).filter(any(), context.capture());
+        assertThat(context.getValue().originalQuery()).isEqualTo(originalQuery);
+        assertThat(context.getValue().priceRange().maxPrice()).isEqualTo(50_000L);
+        assertThat(context.getValue().priceRange().evidence()).isEqualTo("5만원 이하");
+        assertThat(context.getValue().priceRange().source()).isEqualTo(ConditionSource.EXPLICIT);
+        assertThat(context.getValue().categoryConstraint().categories()).containsExactly("문구·오피스");
+        assertThat(context.getValue().categoryConstraint().evidence()).isEqualTo("사무용품");
+        assertThat(context.getValue().categoryConstraint().source()).isEqualTo(ConditionSource.EXPLICIT);
+        verify(llmReasoningService).generateReasons(any(), eq(originalQuery));
+    }
+
+    @Test
     @DisplayName("validated 비어있음 - 빈 결과 반환")
     void recommend_noValidatedCandidates_returnsEmpty() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any(), any())).willReturn(List.of());
+        given(evaluatorChain.filter(any(), any(RecommendationRequestContext.class))).willReturn(List.of());
 
         List<RecommendationResult> results = recommendationService.recommend(QUERY, MEMBER_ID);
 
@@ -150,7 +199,7 @@ class RecommendationServiceTest {
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
         List<ValidatedCandidate> seven = new ArrayList<>();
         for (long i = 1; i <= 7; i++) seven.add(validated(i, "상품" + i, "전자제품", 10000, 0.9));
-        given(evaluatorChain.filter(any(), any(), any(), any(), any())).willReturn(seven);
+        given(evaluatorChain.filter(any(), any(RecommendationRequestContext.class))).willReturn(seven);
 
         List<RecommendationResult> results = recommendationService.recommend(QUERY, MEMBER_ID);
 
@@ -162,7 +211,7 @@ class RecommendationServiceTest {
     void recommend_missingLlmReason_usesFallbackReason() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any(), any()))
+        given(evaluatorChain.filter(any(), any(RecommendationRequestContext.class)))
                 .willReturn(List.of(validated(1L, "무선 이어폰", "전자제품", 89000, 0.95)));
         given(llmReasoningService.generateReasons(any(), any())).willReturn(Map.of());
 
@@ -183,7 +232,7 @@ class RecommendationServiceTest {
     void recommend_withLlmReason_usesGeneratedReason() {
         given(queryEnrichmentService.enrich(QUERY))
                 .willReturn(new EnrichedQuery("쿼리", "키워드", List.of(), null, null));
-        given(evaluatorChain.filter(any(), any(), any(), any(), any()))
+        given(evaluatorChain.filter(any(), any(RecommendationRequestContext.class)))
                 .willReturn(List.of(validated(1L, "무선 이어폰", "전자제품", 89000, 0.95)));
         given(llmReasoningService.generateReasons(any(), any()))
                 .willReturn(Map.of(1L, new LlmReasonResult("출퇴근에 적합합니다", List.of("노이즈캔슬링", "장시간 배터리"))));

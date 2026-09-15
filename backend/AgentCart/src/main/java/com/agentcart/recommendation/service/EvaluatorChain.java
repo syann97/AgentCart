@@ -4,6 +4,10 @@ import com.agentcart.order.repository.OrderItemRepository;
 import com.agentcart.product.domain.Product;
 import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.repository.ProductRepository;
+import com.agentcart.recommendation.dto.CategoryConstraint;
+import com.agentcart.recommendation.dto.ConditionSource;
+import com.agentcart.recommendation.dto.PriceRange;
+import com.agentcart.recommendation.dto.RecommendationRequestContext;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
 import com.agentcart.recommendation.service.evaluator.CategoryValidator;
@@ -32,19 +36,24 @@ public class EvaluatorChain {
     private final RuleFilterValidator ruleFilterValidator;
     private final PriceConstraintValidator priceConstraintValidator;
 
-    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, Long memberId,
-                                           Long minPrice, Long maxPrice, List<String> categories) {
+    public List<ValidatedCandidate> filter(List<SearchCandidate> candidates, RecommendationRequestContext context) {
+        PriceRange priceRange = context.priceRange();
+        CategoryConstraint categoryConstraint = context.categoryConstraint();
+        Long minPrice = priceRange != null ? priceRange.minPrice() : null;
+        Long maxPrice = priceRange != null ? priceRange.maxPrice() : null;
+        List<String> categories = categoryConstraint != null ? categoryConstraint.categories() : List.of();
         Set<Long> ids = candidates.stream().map(SearchCandidate::productId).collect(Collectors.toSet());
         Map<Long, Product> productMap = productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, p -> p));
         Set<Long> recentlyOrdered = new HashSet<>(
-                orderItemRepository.findProductIdsOrderedByMemberSince(memberId, LocalDateTime.now().minusDays(7)));
+                orderItemRepository.findProductIdsOrderedByMemberSince(context.memberId(), LocalDateTime.now().minusDays(7)));
 
         List<ValidatedCandidate> result = evaluate(candidates, productMap, recentlyOrdered, minPrice, maxPrice, categories);
 
         // 카테고리 hard filter가 결과를 전부 비우면(카탈로그에 해당 카테고리 상품 부재 등),
         // 카테고리 없이 재시도하여 빈 화면 대신 차선 후보를 회수 (#167). 그 외 하드 규칙(재고·가격)은 유지.
-        if (result.isEmpty() && categories != null && !categories.isEmpty()) {
+        if (result.isEmpty() && categoryConstraint != null
+                && categoryConstraint.source() == ConditionSource.INFERRED) {
             log.debug("category filter emptied result — retrying without category filter (#167)");
             result = evaluate(candidates, productMap, recentlyOrdered, minPrice, maxPrice, List.of());
         }
@@ -63,6 +72,10 @@ public class EvaluatorChain {
             }
             if (product.getStatus() != ProductStatus.ACTIVE) {
                 log.debug("REJECTED reason=INACTIVE productId={} productName={}", product.getId(), product.getName());
+                continue;
+            }
+            if (product.getStock() <= 0) {
+                log.debug("REJECTED reason=OUT_OF_STOCK productId={} productName={}", product.getId(), product.getName());
                 continue;
             }
 

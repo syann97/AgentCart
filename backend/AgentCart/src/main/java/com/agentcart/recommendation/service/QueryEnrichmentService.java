@@ -1,6 +1,7 @@
 package com.agentcart.recommendation.service;
 
 import com.agentcart.recommendation.dto.EnrichedQuery;
+import com.agentcart.recommendation.dto.CategoryTaxonomy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -24,10 +25,7 @@ public class QueryEnrichmentService {
     private static final String CACHE_PREFIX = "rec:query:";
     private static final long CACHE_TTL_MINUTES = 5;
 
-    // 상품 카탈로그의 실제 카테고리 값(고정). LLM이 임의 카테고리를 만들지 않도록 폐쇄형 분류로 제약.
-    private static final String CATEGORY_TAXONOMY =
-            "캠핑·아웃도어, 문구·오피스, 주방용품, 가전, 뷰티·헬스, 패션·의류, 여행용품, "
-            + "스포츠·피트니스, 반려동물용품, 유아동, 디지털·IT기기, 생활용품, 인테리어·소품";
+    private static final String CATEGORY_TAXONOMY = String.join(", ", CategoryTaxonomy.names());
 
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
