@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,4 +35,54 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                    "WHERE MATCH(name, description, category, brand) AGAINST (:keyword IN BOOLEAN MODE) " +
                    "ORDER BY score DESC LIMIT :limit", nativeQuery = true)
     List<Object[]> bm25Search(@Param("keyword") String keyword, @Param("limit") int limit);
+
+    @Query(value = "SELECT id, MATCH(name, description, category, brand) " +
+                   "AGAINST (:keyword IN BOOLEAN MODE) AS score " +
+                   "FROM products " +
+                   "WHERE id IN (:allowedIds) " +
+                   "AND MATCH(name, description, category, brand) AGAINST (:keyword IN BOOLEAN MODE) " +
+                   "ORDER BY score DESC LIMIT :limit", nativeQuery = true)
+    List<Object[]> bm25SearchWithinIds(@Param("keyword") String keyword,
+                                       @Param("allowedIds") List<Long> allowedIds,
+                                       @Param("limit") int limit);
+
+    @Query("""
+            SELECT p.id FROM Product p
+            WHERE p.status = :status
+              AND p.stock > 0
+              AND (:minPrice IS NULL OR p.price >= :minPrice)
+              AND (:maxPrice IS NULL OR p.price <= :maxPrice)
+              AND NOT EXISTS (
+                  SELECT oi.id FROM OrderItem oi
+                  WHERE oi.product = p
+                    AND oi.order.member.id = :memberId
+                    AND oi.createdAt >= :since
+              )
+            """)
+    List<Long> findEligibleProductIds(@Param("memberId") Long memberId,
+                                      @Param("since") LocalDateTime since,
+                                      @Param("status") ProductStatus status,
+                                      @Param("minPrice") BigDecimal minPrice,
+                                      @Param("maxPrice") BigDecimal maxPrice);
+
+    @Query("""
+            SELECT p.id FROM Product p
+            WHERE p.status = :status
+              AND p.stock > 0
+              AND p.category IN :categories
+              AND (:minPrice IS NULL OR p.price >= :minPrice)
+              AND (:maxPrice IS NULL OR p.price <= :maxPrice)
+              AND NOT EXISTS (
+                  SELECT oi.id FROM OrderItem oi
+                  WHERE oi.product = p
+                    AND oi.order.member.id = :memberId
+                    AND oi.createdAt >= :since
+              )
+            """)
+    List<Long> findEligibleProductIdsByCategories(@Param("memberId") Long memberId,
+                                                  @Param("since") LocalDateTime since,
+                                                  @Param("status") ProductStatus status,
+                                                  @Param("minPrice") BigDecimal minPrice,
+                                                  @Param("maxPrice") BigDecimal maxPrice,
+                                                  @Param("categories") List<String> categories);
 }

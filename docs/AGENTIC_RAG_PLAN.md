@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 기반 코드 일부 구현**. 명시 조건을 보존하는 요청 컨텍스트와 evaluator 정책은 구현되었고, 검색 도구·에이전트 반복·SSE 계약은 아직 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 기반 코드와 검색 도구 구현**. 명시 조건 요청 컨텍스트와 `searchCatalog` 계약은 구현되었고, 모델의 도구 호출 반복과 SSE 계약은 아직 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -22,7 +22,7 @@ flowchart TD
 
 정상 흐름은 첫 모델 호출에서 검색 인자를 만들고, 검색 결과를 받은 두 번째 호출에서 최종 응답을 생성합니다. 두 번째 호출이 재검색을 선택하면 검색 결과를 받은 세 번째 호출에서 종료합니다. 별도의 추천 이유 생성 호출을 추가하지 않습니다.
 
-이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 실제 도구 연동은 후속 `searchCatalog`·에이전트 구현에서 확정합니다.
+이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 `searchCatalog`의 `ToolCallback` 계약은 #177에서 확정했습니다. 모델 호출 루프 연결은 후속 에이전트 단계입니다.
 
 ## 명시 조건과 사용자 의도
 
@@ -37,9 +37,11 @@ flowchart TD
 
 서버는 가격·명시 카테고리, 상품 존재·ACTIVE·양수 재고, 기존 최근 7일 주문 제외 정책을 적용합니다. 회원 식별자와 확정된 조건은 모델이 수정할 수 없는 요청 문맥에서 도구로 전달합니다.
 
-## 검색 도구 계약 — 구현 예정
+## 검색 도구 계약 — 구현됨, 에이전트 연결 예정
 
 도구명은 `searchCatalog` 하나입니다.
+
+#177에서 입력·출력 DTO, 서버 실행 문맥을 받는 Spring AI `ToolCallback`, MySQL 허용 ID 사전 필터, 제한된 BM25·pgvector 검색과 최신 상품 재검증을 구현했습니다. 현행 `RecommendationService` 대신 이 도구를 호출하는 agent loop는 다음 단계입니다.
 
 | 구분 | 내용 |
 |---|---|
@@ -122,8 +124,8 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 단계 | 범위 | 상태 |
 |---|---|---|
 | 1. #173 | 문서·skills·prompts 정합성, 현재/목표 구분, 공통 지침과 참조 검사 | 완료 |
-| 2. #175–#176 기반 코드 | Spring AI 안정 버전 전환, 명시 조건 보존 요청 컨텍스트, evaluator 정책 | 일부 완료; 검색 전 조건 적용은 후속 |
-| 3. 에이전트 | 검색 도구와 제한된 반복, 통합 이유 생성 | 후속 구현 |
+| 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
+| 3. 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성 | 후속 구현 |
 | 4. 응답·평가 | SSE 진행·종료·취소, 회귀 테스트와 실제 모델 평가 | 후속 구현 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.

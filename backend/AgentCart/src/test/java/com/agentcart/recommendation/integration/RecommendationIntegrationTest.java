@@ -4,19 +4,28 @@ import com.agentcart.auth.repository.RefreshTokenRepository;
 import com.agentcart.member.domain.Member;
 import com.agentcart.member.domain.Role;
 import com.agentcart.member.repository.MemberRepository;
+import com.agentcart.order.domain.Order;
+import com.agentcart.order.domain.OrderItem;
+import com.agentcart.order.repository.OrderRepository;
+import com.agentcart.product.domain.Product;
+import com.agentcart.product.domain.ProductStatus;
+import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.domain.RecommendationHistory;
 import com.agentcart.recommendation.repository.RecommendationHistoryRepository;
+import com.agentcart.recommendation.repository.RecommendationVectorRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -32,6 +41,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -78,6 +93,10 @@ class RecommendationIntegrationTest {
     @Autowired MemberRepository memberRepository;
     @Autowired RefreshTokenRepository refreshTokenRepository;
     @Autowired RecommendationHistoryRepository historyRepository;
+    @Autowired ProductRepository productRepository;
+    @Autowired OrderRepository orderRepository;
+    @Autowired RecommendationVectorRepository vectorRepository;
+    @Autowired @Qualifier("pgVectorJdbcTemplate") NamedParameterJdbcTemplate pgVectorJdbcTemplate;
     @Autowired PasswordEncoder passwordEncoder;
 
     private static final String MEMBER_EMAIL = "member@example.com";
@@ -99,6 +118,9 @@ class RecommendationIntegrationTest {
     @AfterEach
     void tearDown() {
         historyRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        pgVectorJdbcTemplate.update("DELETE FROM product_embeddings", Map.of());
         refreshTokenRepository.deleteAll();
         memberRepository.deleteAllInBatch();
     }
@@ -152,6 +174,47 @@ class RecommendationIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    @DisplayName("searchCatalog 사전 필터 - 가격·카테고리·ACTIVE·재고·최근 주문을 MySQL에서 적용")
+    void searchCatalogEligibility_explicitPolicies_returnsOnlyAllowedIds() {
+        Product eligible = saveProduct("업무 노트 허용", 30_000, "문구·오피스", 10, ProductStatus.ACTIVE);
+        saveProduct("업무 노트 고가", 80_000, "문구·오피스", 10, ProductStatus.ACTIVE);
+        saveProduct("업무 노트 타카테고리", 30_000, "디지털·IT기기", 10, ProductStatus.ACTIVE);
+        saveProduct("업무 노트 품절", 30_000, "문구·오피스", 0, ProductStatus.ACTIVE);
+        saveProduct("업무 노트 비활성", 30_000, "문구·오피스", 10, ProductStatus.INACTIVE);
+        Product ordered = saveProduct("업무 노트 최근주문", 30_000, "문구·오피스", 10, ProductStatus.ACTIVE);
+        Order order = new Order(member, ordered.getPrice(), "Member", "01012345678", "Seoul", null);
+        order.addItem(new OrderItem(order, ordered, 1));
+        orderRepository.saveAndFlush(order);
+
+        List<Long> allowedIds = productRepository.findEligibleProductIdsByCategories(
+                member.getId(), LocalDateTime.now().minusDays(7), ProductStatus.ACTIVE,
+                BigDecimal.valueOf(20_000), BigDecimal.valueOf(50_000), List.of("문구·오피스"));
+
+        assertThat(allowedIds).containsExactly(eligible.getId());
+        assertThat(productRepository.bm25SearchWithinIds("업무 노트", allowedIds, 50))
+                .extracting(row -> ((Number) row[0]).longValue())
+                .containsExactly(eligible.getId());
+    }
+
+    @Test
+    @DisplayName("searchCatalog Vector 조회 - PostgreSQL 검색 전에 허용 상품 ID 적용")
+    void searchCatalogVector_allowedIds_filtersBeforeSimilarityLimit() {
+        float[] query = vector(1.0f, 0.0f);
+        pgVectorJdbcTemplate.update(
+                "INSERT INTO product_embeddings(product_id, embedding, model) " +
+                        "VALUES (:productId, CAST(:embedding AS vector), 'bge-m3')",
+                Map.of("productId", 101L, "embedding", vectorText(vector(1.0f, 0.0f))));
+        pgVectorJdbcTemplate.update(
+                "INSERT INTO product_embeddings(product_id, embedding, model) " +
+                        "VALUES (:productId, CAST(:embedding AS vector), 'bge-m3')",
+                Map.of("productId", 202L, "embedding", vectorText(vector(0.9f, 0.1f))));
+
+        var results = vectorRepository.findTopBySimilarityWithinIds(query, List.of(202L), 50, 0.4);
+
+        assertThat(results).extracting(result -> result.productId()).containsExactly(202L);
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private String memberToken() throws Exception {
@@ -162,5 +225,27 @@ class RecommendationIntegrationTest {
                 .andReturn();
         JsonNode node = objectMapper.readTree(result.getResponse().getContentAsString());
         return node.get("data").get("accessToken").asString();
+    }
+
+    private Product saveProduct(String name, long price, String category, int stock, ProductStatus status) {
+        return productRepository.saveAndFlush(Product.builder()
+                .name(name).description("업무용 필기 상품").price(BigDecimal.valueOf(price))
+                .category(category).brand("AgentCart").stock(stock).status(status).build());
+    }
+
+    private float[] vector(float first, float second) {
+        float[] vector = new float[1024];
+        vector[0] = first;
+        vector[1] = second;
+        return vector;
+    }
+
+    private String vectorText(float[] vector) {
+        StringBuilder text = new StringBuilder("[");
+        for (int index = 0; index < vector.length; index++) {
+            if (index > 0) text.append(',');
+            text.append(vector[index]);
+        }
+        return text.append(']').toString();
     }
 }
