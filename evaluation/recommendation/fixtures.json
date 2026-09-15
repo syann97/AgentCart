@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "fixtures": {
+    "C04": {
+      "memberReference": "evaluation-member",
+      "recentWindowDays": 7,
+      "orders": [
+        {"stableProductKey":"스테인리스 냄비 3종 세트|키친아트","quantity":1,"orderedAt":"evaluation-run-time"}
+      ]
+    }
+  }
+}

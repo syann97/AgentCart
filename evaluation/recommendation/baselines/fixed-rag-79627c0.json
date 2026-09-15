@@ -1,0 +1,809 @@
+{
+  "schemaVersion" : 1,
+  "kind" : "real-model-fixed-rag-baseline",
+  "capturedAt" : "2026-09-15T14:47:56.428349300+09:00",
+  "sourceCommit" : "79627c080491b4d9e3d8400d4f81e8dcc40768b6",
+  "chatModel" : "gpt-4o-mini",
+  "embeddingModel" : "bge-m3",
+  "embeddingDimensions" : 1024,
+  "snapshotId" : "recommendation-catalog-2026-09-15",
+  "runtimeSnapshot" : {"mysqlProducts": 500, "pgvectorRows": 500},
+  "promptSources" : [
+    "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java@79627c080491b4d9e3d8400d4f81e8dcc40768b6",
+    "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/LlmReasoningService.java@79627c080491b4d9e3d8400d4f81e8dcc40768b6"
+  ],
+  "llmCallDefinition" : "application-level attempts: one query enrichment plus one reason generation per result; query cache cleared before each query",
+  "tokenUsageAndCost" : {"status":"not-recorded","reason":"the fixed pipeline did not expose provider token usage; application call attempts are recorded instead"},
+  "evaluations" : [ {
+    "queryId" : "R03",
+    "query" : "반려견과 이동할 때 필요한 물건",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 651,
+      "name" : "반려동물 캐리어형 백팩",
+      "brand" : "펫드라이브",
+      "price" : 56000.00,
+      "category" : "반려동물용품",
+      "score" : 1.0
+    }, {
+      "productId" : 650,
+      "name" : "반려동물용 차량 시트커버",
+      "brand" : "펫드라이브",
+      "price" : 38000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9647109945767959
+    }, {
+      "productId" : 267,
+      "name" : "아기 위생 마스크 10매 세트",
+      "brand" : "리틀세이프",
+      "price" : 9000.00,
+      "category" : "유아동",
+      "score" : 0.66704615402784
+    }, {
+      "productId" : 308,
+      "name" : "다용도 수납정리함 3단",
+      "brand" : "스마트케이스",
+      "price" : 24000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.656287345091907
+    }, {
+      "productId" : 400,
+      "name" : "휴대용 미니 라벨프린터",
+      "brand" : "프린트고",
+      "price" : 56000.00,
+      "category" : "디지털·IT기기",
+      "score" : 0.6458700856460037
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 23442
+  }, {
+    "queryId" : "R02",
+    "query" : "좁은 원룸 수납과 청소에 도움 되는 물건",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 358,
+      "name" : "원룸용 4단 서랍장",
+      "brand" : "스마트케이스",
+      "price" : 31000.00,
+      "category" : "생활용품",
+      "score" : 1.0
+    }, {
+      "productId" : 684,
+      "name" : "휴대용 접이식 빗자루 세트",
+      "brand" : "클린업",
+      "price" : 9500.00,
+      "category" : "생활용품",
+      "score" : 0.9748070176500023
+    }, {
+      "productId" : 336,
+      "name" : "소형 공기청정기",
+      "brand" : "클린업",
+      "price" : 89000.00,
+      "category" : "가전",
+      "score" : 0.9534391260001777
+    }, {
+      "productId" : 331,
+      "name" : "1인용 휴대용 인덕션",
+      "brand" : "쿡메이트",
+      "price" : 32000.00,
+      "category" : "가전",
+      "score" : 0.8862597841070872
+    }, {
+      "productId" : 348,
+      "name" : "접이식 좌식 책상",
+      "brand" : "오피스핏",
+      "price" : 35000.00,
+      "category" : "생활용품",
+      "score" : 0.8635943058015664
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12939
+  }, {
+    "queryId" : "S09",
+    "query" : "고양이를 위한 반려동물용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 685,
+      "name" : "강아지 고양이 자동급수기",
+      "brand" : "펫드라이브",
+      "price" : 42000.00,
+      "category" : "반려동물용품",
+      "score" : 1.0
+    }, {
+      "productId" : 290,
+      "name" : "고양이 깃털 낚싯대 장난감",
+      "brand" : "캣플레이",
+      "price" : 9000.00,
+      "category" : "반려동물용품",
+      "score" : 0.99810363413069
+    }, {
+      "productId" : 288,
+      "name" : "고양이 외출용 백팩 캐리어",
+      "brand" : "펫트래블",
+      "price" : 65000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9832277290743427
+    }, {
+      "productId" : 293,
+      "name" : "강아지 4륜 반려동물 유모차",
+      "brand" : "펫트래블",
+      "price" : 145000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9742380246490425
+    }, {
+      "productId" : 298,
+      "name" : "고양이 화장실 모래 매트 더블레이어",
+      "brand" : "캣클린",
+      "price" : 21000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9607601122856917
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12939
+  }, {
+    "queryId" : "S08",
+    "query" : "요리 초보에게 필요한 주방용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 469,
+      "name" : "디지털 주방용 계량저울",
+      "brand" : "키친메이트",
+      "price" : 16000.00,
+      "category" : "주방용품",
+      "score" : 1.0
+    }, {
+      "productId" : 459,
+      "name" : "주방용 쿠킹포일 대형",
+      "brand" : "홈클린",
+      "price" : 6000.00,
+      "category" : "주방용품",
+      "score" : 0.9546550508021265
+    }, {
+      "productId" : 453,
+      "name" : "스테인리스 계량컵 스푼 세트",
+      "brand" : "키친메이트",
+      "price" : 12000.00,
+      "category" : "주방용품",
+      "score" : 0.9236496106044517
+    }, {
+      "productId" : 517,
+      "name" : "신혼 주방용 광파오븐 전자레인지",
+      "brand" : "쿡메이트",
+      "price" : 285000.00,
+      "category" : "가전",
+      "score" : 0.9229146767465433
+    }, {
+      "productId" : 451,
+      "name" : "대용량 에어프라이어 7L",
+      "brand" : "에어쿡",
+      "price" : 119000.00,
+      "category" : "주방용품",
+      "score" : 0.8763184764919653
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13300
+  }, {
+    "queryId" : "S07",
+    "query" : "겨울 출퇴근 방한용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 424,
+      "name" : "방풍 귀마개",
+      "brand" : "이어웜",
+      "price" : 9000.00,
+      "category" : "패션·의류",
+      "score" : 1.0
+    }, {
+      "productId" : 677,
+      "name" : "방한 귀달이 비니",
+      "brand" : "포근발",
+      "price" : 17000.00,
+      "category" : "패션·의류",
+      "score" : 0.9871085057114626
+    }, {
+      "productId" : 678,
+      "name" : "발열 기능성 보온장갑",
+      "brand" : "웜핸드",
+      "price" : 16000.00,
+      "category" : "패션·의류",
+      "score" : 0.9067102703136596
+    }, {
+      "productId" : 431,
+      "name" : "겨울 호흡 방한 마스크",
+      "brand" : "브레스가드",
+      "price" : 7000.00,
+      "category" : "패션·의류",
+      "score" : 0.9046106187426606
+    }, {
+      "productId" : 643,
+      "name" : "겨울용 푹신 슬리퍼",
+      "brand" : "포근발",
+      "price" : 12000.00,
+      "category" : "패션·의류",
+      "score" : 0.8863738071687849
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12640
+  }, {
+    "queryId" : "S06",
+    "query" : "회사 책상에서 쓸 사무용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 414,
+      "name" : "스테이플러 클립 사무용품 세트",
+      "brand" : "오피스메이트",
+      "price" : 13000.00,
+      "category" : "문구·오피스",
+      "score" : 1.0
+    }, {
+      "productId" : 416,
+      "name" : "2단 슬라이드 데스크 정리함",
+      "brand" : "데스크프로",
+      "price" : 17000.00,
+      "category" : "문구·오피스",
+      "score" : 0.9126852705559149
+    }, {
+      "productId" : 393,
+      "name" : "대형 가죽 데스크매트 80x40",
+      "brand" : "데스크프로",
+      "price" : 23000.00,
+      "category" : "문구·오피스",
+      "score" : 0.8945263551868898
+    }, {
+      "productId" : 398,
+      "name" : "3단 서랍형 서류정리함",
+      "brand" : "오피스메이트",
+      "price" : 29000.00,
+      "category" : "문구·오피스",
+      "score" : 0.8764451624136557
+    }, {
+      "productId" : 631,
+      "name" : "USB-C 멀티포트 멀티탭",
+      "brand" : "코드메이트",
+      "price" : 16500.00,
+      "category" : "디지털·IT기기",
+      "score" : 0.8294655167294132
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12884
+  }, {
+    "queryId" : "S05",
+    "query" : "집에서 근력 운동할 때 쓸 제품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 380,
+      "name" : "벽부착형 케이블 운동기구",
+      "brand" : "스트롱암",
+      "price" : 410000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 1.0
+    }, {
+      "productId" : 361,
+      "name" : "네오프렌 코팅 덤벨 세트 2kg×2",
+      "brand" : "바디팩토리",
+      "price" : 18000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.9865433344060947
+    }, {
+      "productId" : 364,
+      "name" : "벽걸이형 접이식 풀업바",
+      "brand" : "스트롱암",
+      "price" : 45000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.9100627069782464
+    }, {
+      "productId" : 363,
+      "name" : "안티버스트 짐볼 65cm 발펌프 포함",
+      "brand" : "필라엣지",
+      "price" : 22000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.9029995612276175
+    }, {
+      "productId" : 389,
+      "name" : "조절 가능 스미스 머신 프레임",
+      "brand" : "스트롱암",
+      "price" : 550000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.8278840013476637
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12971
+  }, {
+    "queryId" : "S04",
+    "query" : "4인 가족 캠핑용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0
+    }, {
+      "productId" : 202,
+      "name" : "디지털 포토 액자",
+      "brand" : "픽스토리",
+      "price" : 65000.00,
+      "category" : "유아동",
+      "score" : 0.5970297388552317
+    }, {
+      "productId" : 588,
+      "name" : "해외용 멀티탭 USB 일체형",
+      "brand" : "글로벌플러그",
+      "price" : 21000.00,
+      "category" : "여행용품",
+      "score" : 0.5875530763337201
+    } ],
+    "resultCount" : 3,
+    "llmCallAttempts" : 4,
+    "latencyMillis" : 9290
+  }, {
+    "queryId" : "S03",
+    "query" : "자취방에서 쓸 10만원 이하 가전",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 330,
+      "name" : "1인용 미니 냉장고",
+      "brand" : "리빙테크",
+      "price" : 145000.00,
+      "category" : "가전",
+      "score" : 1.0
+    }, {
+      "productId" : 337,
+      "name" : "1~2인용 캡슐세탁기",
+      "brand" : "리빙테크",
+      "price" : 168000.00,
+      "category" : "가전",
+      "score" : 0.9770291476265849
+    }, {
+      "productId" : 359,
+      "name" : "3인용 미니 전기밥솥",
+      "brand" : "쿡메이트",
+      "price" : 49000.00,
+      "category" : "가전",
+      "score" : 0.96613200804038
+    }, {
+      "productId" : 331,
+      "name" : "1인용 휴대용 인덕션",
+      "brand" : "쿡메이트",
+      "price" : 32000.00,
+      "category" : "가전",
+      "score" : 0.9148985973925645
+    }, {
+      "productId" : 336,
+      "name" : "소형 공기청정기",
+      "brand" : "클린업",
+      "price" : 89000.00,
+      "category" : "가전",
+      "score" : 0.903245225626027
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13141
+  }, {
+    "queryId" : "S02",
+    "query" : "새집에 어울리는 집들이 선물",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 308,
+      "name" : "다용도 수납정리함 3단",
+      "brand" : "스마트케이스",
+      "price" : 24000.00,
+      "category" : "인테리어·소품",
+      "score" : 1.0
+    }, {
+      "productId" : 246,
+      "name" : "아로마 디퓨저 선물세트",
+      "brand" : "센트홈",
+      "price" : 38000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.962688827940367
+    }, {
+      "productId" : 301,
+      "name" : "소이왁스 무향 캔들 3종 세트",
+      "brand" : "캔들무드",
+      "price" : 22000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.9598253483346553
+    }, {
+      "productId" : 302,
+      "name" : "본차이나 식기 6인 세트",
+      "brand" : "포슬린하우스",
+      "price" : 89000.00,
+      "category" : "주방용품",
+      "score" : 0.931706181518261
+    }, {
+      "productId" : 323,
+      "name" : "라탄 바스켓 정리함 2P",
+      "brand" : "그린포레스트",
+      "price" : 26000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.9224050979840765
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13526
+  }, {
+    "queryId" : "S01",
+    "query" : "돌잔치 선물 5만원 이하",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 209,
+      "name" : "돌잔치 순금 아기 반지",
+      "brand" : "골든베이비",
+      "price" : 480000.00,
+      "category" : "유아동",
+      "score" : 1.0
+    }, {
+      "productId" : 195,
+      "name" : "아기 첫돌 한복 세트",
+      "brand" : "마이베베",
+      "price" : 89000.00,
+      "category" : "유아동",
+      "score" : 0.9795577215320654
+    }, {
+      "productId" : 196,
+      "name" : "돌잔치 기념 명패 세트",
+      "brand" : "리틀우드",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 0.9783381918654036
+    }, {
+      "productId" : 197,
+      "name" : "유아용 도자기 식기 세트",
+      "brand" : "마이베베",
+      "price" : 42000.00,
+      "category" : "유아동",
+      "score" : 0.9271460179751414
+    }, {
+      "productId" : 202,
+      "name" : "디지털 포토 액자",
+      "brand" : "픽스토리",
+      "price" : 65000.00,
+      "category" : "유아동",
+      "score" : 0.8774600978502829
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12944
+  }, {
+    "queryId" : "R01",
+    "query" : "야외 숙박 때 비바람을 막아 줄 장비",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 441,
+      "name" : "방한 고글형 선글라스",
+      "brand" : "스노우뷰",
+      "price" : 42000.00,
+      "category" : "패션·의류",
+      "score" : 1.0
+    }, {
+      "productId" : 447,
+      "name" : "방한 부츠커버",
+      "brand" : "마운틴게이트",
+      "price" : 13000.00,
+      "category" : "패션·의류",
+      "score" : 0.9514245996676459
+    }, {
+      "productId" : 493,
+      "name" : "1인용 비비색 방수텐트",
+      "brand" : "서바이벌기어",
+      "price" : 58000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9293260521065712
+    }, {
+      "productId" : 505,
+      "name" : "방한 등산용 발토시",
+      "brand" : "윈터그립",
+      "price" : 8000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8706408223878778
+    }, {
+      "productId" : 271,
+      "name" : "야외용 캠핑 해먹 휴대용",
+      "brand" : "릴렉스아웃도어",
+      "price" : 32000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.858396524847217
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 12736
+  }, {
+    "queryId" : "N02",
+    "query" : "자동차 세차용품 추천",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 336,
+      "name" : "소형 공기청정기",
+      "brand" : "클린업",
+      "price" : 89000.00,
+      "category" : "가전",
+      "score" : 1.0
+    }, {
+      "productId" : 257,
+      "name" : "유아용 다기능 접이식 보행기",
+      "brand" : "토이프렌즈",
+      "price" : 68000.00,
+      "category" : "유아동",
+      "score" : 0.7735505754107331
+    }, {
+      "productId" : 303,
+      "name" : "크리스탈 와인잔 2P 세트",
+      "brand" : "글라스리에",
+      "price" : 32000.00,
+      "category" : "주방용품",
+      "score" : 0.761073953226689
+    }, {
+      "productId" : 310,
+      "name" : "스테인리스 키친타올홀더",
+      "brand" : "키친아트",
+      "price" : 15000.00,
+      "category" : "주방용품",
+      "score" : 0.7489934142865828
+    }, {
+      "productId" : 316,
+      "name" : "심플 디자인 벽시계",
+      "brand" : "월데코",
+      "price" : 23000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.737290392188355
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13309
+  }, {
+    "queryId" : "N01",
+    "query" : "여자 악세사리 선물",
+    "outcome" : "empty",
+    "results" : [ ],
+    "resultCount" : 0,
+    "llmCallAttempts" : 1,
+    "latencyMillis" : 4896
+  }, {
+    "queryId" : "S10",
+    "query" : "가벼운 등산용품 추천",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 500,
+      "name" : "등산화 미끄럼 방지 체인스패치",
+      "brand" : "윈터그립",
+      "price" : 19000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0
+    }, {
+      "productId" : 241,
+      "name" : "휴대용 원터치 자동 우산",
+      "brand" : "데일리굿즈",
+      "price" : 15000.00,
+      "category" : "생활용품",
+      "score" : 0.9469549675505922
+    }, {
+      "productId" : 494,
+      "name" : "편광 등산용 선글라스",
+      "brand" : "선가드",
+      "price" : 35000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.919128152808884
+    }, {
+      "productId" : 598,
+      "name" : "기내용 미니 하드 캐리어",
+      "brand" : "트래블메이트",
+      "price" : 95000.00,
+      "category" : "여행용품",
+      "score" : 0.8638067766181354
+    }, {
+      "productId" : 657,
+      "name" : "접이식 캠핑 테이블",
+      "brand" : "아웃도어라이프",
+      "price" : 42000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8376316437759963
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13572
+  }, {
+    "queryId" : "C04",
+    "query" : "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 469,
+      "name" : "디지털 주방용 계량저울",
+      "brand" : "키친메이트",
+      "price" : 16000.00,
+      "category" : "주방용품",
+      "score" : 1.0
+    }, {
+      "productId" : 451,
+      "name" : "대용량 에어프라이어 7L",
+      "brand" : "에어쿡",
+      "price" : 119000.00,
+      "category" : "주방용품",
+      "score" : 0.9938479214229279
+    }, {
+      "productId" : 310,
+      "name" : "스테인리스 키친타올홀더",
+      "brand" : "키친아트",
+      "price" : 15000.00,
+      "category" : "주방용품",
+      "score" : 0.9790473150884806
+    }, {
+      "productId" : 320,
+      "name" : "스테인리스 그릇건조대",
+      "brand" : "키친아트",
+      "price" : 42000.00,
+      "category" : "주방용품",
+      "score" : 0.9209293775585796
+    }, {
+      "productId" : 479,
+      "name" : "본차이나 식기 세트",
+      "brand" : "쿡플랜",
+      "price" : 175000.00,
+      "category" : "주방용품",
+      "score" : 0.8809457052900552
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13002
+  }, {
+    "queryId" : "C03",
+    "query" : "패션·의류 카테고리의 겨울 장갑",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 280,
+      "name" : "캠핑용 내열 장갑 화로 장갑",
+      "brand" : "파이어가드",
+      "price" : 13000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0
+    }, {
+      "productId" : 422,
+      "name" : "터치스크린 방한 장갑",
+      "brand" : "핸디웜",
+      "price" : 15000.00,
+      "category" : "패션·의류",
+      "score" : 0.9684989496097576
+    }, {
+      "productId" : 382,
+      "name" : "논슬립 웨이트 트레이닝 장갑",
+      "brand" : "바디팩토리",
+      "price" : 13500.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.9554548201970745
+    }, {
+      "productId" : 678,
+      "name" : "발열 기능성 보온장갑",
+      "brand" : "웜핸드",
+      "price" : 16000.00,
+      "category" : "패션·의류",
+      "score" : 0.9503768698507463
+    }, {
+      "productId" : 489,
+      "name" : "터치스크린 등산용 장갑",
+      "brand" : "윈터그립",
+      "price" : 16000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9376052879570618
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13248
+  }, {
+    "queryId" : "C02",
+    "query" : "50,000원 이하 돌잔치 선물",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 209,
+      "name" : "돌잔치 순금 아기 반지",
+      "brand" : "골든베이비",
+      "price" : 480000.00,
+      "category" : "유아동",
+      "score" : 1.0
+    }, {
+      "productId" : 196,
+      "name" : "돌잔치 기념 명패 세트",
+      "brand" : "리틀우드",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 0.9933848858956003
+    }, {
+      "productId" : 195,
+      "name" : "아기 첫돌 한복 세트",
+      "brand" : "마이베베",
+      "price" : 89000.00,
+      "category" : "유아동",
+      "score" : 0.9618725822546327
+    }, {
+      "productId" : 197,
+      "name" : "유아용 도자기 식기 세트",
+      "brand" : "마이베베",
+      "price" : 42000.00,
+      "category" : "유아동",
+      "score" : 0.9085797896326758
+    }, {
+      "productId" : 608,
+      "name" : "플로럴 향수 50ml",
+      "brand" : "퍼퓸노트",
+      "price" : 89000.00,
+      "category" : "뷰티·헬스",
+      "score" : 0.894943545379139
+    } ],
+    "resultCount" : 5,
+    "llmCallAttempts" : 6,
+    "latencyMillis" : 13215
+  }, {
+    "queryId" : "C01",
+    "query" : "3만원 이상 5만원 이하 캠핑용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0
+    } ],
+    "resultCount" : 1,
+    "llmCallAttempts" : 2,
+    "latencyMillis" : 8715
+  }, {
+    "queryId" : "A01",
+    "query" : "5만원 이상 3만원 이하 캠핑용품",
+    "outcome" : "recommendations",
+    "results" : [ {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0
+    } ],
+    "resultCount" : 1,
+    "llmCallAttempts" : 2,
+    "latencyMillis" : 9006
+  } ],
+  "metrics": {
+    "eligibleHitAt5Queries": 17,
+    "strictHitAt5Count": 15,
+    "strictHitAt5Rate": 0.882353,
+    "acceptedHitAt5Count": 16,
+    "acceptedHitAt5Rate": 0.941176,
+    "conditionViolations": {"price": 9, "category": 15, "stock": 0, "recentOrder": 0, "total": 24},
+    "outOfCatalogQueriesReturningResults": 1,
+    "outOfCatalogFalsePositiveProducts": 5,
+    "clarificationFailures": 1,
+    "totalResultCount": 85,
+    "totalLlmCallAttempts": 105,
+    "latencyMillis": {"total": 251715, "median": 12944, "p95": 13572, "maximum": 23442},
+    "queries": [
+      {"queryId":"S01","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":3,"returnedHumanIrrelevant":2},
+      {"queryId":"S02","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":0},
+      {"queryId":"S03","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":2,"returnedHumanIrrelevant":2},
+      {"queryId":"S04","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":2,"returnedHumanIrrelevant":2},
+      {"queryId":"S05","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":1},
+      {"queryId":"S06","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":1,"returnedHumanIrrelevant":0},
+      {"queryId":"S07","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":0},
+      {"queryId":"S08","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":1,"returnedHumanIrrelevant":1},
+      {"queryId":"S09","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":1},
+      {"queryId":"S10","strictHitAt5":false,"acceptedHitAt5":true,"conditionViolations":2,"returnedHumanIrrelevant":2},
+      {"queryId":"C01","strictHitAt5":false,"acceptedHitAt5":false,"conditionViolations":1,"returnedHumanIrrelevant":1},
+      {"queryId":"C02","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":4,"returnedHumanIrrelevant":2},
+      {"queryId":"C03","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":3,"returnedHumanIrrelevant":3},
+      {"queryId":"C04","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":0},
+      {"queryId":"R01","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":2,"returnedHumanIrrelevant":2},
+      {"queryId":"R02","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":0,"returnedHumanIrrelevant":1},
+      {"queryId":"R03","strictHitAt5":true,"acceptedHitAt5":true,"conditionViolations":3,"returnedHumanIrrelevant":2},
+      {"queryId":"N01","strictHitAt5":null,"acceptedHitAt5":null,"conditionViolations":0,"returnedHumanIrrelevant":0},
+      {"queryId":"N02","strictHitAt5":null,"acceptedHitAt5":null,"conditionViolations":0,"returnedHumanIrrelevant":3},
+      {"queryId":"A01","strictHitAt5":null,"acceptedHitAt5":null,"conditionViolations":0,"returnedHumanIrrelevant":1}
+    ]
+  }
+}
