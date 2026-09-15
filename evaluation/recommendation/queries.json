@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "queries": [
+    {"id":"S01","family":"supported","query":"돌잔치 선물 5만원 이하","targetOutcome":"recommendations","constraints":{"maxPrice":50000,"categories":["유아동"]}},
+    {"id":"S02","family":"supported","query":"새집에 어울리는 집들이 선물","targetOutcome":"recommendations","constraints":{"categories":["생활용품","인테리어·소품","주방용품"]}},
+    {"id":"S03","family":"supported","query":"자취방에서 쓸 10만원 이하 가전","targetOutcome":"recommendations","constraints":{"maxPrice":100000,"categories":["가전"]}},
+    {"id":"S04","family":"supported","query":"4인 가족 캠핑용품","targetOutcome":"recommendations","constraints":{"categories":["캠핑·아웃도어"]}},
+    {"id":"S05","family":"supported","query":"집에서 근력 운동할 때 쓸 제품","targetOutcome":"recommendations","constraints":{"categories":["스포츠·피트니스"]}},
+    {"id":"S06","family":"supported","query":"회사 책상에서 쓸 사무용품","targetOutcome":"recommendations","constraints":{"categories":["문구·오피스"]}},
+    {"id":"S07","family":"supported","query":"겨울 출퇴근 방한용품","targetOutcome":"recommendations","constraints":{"categories":["패션·의류"]}},
+    {"id":"S08","family":"supported","query":"요리 초보에게 필요한 주방용품","targetOutcome":"recommendations","constraints":{"categories":["주방용품"]}},
+    {"id":"S09","family":"supported","query":"고양이를 위한 반려동물용품","targetOutcome":"recommendations","constraints":{"categories":["반려동물용품"]}},
+    {"id":"S10","family":"supported","query":"가벼운 등산용품 추천","targetOutcome":"recommendations","constraints":{"categories":["캠핑·아웃도어","스포츠·피트니스"]}},
+    {"id":"C01","family":"constraint","query":"3만원 이상 5만원 이하 캠핑용품","targetOutcome":"recommendations","constraints":{"minPrice":30000,"maxPrice":50000,"categories":["캠핑·아웃도어"]}},
+    {"id":"C02","family":"constraint","query":"50,000원 이하 돌잔치 선물","targetOutcome":"recommendations","constraints":{"maxPrice":50000,"categories":["유아동"]}},
+    {"id":"C03","family":"constraint","query":"패션·의류 카테고리의 겨울 장갑","targetOutcome":"recommendations","constraints":{"categories":["패션·의류"]}},
+    {"id":"C04","family":"constraint","query":"최근 7일 안에 산 상품은 빼고 주방용품 추천","targetOutcome":"recommendations","constraints":{"categories":["주방용품"],"excludeRecentFixture":"C04"}},
+    {"id":"R01","family":"rephrased","query":"야외 숙박 때 비바람을 막아 줄 장비","targetOutcome":"recommendations","constraints":{"categories":["캠핑·아웃도어"]}},
+    {"id":"R02","family":"rephrased","query":"좁은 원룸 수납과 청소에 도움 되는 물건","targetOutcome":"recommendations","constraints":{"categories":["생활용품","가전","인테리어·소품"]}},
+    {"id":"R03","family":"rephrased","query":"반려견과 이동할 때 필요한 물건","targetOutcome":"recommendations","constraints":{"categories":["반려동물용품"]}},
+    {"id":"N01","family":"out_of_catalog","query":"여자 악세사리 선물","targetOutcome":"empty","constraints":{}},
+    {"id":"N02","family":"out_of_catalog","query":"자동차 세차용품 추천","targetOutcome":"empty","constraints":{}},
+    {"id":"A01","family":"ambiguous","query":"5만원 이상 3만원 이하 캠핑용품","targetOutcome":"clarification","constraints":{"minPrice":50000,"maxPrice":30000,"categories":["캠핑·아웃도어"]}}
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "sourceCommit": "79627c080491b4d9e3d8400d4f81e8dcc40768b6",
+  "files": [
+    {"path": "scripts/data/products_batch_noise.json", "items": 65, "sha256": "6ae1a1c9084b4bf763edeb4f91e334c17008628d5f778bd6c581e3dcb6ea51a4"},
+    {"path": "scripts/data/products_batch2.json", "items": 60, "sha256": "db55d8034cbe40de14d92da08d25646a3731c37fd5d9807c211e8cbb3b501555"},
+    {"path": "scripts/data/products_batch3.json", "items": 60, "sha256": "08433f0dd16400f4da1c66fc12aa236c9ca5878191e17a06abb7349af135f3bf"},
+    {"path": "scripts/data/products_batch4.json", "items": 60, "sha256": "f4fb5ae92a06774b5ca8f5c4650f2248a153c6aee9c15deb9ae2771ecaa38286"},
+    {"path": "scripts/data/products_batch5.json", "items": 60, "sha256": "df42914adfded8c5756f41128996a9033339e9f3f330906b71339b0159360f39"},
+    {"path": "scripts/data/products_batch6.json", "items": 90, "sha256": "b0b5985928dfbfe6aa5d9b0ccf423b1b1048af0748a84ad55bcaf574ab07e27b"},
+    {"path": "scripts/data/products_pilot.json", "items": 60, "sha256": "042617039a585bc52f85df308ed0641bc02050a2110b5dca1a54fd3d7df55832"},
+    {"path": "scripts/data/products_topup.json", "items": 45, "sha256": "12227da84ef9dfe679783430b6147f4ba69701b1dd7c902d655b263fba972e20"}
+  ],
+  "totals": {"files": 8, "jsonProducts": 500},
+  "mysqlSnapshot": {
+    "productCount": 500,
+    "productIdCount": 500,
+    "uniqueProductIdCount": 500,
+    "minimumProductId": 195,
+    "maximumProductId": 694,
+    "productIdDigestInput": "ascending decimal IDs joined by commas without whitespace",
+    "sortedCommaSeparatedProductIdsSha256": "40883feffe90c108a2b9e798f1e8877630e76f677ebfafe187348300f8db7d93"
+  },
+  "vectorSnapshot": {
+    "rowCount": 500,
+    "uniqueProductIdCount": 500,
+    "model": "bge-m3",
+    "dimensions": 1024,
+    "textComposition": "카테고리: {category} 브랜드: {brand} 상품명: {name} 설명: {description}",
+    "source": "backend/AgentCart/src/main/java/com/agentcart/product/service/ProductEmbeddingService.java"
+  },
+  "stableProductKey": {
+    "fields": ["name", "brand"],
+    "separator": "|",
+    "duplicateCount": 0,
+    "duplicateResolution": "reject snapshot; labels never fall back to database IDs"
+  }
+}

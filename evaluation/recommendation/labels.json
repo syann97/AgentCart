@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "A human reviewer read the snapshot product names, descriptions, categories, prices, and the explicit query constraints. Labels were not generated from baseline output.",
+  "labelMeaning": {
+    "relevant": "directly satisfies the query and its explicit constraints",
+    "acceptableAlternative": "useful but less direct, broader, or dependent on user preference",
+    "irrelevant": "does not satisfy the intent or violates an explicit constraint",
+    "unjudged": "not used as a positive hit and not counted as a human-confirmed irrelevant example"
+  },
+  "judgments": [
+    {"queryId":"S01","relevant":["돌잔치 기념 명패 세트|리틀우드","유아용 도자기 식기 세트|마이베베","원목 애착 장난감 세트|그린토이","회전 멜로디 아기 모빌|리틀우드"],"acceptableAlternatives":["신생아 배냇저고리 선물세트|코코맘","아기 첫걸음 가죽 신발|베이비웰"],"irrelevant":["돌잔치 순금 아기 반지|골든베이비","아기 첫돌 한복 세트|마이베베"]},
+    {"queryId":"S02","relevant":["라벤더 향 디퓨저 세트|센티드홈","소이왁스 무향 캔들 3종 세트|캔들무드","아로마 디퓨저 선물세트|센트홈","공기정화 식물 몬스테라 화분|그린포레스트"],"acceptableAlternatives":["본차이나 식기 6인 세트|포슬린하우스","다용도 수납정리함 3단|스마트케이스"],"irrelevant":["등산화 미끄럼 방지 체인스패치|윈터그립"]},
+    {"queryId":"S03","relevant":["3인용 미니 전기밥솥|쿡메이트","1인용 휴대용 인덕션|쿡메이트","소형 공기청정기|클린업","무선 핸디 청소기|클린업"],"acceptableAlternatives":["접이식 미니 실내자전거|헬스메이트"],"irrelevant":["1인용 미니 냉장고|리빙테크","1~2인용 캡슐세탁기|리빙테크"]},
+    {"queryId":"S04","relevant":["4인용 거실형 캠핑 텐트|캠프힐","알루미늄 롤테이블 캠핑 테이블|아웃도어랩","대용량 캠핑 아이스박스 25L|캠프힐","방수 차광 캠핑 타프 4x4m|캠프힐"],"acceptableAlternatives":["알루미늄 폴딩 캠핑 의자|아웃도어랩","캠핑 코펠 12종 세트|파이어캠프"],"irrelevant":["디지털 포토 액자|픽스토리","해외용 멀티탭 USB 일체형|글로벌플러그"]},
+    {"queryId":"S05","relevant":["네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리","벽걸이형 접이식 풀업바|스트롱암","보강 손잡이 케틀벨 8kg|바디팩토리","라텍스 저항밴드 5단계 세트|릴렉스핏"],"acceptableAlternatives":["복근 롤러 에이비휠|바디팩토리","회전형 푸쉬업바 한 쌍|바디팩토리"],"irrelevant":["안티버스트 짐볼 65cm 발펌프 포함|필라엣지"]},
+    {"queryId":"S06","relevant":["스테이플러 클립 사무용품 세트|오피스메이트","2단 슬라이드 데스크 정리함|데스크프로","대형 가죽 데스크매트 80x40|데스크프로","3단 서랍형 서류정리함|오피스메이트"],"acceptableAlternatives":["USB-C 멀티포트 멀티탭|코드메이트","도자기 펜꽂이 책상정리세트|오피스메이트"],"irrelevant":["4인용 거실형 캠핑 텐트|캠프힐"]},
+    {"queryId":"S07","relevant":["방풍 귀마개|이어웜","방한 귀달이 비니|포근발","발열 기능성 보온장갑|웜핸드","겨울 호흡 방한 마스크|브레스가드"],"acceptableAlternatives":["겨울용 푹신 슬리퍼|포근발","충전식 손난로 핫팩|히트팟"],"irrelevant":["논슬립 웨이트 트레이닝 장갑|바디팩토리"]},
+    {"queryId":"S08","relevant":["디지털 주방용 계량저울|키친메이트","스테인리스 계량컵 스푼 세트|키친메이트","원목 양면 도마|우드키친","밀폐 보관용기 10종 세트|홈클린"],"acceptableAlternatives":["대용량 에어프라이어 7L|에어쿡","멀티 핸드블렌더 세트|쿡플랜"],"irrelevant":["신혼 주방용 광파오븐 전자레인지|쿡메이트"]},
+    {"queryId":"S09","relevant":["고양이 자동급수기 순환형 2L|펫워터","고양이 깃털 낚싯대 장난감|캣플레이","고양이 외출용 백팩 캐리어|펫트래블","고양이 화장실 모래 매트 더블레이어|캣클린"],"acceptableAlternatives":["강아지 고양이 자동급수기|펫드라이브","반려동물 도넛형 극세사 방석|캣라이프"],"irrelevant":["강아지 4륜 반려동물 유모차|펫트래블"]},
+    {"queryId":"S10","relevant":["카본 경량 등산스틱 2P 세트|마운틴기어","초경량 LED 헤드램프|라이트온","휴대용 등산 우의 판초형|레인스톱","접이식 등산용 물통 1L|워터플로우"],"acceptableAlternatives":["편광 등산용 선글라스|선가드","등산화 미끄럼 방지 체인스패치|윈터그립"],"irrelevant":["기내용 미니 하드 캐리어|트래블메이트","접이식 캠핑 테이블|아웃도어라이프"]},
+    {"queryId":"C01","relevant":["알루미늄 폴딩 캠핑 의자|아웃도어랩","사계절 차박 캠핑 침낭|아웃도어랩","야외용 캠핑 해먹 휴대용|릴렉스아웃도어","2in1 캠핑 의자 테이블 겸용|캠프메이트"],"acceptableAlternatives":["접이식 캠핑 테이블|아웃도어라이프"],"irrelevant":["4인용 거실형 캠핑 텐트|캠프힐"]},
+    {"queryId":"C02","relevant":["돌잔치 기념 명패 세트|리틀우드","유아용 도자기 식기 세트|마이베베","원목 애착 장난감 세트|그린토이"],"acceptableAlternatives":["신생아 배냇저고리 선물세트|코코맘","아기 첫걸음 가죽 신발|베이비웰"],"irrelevant":["돌잔치 순금 아기 반지|골든베이비","아기 첫돌 한복 세트|마이베베"]},
+    {"queryId":"C03","relevant":["터치스크린 방한 장갑|핸디웜","발열 기능성 보온장갑|웜핸드"],"acceptableAlternatives":["기모 넥워머|웜넥"],"irrelevant":["캠핑용 내열 장갑 화로 장갑|파이어가드","논슬립 웨이트 트레이닝 장갑|바디팩토리","터치스크린 등산용 장갑|윈터그립"]},
+    {"queryId":"C04","relevant":["디지털 주방용 계량저울|키친메이트","스테인리스 키친타올홀더|키친아트","스테인리스 그릇건조대|키친아트","스테인리스 냄비 3종 세트|키친아트"],"acceptableAlternatives":["대용량 에어프라이어 7L|에어쿡","본차이나 식기 세트|쿡플랜"],"irrelevant":["소형 공기청정기|클린업"]},
+    {"queryId":"R01","relevant":["1인용 비비색 방수텐트|서바이벌기어","4인용 거실형 캠핑 텐트|캠프힐","방수 차광 캠핑 타프 4x4m|캠프힐"],"acceptableAlternatives":["등산배낭용 레인커버 대형|레인스톱","휴대용 등산 우의 판초형|레인스톱"],"irrelevant":["방한 고글형 선글라스|스노우뷰","야외용 캠핑 해먹 휴대용|릴렉스아웃도어"]},
+    {"queryId":"R02","relevant":["원룸용 4단 서랍장|스마트케이스","휴대용 접이식 빗자루 세트|클린업","무선 핸디 청소기|클린업","다용도 수납정리함 3단|스마트케이스"],"acceptableAlternatives":["소형 공기청정기|클린업","접이식 좌식 책상|오피스핏"],"irrelevant":["1인용 휴대용 인덕션|쿡메이트"]},
+    {"queryId":"R03","relevant":["반려동물 캐리어형 백팩|펫드라이브","반려동물용 차량 시트커버|펫드라이브","항공기 기내 반입 반려동물 이동장|펫프렌즈","강아지 4륜 반려동물 유모차|펫트래블"],"acceptableAlternatives":["반려동물 전용 휴대용 식수통|펫워크","강아지 반사띠 산책 리드줄|도그메이트"],"irrelevant":["아기 위생 마스크 10매 세트|리틀세이프","휴대용 미니 라벨프린터|프린트고"]},
+    {"queryId":"N01","relevant":[],"acceptableAlternatives":[],"irrelevant":["돌잔치 순금 아기 반지|골든베이비","양모 혼방 머플러|울템포","플로럴 향수 50ml|퍼퓸노트"],"unjudgedPolicy":"all catalog products are irrelevant because the requested accessory taxonomy is absent"},
+    {"queryId":"N02","relevant":[],"acceptableAlternatives":[],"irrelevant":["소형 공기청정기|클린업","크리스탈 와인잔 2P 세트|글라스리에","스테인리스 키친타올홀더|키친아트"],"unjudgedPolicy":"all catalog products are irrelevant because car-wash products are absent"},
+    {"queryId":"A01","relevant":[],"acceptableAlternatives":[],"irrelevant":["4인용 거실형 캠핑 텐트|캠프힐"],"unjudgedPolicy":"no product can satisfy a minimum of 50000 and maximum of 30000; the request needs clarification"}
+  ]
+}

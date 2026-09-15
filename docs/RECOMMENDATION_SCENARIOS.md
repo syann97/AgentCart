@@ -1,6 +1,6 @@
 # 추천 데이터 범위와 평가 계획
 
-상태: **현재 JSON 데이터의 범위 + 후속 평가 계획**. 이 문서는 추천 품질을 이미 검증했다는 보고서가 아닙니다. 현재 pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 승인된 다음 계약은 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
+상태: **현재 JSON 데이터의 범위 + 고정 평가 계획**. 재현 가능한 snapshot, 수동 label과 현재 고정형 RAG 기준선은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. 현재 pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 승인된 다음 계약은 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
 
 ## 데이터 출처와 스냅샷
 
@@ -63,7 +63,7 @@ JSON 항목 수와 실제 MySQL 상품 수, pgvector embedding 수는 다를 수
 
 ## 약 20개 평가 질의 초안
 
-상품 ID 정답과 허용 대체 상품은 고정 snapshot을 만든 뒤 사람이 상품명·설명을 읽고 label합니다. 아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다.
+아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다. 평가 질의와 사람이 검토한 안정 상품 키 label은 [queries.json](../evaluation/recommendation/queries.json)과 [labels.json](../evaluation/recommendation/labels.json)에 있습니다.
 
 | ID | 질의 | 검증 목적 | 목표 outcome |
 |---|---|---|---|
