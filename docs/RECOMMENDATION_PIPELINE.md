@@ -11,7 +11,7 @@
 
 ## 처리 순서
 
-1. `QueryEnrichmentService`가 LLM으로 한국어 확장 키워드, 카테고리, 가격 범위를 추출합니다.
+1. `RecommendationRequestContextFactory`가 원본 질의에서 명시 가격·카테고리를 먼저 해석하고, `QueryEnrichmentService`가 LLM으로 한국어 확장 키워드와 추론 조건을 추출합니다.
 2. `RecommendationService`가 **원본 자연어 질의**를 Ollama 임베딩 모델에 전달합니다.
 3. `HybridSearchService`가 확장 키워드의 MySQL FULLTEXT 결과와 pgvector 결과를 결합합니다.
 4. `EvaluatorChain`이 상품을 조회하고 정책을 적용합니다. 통과 후보 중 최대 5개를 선택합니다.
@@ -22,11 +22,13 @@
 
 ## 질의 해석과 캐시
 
+[RecommendationRequestContextFactory](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationRequestContextFactory.java)는 모델 호출 전에 지원되는 원화 가격 표현과 13개 카테고리·승인 별칭을 결정적으로 해석합니다. 값, 원문 근거, `EXPLICIT` 출처와 원본 질의·회원 ID를 [RecommendationRequestContext](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/RecommendationRequestContext.java)에 보존합니다. 역전된 가격 조건은 삭제하지 않고 `CLARIFICATION_REQUIRED`로 분류하며, 현행 리스트 응답에서는 검색과 모델 호출 없이 빈 결과로 종료합니다.
+
 [QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java)는 `openAiChatModel`을 사용합니다. 로컬 모델 설정은 [Backend Context](BACKEND_CONTEXT.md)에 설명합니다.
 
 - 출력은 [EnrichedQuery](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/EnrichedQuery.java)의 `enrichedQuery`, `bm25Keywords`, `categories`, `minPrice`, `maxPrice`입니다.
-- 응답 문자열의 첫 `{`부터 마지막 `}`까지를 JSON으로 파싱합니다. 카테고리·가격 값의 의미 검증은 별도로 구현되어 있지 않습니다.
-- 프롬프트는 [13개 카테고리](RECOMMENDATION_SCENARIOS.md)를 요구하지만 서버의 enum 검증으로 강제하는 상태는 아닙니다.
+- 응답 문자열의 첫 `{`부터 마지막 `}`까지를 JSON으로 파싱합니다. 추론 카테고리는 서버의 폐쇄형 분류로 정규화하고, 음수·역전 가격 범위는 사용하지 않습니다.
+- 모델의 추론 조건은 `INFERRED`로 표시하며 같은 종류의 명시 조건을 덮어쓰지 못합니다.
 - Redis `rec:query:` 캐시는 5분입니다. LLM·JSON 실패 시 원본 질의, 빈 카테고리, 가격 `null`로 fallback합니다.
 - 캐시 쓰기 실패는 처리하지만 캐시 읽기에는 같은 예외 처리가 없습니다. 모든 Redis 장애를 격리한다고 설명하지 않습니다.
 
@@ -59,14 +61,12 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 출처: [EvaluatorChain](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/EvaluatorChain.java).
 
-1. 상품 존재와 `ACTIVE` 상태
+1. 상품 존재, `ACTIVE` 상태와 `stock > 0`
 2. `CategoryValidator`: 카테고리 목록이 있으면 일치 여부 확인
 3. `RuleFilterValidator`: `SOLD_OUT`, 최근 7일 주문 상품 제외
 4. `PriceConstraintValidator`: 추출된 가격 범위 검증
 
-통과 결과가 없고 카테고리가 지정되어 있으면, 같은 후보를 카테고리 없이 다시 검증합니다. 현재는 명시 조건과 추론 조건을 구분하지 않습니다. 가격 규칙도 추출된 값이 있을 때만 적용됩니다.
-
-`ACTIVE` 상태 검증과 별도로 `stock > 0`을 직접 검사하는 로직은 현재 evaluator에 없습니다. [목표 정책](AGENTIC_RAG_PLAN.md)은 이를 포함하며 현재 보장으로 간주하지 않습니다.
+통과 결과가 없을 때 카테고리 완화는 `INFERRED` 조건에만 적용합니다. `EXPLICIT` 카테고리는 결과가 0개여도 유지합니다. 가격 규칙은 명시 조건을 우선하며, 명시 가격이 없을 때만 유효한 모델 추론값을 사용합니다.
 
 ## 추천 이유와 실행 시간
 
@@ -122,4 +122,4 @@ Future의 timeout이나 SSE 연결 종료가 실행 중인 외부 호출을 모�
 
 ## 후속 작업으로 남은 항목
 
-명시 조건 유실, 무조건 카테고리 완화, 검색 전 조건 적용, 근거 검증, 실행 취소, SSE 종료 계약, 모델 호출 루프는 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 코드 변경과 회귀 검증이 필요합니다. 이 문서 정비만으로 해결된 항목이 아닙니다.
+조건을 검색 후보 제한 전에 적용하는 작업, 근거 검증, 실행 취소, SSE 종료 계약, 모델 호출 루프는 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 코드 변경과 회귀 검증이 필요합니다.

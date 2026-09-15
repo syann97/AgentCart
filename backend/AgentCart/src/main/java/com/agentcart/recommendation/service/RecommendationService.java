@@ -24,6 +24,7 @@ public class RecommendationService {
     private final RecommendationHistoryRepository historyRepository;
     private final MemberService memberService;
     private final QueryEnrichmentService queryEnrichmentService;
+    private final RecommendationRequestContextFactory requestContextFactory;
     private final HybridSearchService hybridSearchService;
     private final EvaluatorChain evaluatorChain;
     private final LlmReasoningService llmReasoningService;
@@ -42,7 +43,15 @@ public class RecommendationService {
     }
 
     public List<RecommendationResult> recommend(String query, Long memberId) {
+        RecommendationRequestContext context = requestContextFactory.create(query, memberId);
+        if (context.requiresClarification()) {
+            log.debug("recommendation requires clarification: memberId={} priceEvidence={}",
+                    memberId, context.priceRange() != null ? context.priceRange().evidence() : null);
+            return List.of();
+        }
+
         EnrichedQuery enriched = queryEnrichmentService.enrich(query);
+        context = context.mergeInferred(enriched);
         // 벡터 arm은 자연어 원본 질의를 임베딩(상품 임베딩이 자연어 라벨 기반이라 키워드 나열보다 정합이 높음, #162).
         // BM25 arm은 확장 키워드를 사용해 키워드 매칭을 유지.
         float[] embedding = embed(query);
@@ -51,10 +60,10 @@ public class RecommendationService {
         List<SearchCandidate> candidates = hybridSearchService.search(bm25Query, embedding);
 
         List<ValidatedCandidate> validated = evaluatorChain
-                .filter(candidates, memberId, enriched.minPrice(), enriched.maxPrice(), enriched.categories())
+                .filter(candidates, context)
                 .stream().limit(TOP_N).toList();
 
-        Map<Long, LlmReasonResult> reasons = llmReasoningService.generateReasons(validated, enriched.enrichedQuery());
+        Map<Long, LlmReasonResult> reasons = llmReasoningService.generateReasons(validated, context.originalQuery());
 
         return buildResults(validated, reasons);
     }

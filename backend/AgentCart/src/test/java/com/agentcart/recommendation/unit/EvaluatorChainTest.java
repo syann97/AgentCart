@@ -6,6 +6,11 @@ import com.agentcart.product.domain.ProductStatus;
 import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.dto.SearchCandidate;
 import com.agentcart.recommendation.dto.ValidatedCandidate;
+import com.agentcart.recommendation.dto.CategoryConstraint;
+import com.agentcart.recommendation.dto.ConditionSource;
+import com.agentcart.recommendation.dto.InterpretationStatus;
+import com.agentcart.recommendation.dto.PriceRange;
+import com.agentcart.recommendation.dto.RecommendationRequestContext;
 import com.agentcart.recommendation.service.EvaluatorChain;
 import com.agentcart.recommendation.service.evaluator.CategoryValidator;
 import com.agentcart.recommendation.service.evaluator.PriceConstraintValidator;
@@ -52,7 +57,7 @@ class EvaluatorChainTest {
         given(ruleFilterValidator.validate(any(), any(), any())).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L, null, null, List.of());
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), context());
 
         assertThat(result).hasSize(2);
     }
@@ -67,7 +72,7 @@ class EvaluatorChainTest {
         given(productRepository.findAllById(any())).willReturn(List.of(p1));
         given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of());
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), context());
 
         assertThat(result).isEmpty();
     }
@@ -85,7 +90,8 @@ class EvaluatorChainTest {
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1, c2), 1L, null, null, List.of("패션·의류"));
+        List<ValidatedCandidate> result = evaluatorChain.filter(
+                List.of(c1, c2), context(ConditionSource.INFERRED, "패션·의류"));
 
         assertThat(result).extracting(vc -> vc.candidate().productId()).containsExactly(1L);
     }
@@ -104,9 +110,41 @@ class EvaluatorChainTest {
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(true);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of("패션·의류"));
+        List<ValidatedCandidate> result = evaluatorChain.filter(
+                List.of(c1), context(ConditionSource.INFERRED, "패션·의류"));
 
         assertThat(result).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("명시 카테고리로 전부 제외되면 카테고리를 완화하지 않는다")
+    void filter_explicitCategoryEmptiesResult_doesNotFallback() {
+        SearchCandidate candidate = candidate(1L);
+        Product product = product(1L);
+        given(productRepository.findAllById(any())).willReturn(List.of(product));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+        given(categoryValidator.validate(any(), eq(List.of("패션·의류")))).willReturn(false);
+        RecommendationRequestContext context = new RecommendationRequestContext("패션·의류 장갑", 1L, null,
+                new CategoryConstraint(List.of("패션·의류"), "패션·의류", ConditionSource.EXPLICIT),
+                InterpretationStatus.READY);
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(candidate), context);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("ACTIVE여도 재고가 0이면 결과에서 제외한다")
+    void filter_activeProductWithZeroStock_excluded() {
+        SearchCandidate candidate = candidate(1L);
+        Product product = product(1L);
+        ReflectionTestUtils.setField(product, "stock", 0);
+        given(productRepository.findAllById(any())).willReturn(List.of(product));
+        given(orderItemRepository.findProductIdsOrderedByMemberSince(anyLong(), any())).willReturn(List.of());
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(candidate), context());
+
+        assertThat(result).isEmpty();
     }
 
     @Test
@@ -120,7 +158,7 @@ class EvaluatorChainTest {
         given(categoryValidator.validate(any(), any())).willReturn(true);
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(false);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, null, List.of());
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), context());
 
         assertThat(result).isEmpty();
     }
@@ -137,13 +175,25 @@ class EvaluatorChainTest {
         given(ruleFilterValidator.validate(any(), any(), any(Set.class))).willReturn(true);
         given(priceConstraintValidator.validate(any(), any(), any())).willReturn(false);
 
-        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), 1L, null, 5000L, List.of());
+        RecommendationRequestContext context = new RecommendationRequestContext("", 1L,
+                new PriceRange(null, 5000L, null, ConditionSource.INFERRED), null, InterpretationStatus.READY);
+
+        List<ValidatedCandidate> result = evaluatorChain.filter(List.of(c1), context);
 
         assertThat(result).isEmpty();
     }
 
     private SearchCandidate candidate(long productId) {
         return new SearchCandidate(productId, 1, 1, 0.0, 0.5);
+    }
+
+    private RecommendationRequestContext context() {
+        return new RecommendationRequestContext("", 1L, null, null, InterpretationStatus.READY);
+    }
+
+    private RecommendationRequestContext context(ConditionSource source, String category) {
+        return new RecommendationRequestContext("", 1L, null,
+                new CategoryConstraint(List.of(category), null, source), InterpretationStatus.READY);
     }
 
     private Product product(long id) {

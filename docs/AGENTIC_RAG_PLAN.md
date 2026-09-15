@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 런타임 미구현**. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다. [#173](https://github.com/syann97/AgentCart/issues/173)은 이 계획을 문서에 정합하게 반영하는 선행 작업입니다.
+상태: **승인된 목표 설계 / 기반 코드 일부 구현**. 명시 조건을 보존하는 요청 컨텍스트와 evaluator 정책은 구현되었고, 검색 도구·에이전트 반복·SSE 계약은 아직 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -25,6 +25,8 @@ flowchart TD
 이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 실제 도구 연동은 후속 `searchCatalog`·에이전트 구현에서 확정합니다.
 
 ## 명시 조건과 사용자 의도
+
+이 절의 요청 컨텍스트, 결정적 가격 파서, 카테고리 분류·별칭, 조건 병합 우선순위와 양수 재고 검사는 #176에서 구현되었습니다. 입력 구체화 상태를 별도 SSE outcome으로 전달하는 계약은 후속 응답 단계에 남아 있습니다.
 
 - 원본 질의는 전체 요청 동안 유지합니다. 모델이 만든 검색어가 사용자 원문을 대체하지 않습니다.
 - 가격의 초기 지원 표현은 원/KRW 기준 상한·하한·범위입니다. 예: `5만원 이하`, `3만원 이상`, `3만~5만원`, `50,000원 이하`. 경계 포함 여부와 범위 역전은 테스트로 고정합니다.
@@ -119,9 +121,9 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 
 | 단계 | 범위 | 상태 |
 |---|---|---|
-| 1. #173 | 문서·skills·prompts 정합성, 현재/목표 구분, 공통 지침과 참조 검사 | 이번 문서 작업 |
-| 2. 기반 코드 | 명시 조건 보존, 구조화 계약, 검색·데이터 정책, 안정 버전 호환성 확인 | 후속 구현 |
+| 1. #173 | 문서·skills·prompts 정합성, 현재/목표 구분, 공통 지침과 참조 검사 | 완료 |
+| 2. #175–#176 기반 코드 | Spring AI 안정 버전 전환, 명시 조건 보존 요청 컨텍스트, evaluator 정책 | 일부 완료; 검색 전 조건 적용은 후속 |
 | 3. 에이전트 | 검색 도구와 제한된 반복, 통합 이유 생성 | 후속 구현 |
 | 4. 응답·평가 | SSE 진행·종료·취소, 회귀 테스트와 실제 모델 평가 | 후속 구현 |
 
-문서 정비에서는 런타임 코드·의존성·데이터를 변경하지 않습니다. 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
+구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
