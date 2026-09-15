@@ -198,6 +198,20 @@ class HybridSearchServiceTest {
         assertThat(kw.getValue()).isEqualTo("세트 선물");
     }
 
+    @Test
+    @DisplayName("허용 상품 ID - BM25와 Vector 검색에 같은 ID 집합 전달")
+    void search_allowedIds_passesSameIdsToBothSearches() {
+        List<Long> allowedIds = List.of(3L, 1L, 2L);
+        given(productRepository.bm25SearchWithinIds(anyString(), anyList(), anyInt())).willReturn(List.of());
+        given(vectorRepository.findTopBySimilarityWithinIds(any(), anyList(), anyInt(), anyDouble()))
+                .willReturn(List.of());
+
+        hybridSearchService.search("캠핑 의자", new float[]{0.1f}, allowedIds);
+
+        verify(productRepository).bm25SearchWithinIds("캠핑 의자", allowedIds, 50);
+        verify(vectorRepository).findTopBySimilarityWithinIds(any(), eq(allowedIds), eq(50), eq(0.4));
+    }
+
     private static float[] any() {
         return org.mockito.ArgumentMatchers.any();
     }

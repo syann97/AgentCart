@@ -1,6 +1,6 @@
 # 현재 추천 파이프라인
 
-상태: **현재 소스에 구현된 고정형 RAG 흐름**. 다음 단계의 도구 호출 구조와 실행 상한은 [목표 설계](AGENTIC_RAG_PLAN.md)에 있으며 아직 적용되지 않았습니다.
+상태: **현재 요청 경로는 고정형 RAG 흐름**입니다. `searchCatalog` 도구 계약은 구현되었지만 아직 추천 요청의 모델 호출 루프에 연결되지 않았습니다. 에이전트 반복과 실행 상한은 [목표 설계](AGENTIC_RAG_PLAN.md)에 남아 있습니다.
 
 ## 진입점
 
@@ -56,6 +56,17 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 정규화 전 하한도 적용되므로 벡터 유사도가 0.4 이상이라고 항상 최종 후보에 남는 것은 아닙니다. 정규화된 검색 최상위 점수는 1.0이므로 확률·신뢰도로 해석하지 않습니다.
 
 현재 가격·카테고리·주문 정책 검증은 검색 후보 제한 **이후**에 실행됩니다. 조건에 맞는 상품이 카탈로그에 있어도 상위 후보 밖이면 누락될 수 있습니다.
+
+### 구현된 `searchCatalog` 계약
+
+[SearchCatalogService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java)와 Spring AI `ToolCallback` bean은 후속 에이전트가 호출할 읽기 전용 검색 경계를 제공합니다. 현재 `RecommendationService`는 이 도구를 호출하지 않습니다.
+
+- 모델 입력은 BM25 키워드, 의미 검색어, 선택적 추론 카테고리뿐입니다. 회원 ID, 명시 조건, 요청 ID, 검색 횟수와 deadline은 별도 서버 `ToolContext`로 전달합니다.
+- MySQL에서 `ACTIVE`, 양수 재고, 명시 가격·카테고리, 최근 7일 주문 제외를 적용해 허용 상품 ID를 먼저 계산합니다. 빈 집합이면 BM25·pgvector를 호출하지 않습니다.
+- 같은 허용 ID 집합을 BM25와 pgvector 양쪽에 적용하고 기존 가중 RRF를 유지합니다.
+- 첫 의미 검색은 모델 입력과 관계없이 원본 질의를 사용합니다. 추론 카테고리는 사전 허용 ID를 줄이지 않고 evaluator의 완화 가능한 조건으로만 사용합니다.
+- 검색 결과는 최신 MySQL 상품 조회와 evaluator 정책을 다시 통과하며 최대 10개입니다. 상품 근거 ID는 `product:{id}` 형식입니다.
+- 정상 결과, 결과 없음 사유, deadline·embedding·저장소 오류를 구조화된 상태로 구분합니다. 존재하지 않는 상품 참조는 저장소 장애와 다른 빈 결과 사유입니다.
 
 ## 검증과 fallback
 
@@ -122,4 +133,4 @@ Future의 timeout이나 SSE 연결 종료가 실행 중인 외부 호출을 모�
 
 ## 후속 작업으로 남은 항목
 
-조건을 검색 후보 제한 전에 적용하는 작업, 근거 검증, 실행 취소, SSE 종료 계약, 모델 호출 루프는 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 코드 변경과 회귀 검증이 필요합니다.
+현행 추천 요청을 `searchCatalog`에 연결하는 모델 호출 루프, 근거 검증, 실행 취소와 SSE 종료 계약은 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 코드 변경과 회귀 검증이 필요합니다.

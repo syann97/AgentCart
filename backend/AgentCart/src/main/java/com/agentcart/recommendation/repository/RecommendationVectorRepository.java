@@ -34,6 +34,22 @@ public class RecommendationVectorRepository {
         );
     }
 
+    public List<VectorSearchResult> findTopBySimilarityWithinIds(float[] queryVector, List<Long> allowedIds,
+                                                                 int limit, double minSimilarity) {
+        if (allowedIds == null || allowedIds.isEmpty()) return List.of();
+        return jdbcTemplate.query(
+                "SELECT product_id, similarity FROM (" +
+                "  SELECT product_id, 1 - (embedding <=> CAST(:queryVector AS vector)) AS similarity" +
+                "  FROM product_embeddings WHERE product_id IN (:allowedIds)" +
+                ") sub " +
+                "WHERE similarity >= :minSimilarity " +
+                "ORDER BY similarity DESC LIMIT :limit",
+                Map.of("queryVector", toVectorString(queryVector), "allowedIds", allowedIds,
+                        "limit", limit, "minSimilarity", minSimilarity),
+                (rs, rowNum) -> new VectorSearchResult(rs.getLong("product_id"), rs.getDouble("similarity"))
+        );
+    }
+
     private String toVectorString(float[] embedding) {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
         for (float f : embedding) {

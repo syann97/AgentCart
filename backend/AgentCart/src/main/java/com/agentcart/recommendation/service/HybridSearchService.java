@@ -37,6 +37,14 @@ public class HybridSearchService {
         return fuse(bm25Ids, vectorResults);
     }
 
+    public List<SearchCandidate> search(String keyword, float[] queryEmbedding, Collection<Long> allowedIds) {
+        if (allowedIds == null || allowedIds.isEmpty()) return List.of();
+        List<Long> ids = List.copyOf(new LinkedHashSet<>(allowedIds));
+        List<Long> bm25Ids = fetchBm25Ids(keyword, ids);
+        List<VectorSearchResult> vectorResults = fetchVectorResults(queryEmbedding, ids);
+        return fuse(bm25Ids, vectorResults);
+    }
+
     private List<Long> fetchBm25Ids(String keyword) {
         String cleaned = sanitizeBm25Keyword(keyword);
         List<Long> ids = productRepository.bm25Search(cleaned, SEARCH_LIMIT)
@@ -44,6 +52,17 @@ public class HybridSearchService {
                 .map(row -> ((Number) row[0]).longValue())
                 .toList();
         log.info("HybridSearch BM25: keyword='{}' cleaned='{}' hits={} ids={}", keyword, cleaned, ids.size(), ids);
+        return ids;
+    }
+
+    private List<Long> fetchBm25Ids(String keyword, List<Long> allowedIds) {
+        String cleaned = sanitizeBm25Keyword(keyword);
+        List<Long> ids = productRepository.bm25SearchWithinIds(cleaned, allowedIds, SEARCH_LIMIT)
+                .stream()
+                .map(row -> ((Number) row[0]).longValue())
+                .toList();
+        log.info("HybridSearch BM25 constrained: keyword='{}' cleaned='{}' allowed={} hits={}",
+                keyword, cleaned, allowedIds.size(), ids.size());
         return ids;
     }
 
@@ -77,6 +96,12 @@ public class HybridSearchService {
                             .toList());
         }
         return results;
+    }
+
+    private List<VectorSearchResult> fetchVectorResults(float[] queryEmbedding, List<Long> allowedIds) {
+        if (vectorRepository == null || queryEmbedding == null) return List.of();
+        return vectorRepository.findTopBySimilarityWithinIds(
+                queryEmbedding, allowedIds, SEARCH_LIMIT, MIN_VECTOR_SIMILARITY);
     }
 
     List<SearchCandidate> fuse(List<Long> bm25Ids, List<VectorSearchResult> vectorResults) {
