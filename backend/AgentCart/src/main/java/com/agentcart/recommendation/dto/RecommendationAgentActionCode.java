@@ -1,0 +1,16 @@
+package com.agentcart.recommendation.dto;
+
+public enum RecommendationAgentActionCode {
+    COMPLETED,
+    NO_RESULTS,
+    OUT_OF_SCOPE,
+    CLARIFICATION_REQUIRED,
+    FALLBACK_SEARCH,
+    DUPLICATE_SEARCH_BLOCKED,
+    LLM_LIMIT_REACHED,
+    SEARCH_LIMIT_REACHED,
+    INVALID_MODEL_RESPONSE,
+    DEADLINE_EXCEEDED,
+    CANCELLED,
+    PROCESSING_FAILED
+}
