@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
@@ -31,7 +30,6 @@ public class QueryEnrichmentService {
     private final ObjectMapper objectMapper;
 
     @Autowired(required = false)
-    @Qualifier("openAiChatModel")
     private ChatModel chatModel;
 
     public QueryEnrichmentService(StringRedisTemplate redisTemplate, ObjectMapper objectMapper) {

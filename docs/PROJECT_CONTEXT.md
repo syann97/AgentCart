@@ -6,7 +6,7 @@ AgentCart는 상품 추천을 통해 Agentic RAG를 학습하는 개인 프로�
 
 - Spring Boot Backend와 Next.js Frontend를 사용합니다.
 - 회원·상품·장바구니·주문·Mock 결제·추천 이력 기능이 있습니다.
-- 추천은 제한된 단일 에이전트와 `searchCatalog`를 사용하는 Agentic RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
+- 추천은 OpenAI 또는 Anthropic Claude 중 설정으로 선택한 채팅 모델, 제한된 단일 에이전트와 `searchCatalog`를 사용하는 Agentic RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
 - 데이터의 1차 범위는 합성 상품 JSON 500개와 [10개 추천 시나리오](RECOMMENDATION_SCENARIOS.md)입니다.
 
 ## 진행 중인 구현

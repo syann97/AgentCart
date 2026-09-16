@@ -35,6 +35,6 @@ validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·f
 
 ## Agent 실제 실행
 
-`AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 OpenAI를 호출합니다. 실행 전에 root, output, 평가 대상 commit 환경 변수를 명시해야 합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
+`AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit 환경 변수를 명시해야 합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
 
 2026-09-16 실행은 snapshot 검증과 A01 결정적 구체화에는 성공했지만 OpenAI 잔여 credit 부족으로 모델 의존 19개 질의가 완료되지 않았습니다. 이 artifact는 실패 실행의 재현 기록이며 Agent 품질 기준선으로 사용하지 않습니다. 자세한 판정은 [실행 기록](AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.
