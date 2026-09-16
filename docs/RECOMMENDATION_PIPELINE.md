@@ -1,30 +1,29 @@
 # 현재 추천 파이프라인
 
-상태: **현재 HTTP 요청 경로는 고정형 RAG 흐름**입니다. `searchCatalog`를 사용하는 독립된 단일 에이전트 서비스와 실행 상한은 구현되었지만 Controller와 SSE 경로에는 아직 연결되지 않았습니다. 응답 전환 범위는 [목표 설계](AGENTIC_RAG_PLAN.md)에 남아 있습니다.
+상태: **현재 HTTP 요청 경로는 제한된 단일 에이전트 흐름**입니다. 에이전트는 `searchCatalog`를 최대 두 번 호출하며 Backend와 Frontend는 명시적인 진행·결과·종료·오류 SSE 계약을 사용합니다.
 
 ## 진입점
 
 - `GET /api/recommendations/stream?query=...`: 인증된 회원의 추천 요청
 - `GET /api/recommendations/history`: 회원별 최근 20건의 추천 이력
 
-출처: [RecommendationController](../backend/AgentCart/src/main/java/com/agentcart/recommendation/controller/RecommendationController.java), [RecommendationService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationService.java).
+출처: [RecommendationController](../backend/AgentCart/src/main/java/com/agentcart/recommendation/controller/RecommendationController.java), [RecommendationAgentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationAgentService.java), [RecommendationStreamService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationStreamService.java).
 
 ## 처리 순서
 
-1. `RecommendationRequestContextFactory`가 원본 질의에서 명시 가격·카테고리를 먼저 해석하고, `QueryEnrichmentService`가 LLM으로 한국어 확장 키워드와 추론 조건을 추출합니다.
-2. `RecommendationService`가 **원본 자연어 질의**를 Ollama 임베딩 모델에 전달합니다.
-3. `HybridSearchService`가 확장 키워드의 MySQL FULLTEXT 결과와 pgvector 결과를 결합합니다.
-4. `EvaluatorChain`이 상품을 조회하고 정책을 적용합니다. 통과 후보 중 최대 5개를 선택합니다.
-5. `LlmReasoningService`가 후보마다 추천 이유와 `conditions`를 생성합니다.
-6. 전체 결과가 준비된 뒤 Controller가 상품별 SSE 메시지를 전송하고 Kafka 이벤트를 발행합니다.
-
-모델이 검색 도구를 호출하거나 검색 결과를 보고 새 검색어를 결정하는 반복은 현재 없습니다. 카테고리 fallback은 같은 후보에 필터를 다시 적용하는 동작이며 재검색이 아닙니다.
+1. 인증과 빈 질의를 SSE 연결 전에 검증하고 회원 ID를 결정합니다.
+2. `RecommendationRequestContextFactory`가 원본 질의에서 명시 가격·카테고리를 결정적으로 해석합니다.
+3. 단일 Agent가 `searchCatalog` 인자를 만들고, 검색 시작 때 `status`를 전송합니다.
+4. 도구는 MySQL 허용 상품을 먼저 제한한 뒤 FULLTEXT와 pgvector 결과를 결합하고 최신 상품 정책을 재검증합니다.
+5. Agent가 후보를 선택해 통합 이유를 생성하거나, 관련성이 부족하면 다른 인자로 한 번 재검색합니다.
+6. 검증된 상품마다 `result`, 정상 outcome은 결과가 0개여도 `done`, 처리 실패는 `error`로 한 번 종료합니다.
+7. 성공적으로 전송한 `result`에 대해서만 Kafka 추천 이력 이벤트를 발행합니다.
 
 ## 질의 해석과 캐시
 
 [RecommendationRequestContextFactory](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationRequestContextFactory.java)는 모델 호출 전에 지원되는 원화 가격 표현과 13개 카테고리·승인 별칭을 결정적으로 해석합니다. 값, 원문 근거, `EXPLICIT` 출처와 원본 질의·회원 ID를 [RecommendationRequestContext](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/RecommendationRequestContext.java)에 보존합니다. 역전된 가격 조건은 삭제하지 않고 `CLARIFICATION_REQUIRED`로 분류하며, 현행 리스트 응답에서는 검색과 모델 호출 없이 빈 결과로 종료합니다.
 
-[QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java)는 `openAiChatModel`을 사용합니다. 로컬 모델 설정은 [Backend Context](BACKEND_CONTEXT.md)에 설명합니다.
+[QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java)는 비교 기준으로 유지된 기존 `RecommendationService` 경로에서 `openAiChatModel`을 사용합니다. 현재 stream endpoint의 Agent 경로에서는 호출하지 않습니다.
 
 - 출력은 [EnrichedQuery](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/EnrichedQuery.java)의 `enrichedQuery`, `bm25Keywords`, `categories`, `minPrice`, `maxPrice`입니다.
 - 응답 문자열의 첫 `{`부터 마지막 `}`까지를 JSON으로 파싱합니다. 추론 카테고리는 서버의 폐쇄형 분류로 정규화하고, 음수·역전 가격 범위는 사용하지 않습니다.
@@ -55,11 +54,11 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 정규화 전 하한도 적용되므로 벡터 유사도가 0.4 이상이라고 항상 최종 후보에 남는 것은 아닙니다. 정규화된 검색 최상위 점수는 1.0이므로 확률·신뢰도로 해석하지 않습니다.
 
-현재 가격·카테고리·주문 정책 검증은 검색 후보 제한 **이후**에 실행됩니다. 조건에 맞는 상품이 카탈로그에 있어도 상위 후보 밖이면 누락될 수 있습니다.
+기존 고정형 `RecommendationService`는 가격·카테고리·주문 정책을 검색 후보 제한 이후에 적용합니다. 현재 Agent 경로의 `searchCatalog`는 가능한 명시 정책을 후보 제한 전에 적용하고 반환 전에 다시 검증합니다.
 
 ### 구현된 `searchCatalog` 계약
 
-[SearchCatalogService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java)와 Spring AI `ToolCallback` bean은 읽기 전용 검색 경계를 제공합니다. `RecommendationAgentService`가 이 도구를 호출하며, 현재 HTTP 경로의 `RecommendationService`는 호출하지 않습니다.
+[SearchCatalogService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java)와 Spring AI `ToolCallback` bean은 읽기 전용 검색 경계를 제공합니다. 현재 HTTP 경로의 `RecommendationAgentService`가 이 도구를 호출하며, 비교 기준으로 남은 `RecommendationService`는 호출하지 않습니다.
 
 - 모델 입력은 BM25 키워드, 의미 검색어, 선택적 추론 카테고리뿐입니다. 회원 ID, 명시 조건, 요청 ID, 검색 횟수와 deadline은 별도 서버 `ToolContext`로 전달합니다.
 - MySQL에서 `ACTIVE`, 양수 재고, 명시 가격·카테고리, 최근 7일 주문 제외를 적용해 허용 상품 ID를 먼저 계산합니다. 빈 집합이면 BM25·pgvector를 호출하지 않습니다.
@@ -89,49 +88,38 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 통과 결과가 없을 때 카테고리 완화는 `INFERRED` 조건에만 적용합니다. `EXPLICIT` 카테고리는 결과가 0개여도 유지합니다. 가격 규칙은 명시 조건을 우선하며, 명시 가격이 없을 때만 유효한 모델 추론값을 사용합니다.
 
-## 추천 이유와 실행 시간
+## 실행 시간과 유지된 비교 기준
 
 출처: [LlmReasoningService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/LlmReasoningService.java), [ProductEmbeddingService](../backend/AgentCart/src/main/java/com/agentcart/product/service/ProductEmbeddingService.java), [application.yaml](../backend/AgentCart/src/main/resources/application.yaml).
 
 | 항목 | 현재 값 / 적용 범위 |
 |---|---|
-| 추천 개수 | 최대 5개 |
-| 이유 생성 | 후보마다 LLM 호출, semaphore 동시 실행 3개 |
-| 이유 생성 timeout | 후보별 Future 대기 10초 |
+| Agent 추천 개수 | 최대 5개 |
+| Agent 전체 처리 제한 | 30초 |
+| Agent LLM / 검색 | 최대 3회 / 최대 2회 |
+| 기존 기준선 이유 생성 | 후보마다 LLM 호출, semaphore 동시 실행 3개 |
+| 기존 기준선 이유 timeout | 후보별 Future 대기 10초 |
 | 상품 임베딩 생성 timeout | `app.embedding.timeout-seconds`, 기본 5초 |
 | 추천 질의 임베딩 / 질의 확장 | 각 서비스에 별도의 명시적 timeout wrapper 없음 |
-| SSE emitter | 60초 |
-| 요청 전체 실행 상한 | 서비스 차원의 통합 deadline 없음 |
+| SSE emitter | 60초; completion·timeout·error를 Agent 취소에 전달 |
 
-이유는 `REASON:`과 `CONDITIONS:` 텍스트를 파싱합니다. 실제 가격 대신 가격대 레이블을 모델에 제공하고, conditions의 가격 형태 문자열을 제거합니다. 생성 문장이 상품 사실에 부합하는지를 검증하는 기능은 아직 없습니다.
-
-Future의 timeout이나 SSE 연결 종료가 실행 중인 외부 호출을 모두 취소한다는 보장은 없습니다.
+기존 기준선의 `LlmReasoningService`는 `REASON:`과 `CONDITIONS:` 텍스트를 파싱합니다. 현재 Agent 경로는 후보별 이유 호출을 사용하지 않고 최종 모델 응답의 후보 ID·근거를 검증한 뒤 서버 상품 사실과 결합합니다. 외부 SDK가 이미 실행 중인 호출의 interrupt를 즉시 준수한다고 보장하지는 않지만, 취소 이후 새 LLM·검색은 시작하지 않습니다.
 
 ## 현재 SSE 계약
 
-일반 REST의 `ApiResponse`와 달리 SSE는 아래 JSON을 상품마다 `data:` 메시지로 전송합니다.
+일반 REST의 `ApiResponse`와 달리 SSE는 `{ "type": "...", "data": {...} }` 판별 유니온을 전송합니다.
 
-```json
-{
-  "type": "complete",
-  "data": {
-    "productId": 1,
-    "productName": "예시 상품",
-    "price": 45000,
-    "reason": "추천 이유",
-    "conditions": [],
-    "score": 1.0
-  }
-}
-```
+| type | data | terminal |
+|---|---|---|
+| `status` | 검색 단계, 검색 시도 번호, 사용자 메시지 | 아니요 |
+| `result` | 상품 ID·이름·가격·이유·조건·점수 | 아니요 |
+| `done` | request ID, 정상 outcome, action code, 메시지, 결과 수 | 예 |
+| `error` | request ID, 안정적 오류 code, 메시지, 재시도 가능 여부 | 예 |
 
-이 예시는 스키마 설명이며 실제 추천 결과가 아닙니다.
-
-- `complete`는 현재 **상품 한 개의 완성된 결과**를 뜻합니다. 전체 요청 종료 이벤트가 아닙니다.
-- 전체 리스트 계산이 끝난 후 메시지를 전송하며, 단계별 진행 이벤트와 `done` 메시지는 없습니다.
-- 결과가 0개이면 결과 메시지 없이 연결을 종료합니다. 예외는 `completeWithError`로 처리합니다.
-- [프런트 타입](../frontend/src/features/recommendation/types/recommendation.types.ts)은 `partial | complete | error`를 선언하지만 Backend가 세 타입을 모두 발행하는 것은 아닙니다.
-- [구독 훅](../frontend/src/features/recommendation/hooks/use-recommendation-stream.ts)은 `complete`를 누적하고 오류 콜백으로 종료를 처리하여 정상 종료·오류 구분이 충분하지 않습니다.
+- 살아 있는 연결은 `done` 또는 `error` 중 하나만 전송합니다. terminal 뒤에는 추가 상태·상품·Kafka 이벤트가 없습니다.
+- 추천 성공, 결과 없음, 카탈로그 밖, 입력 구체화와 일반 검색 fallback은 모두 `done.outcome`으로 구분합니다.
+- 처리 실패는 `error`이며 `done`이 뒤따르지 않습니다. EventSource transport 오류는 Frontend에서 서버 `error`와 별도 상태로 처리합니다.
+- emitter completion·timeout·error와 전송 실패는 취소 토큰에 반영합니다. 연결이 이미 끊어졌다면 terminal 전송보다 추가 실행 중단을 우선합니다.
 
 브라우저 구독은 `EventSource`와 토큰 query parameter를 사용합니다. [AUTH](AUTH.md)의 실제 인증 계약을 따릅니다.
 
@@ -143,4 +131,4 @@ Future의 timeout이나 SSE 연결 종료가 실행 중인 외부 호출을 모�
 
 ## 후속 작업으로 남은 항목
 
-현행 HTTP 추천 요청을 구현된 에이전트 서비스에 연결하고, 연결 종료를 실행 취소로 전달하며, SSE 진행·결과·정상 종료 계약과 회귀 평가를 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 구현해야 합니다.
+고정 평가셋에서 기존 기준선과 Agent 경로의 품질·지연·호출 수를 비교하는 실제 모델 평가는 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 진행합니다.

@@ -4,7 +4,7 @@
 
 ## SSE
 
-- 현재 계약은 [추천 파이프라인](RECOMMENDATION_PIPELINE.md)을 참조합니다. `complete`는 상품 하나이며 전체 요청 종료가 아닙니다.
+- 현재 계약은 [추천 파이프라인](RECOMMENDATION_PIPELINE.md)을 참조합니다. `result`는 상품 하나이며 `done` 또는 `error`만 terminal 이벤트입니다.
 - 현재 EventSource는 `token` query parameter를 사용합니다. Axios 인터셉터가 SSE 인증·토큰 갱신을 자동 처리한다고 가정하지 않습니다.
 - 새 계약은 [목표 설계](AGENTIC_RAG_PLAN.md)의 진행·결과·종료·오류 메시지를 Backend와 함께 적용합니다.
 - 0개 결과, 정상 종료, 오류, 재검색, 연결 해제, 다시 검색할 때의 상태를 구분합니다.

@@ -1,6 +1,6 @@
 # AgentCart Frontend
 
-현재 Frontend는 Next.js App Router, React, TypeScript로 회원·상품·장바구니·주문·Mock 결제·추천 화면을 제공합니다. 추천 agent의 단계별 진행 UI는 아직 구현되지 않았습니다.
+현재 Frontend는 Next.js App Router, React, TypeScript로 회원·상품·장바구니·주문·Mock 결제·추천 화면을 제공합니다. 추천 화면은 agent 검색 진행, 상품 결과, 정상 outcome과 오류를 구분해 표시합니다.
 
 ## 기술 스택
 
@@ -84,13 +84,11 @@ useRecommendationStream.start(query)
   → useSse(url, { onMessage })
   → EventSource + withCredentials
   → access token을 ?token= query parameter로 전달
-  → type=complete 상품을 results 상태에 축적
-  → 연결 종료/error 경로에서 검색 상태 종료
+  → status는 진행 문구, result는 상품 목록에 축적
+  → done 또는 error에서 연결과 검색 상태 종료
 ```
 
-Backend는 추천 전체를 계산한 뒤 상품별 `complete` 메시지를 전송합니다. `complete`는 상품 하나이며 전체 요청 종료 event가 아닙니다. 현재 type에는 `partial | complete | error`가 선언되어 있지만 Backend가 세 종류를 모두 보내는 것은 아닙니다.
-
-`status | result | done | error`와 재검색 진행 UI는 [Agentic RAG 목표 설계](../docs/AGENTIC_RAG_PLAN.md)의 후속 구현입니다. 현행 계약은 [추천 파이프라인](../docs/RECOMMENDATION_PIPELINE.md)을 따릅니다.
+Backend와 Frontend는 `status | result | done | error` 판별 유니온을 공유합니다. 0개 결과, 입력 구체화, 카탈로그 밖과 fallback도 `done.outcome`으로 정상 종료하며, 서버 `error`와 EventSource transport 오류를 별도로 처리합니다. 현행 계약은 [추천 파이프라인](../docs/RECOMMENDATION_PIPELINE.md)을 따릅니다.
 
 ## 시작하기
 

@@ -167,6 +167,8 @@ GET /api/recommendations/stream?query=...&token=<access-token>
 
 `EventSource`의 `withCredentials=true`도 설정되어 있지만 Refresh token cookie의 path가 `/api/auth/refresh`로 제한되어 있어 추천 endpoint 인증에는 쓰이지 않습니다. SSE는 Axios의 401 refresh·queue 경로도 거치지 않습니다.
 
+인증 실패와 빈 질의는 SSE 연결을 만들기 전 일반 HTTP `401`·`400`으로 반환합니다. 연결이 만들어진 뒤의 처리 실패는 HTTP status를 바꾸지 않고 `type=error` terminal 이벤트로 전달합니다. 브라우저 연결 종료, emitter timeout과 emitter 오류는 Agent 취소 토큰에 전달되어 이후 새 LLM·검색 호출을 막습니다.
+
 query token은 server·proxy access log, 브라우저 기록, 복사된 URL에 노출될 수 있으므로 로그와 오류 메시지에 전체 URL을 남기지 않습니다. 인증 방식을 바꾸면 Backend filter, CORS, Frontend 구독 코드와 테스트를 함께 갱신합니다.
 
 ---

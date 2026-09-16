@@ -1,6 +1,6 @@
 # 추천 데이터 범위와 평가 계획
 
-상태: **현재 JSON 데이터의 범위 + 고정 평가 계획**. 재현 가능한 snapshot, 수동 label과 현재 고정형 RAG 기준선은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. 현재 pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 승인된 다음 계약은 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
+상태: **현재 JSON 데이터의 범위 + 고정 평가 계획**. 재현 가능한 snapshot, 수동 label과 기존 고정형 RAG 기준선은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. 현재 Agent pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 구현 계약과 남은 평가 범위는 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
 
 ## 데이터 출처와 스냅샷
 
@@ -57,7 +57,7 @@ JSON 항목 수와 실제 MySQL 상품 수, pgvector embedding 수는 다를 수
 
 ## 범위 밖 질의와 현재 동작
 
-대표 사례는 귀걸이·목걸이·반지 같은 악세사리/쥬얼리와 자동차용품입니다. 현재 고정형 pipeline은 추론 카테고리가 후보를 모두 제거하면 같은 후보에서 카테고리를 풀기 때문에 무관한 차선 상품을 반환할 수 있습니다. 목표 agent는 근거가 없으면 결과 없음 또는 지원 범위 안내로 종료해야 합니다.
+대표 사례는 귀걸이·목걸이·반지 같은 악세사리/쥬얼리와 자동차용품입니다. 기존 고정형 pipeline은 추론 카테고리가 후보를 모두 제거하면 같은 후보에서 카테고리를 풀기 때문에 무관한 차선 상품을 반환할 수 있습니다. 현재 Agent는 근거가 없으면 결과 없음 또는 지원 범위 안내로 종료하도록 구현되었으며 실제 모델 평가는 별도로 수행합니다.
 
 범위를 확장하려면 상품 데이터와 수동 relevance label을 추가하고, 필요하면 taxonomy·질의 해석·embedding을 함께 갱신합니다.
 
@@ -108,4 +108,4 @@ S·C 사례는 첫 검색으로 종료 가능한 기준선, R 사례는 재검�
 - 첫 검색 종료율, 재검색 후 Hit@5 변화, 중복 검색 인자 0건
 - LLM·검색 호출 수, 전체 지연시간, timeout·취소 준수
 
-같은 snapshot과 label에서 현재 고정형 pipeline을 기준선으로 기록한 뒤 목표 agent와 비교합니다. 실제 모델 평가는 mock 회귀 테스트와 분리하고 실행한 모델·데이터·prompt 버전, 비용과 지연시간을 보고합니다.
+같은 snapshot과 label에서 기존 고정형 pipeline을 기준선으로 기록한 뒤 현재 Agent와 비교합니다. 실제 모델 평가는 mock 회귀 테스트와 분리하고 실행한 모델·데이터·prompt 버전, 비용과 지연시간을 보고합니다.

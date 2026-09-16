@@ -1,6 +1,7 @@
 package com.agentcart.exception;
 
 import com.agentcart.common.ApiResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,6 +60,16 @@ public class GlobalExceptionHandler {
         e.getBindingResult().getFieldErrors().forEach(fe ->
                 fields.putIfAbsent(fe.getField(), fe.getDefaultMessage())
         );
+        return ResponseEntity
+                .status(ErrorCode.VALIDATION_ERROR.getStatus())
+                .body(ApiResponse.validationError(fields));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleConstraintViolation(ConstraintViolationException e) {
+        Map<String, String> fields = new LinkedHashMap<>();
+        e.getConstraintViolations().forEach(violation ->
+                fields.putIfAbsent(violation.getPropertyPath().toString(), violation.getMessage()));
         return ResponseEntity
                 .status(ErrorCode.VALIDATION_ERROR.getStatus())
                 .body(ApiResponse.validationError(fields));

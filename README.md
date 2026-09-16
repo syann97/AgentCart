@@ -2,7 +2,7 @@
 
 Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입니다. 자연어 질의로 상품을 찾고, 추천 이유와 가격을 확인하는 커머스 서비스를 만듭니다.
 
-**현재 HTTP 추천 경로는 질의 확장 → Hybrid 검색 → 규칙 검증 → 추천 이유 생성의 고정형 RAG 파이프라인입니다.** 최대 한 번 재검색하는 단일 에이전트 실행 서비스는 구현되었으며, SSE 경로 연결과 단계별 진행·종료 이벤트는 후속 작업입니다.
+**현재 HTTP 추천 경로는 단일 에이전트가 제한된 `searchCatalog`를 호출하고 필요할 때 한 번 재검색하는 Agentic RAG 흐름입니다.** Backend와 Frontend는 `status | result | done | error` SSE 계약을 사용하며 연결 종료와 timeout을 에이전트 취소 상태로 전달합니다.
 
 ## 현재 구현
 
@@ -29,12 +29,11 @@ Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입�
 
 ```text
 GET /api/recommendations/stream?query=...
-  → QueryEnrichmentService: 키워드·가격·카테고리 추출
-  → 원본 질의 임베딩 + HybridSearchService
-  → EvaluatorChain: 후보 검증, 최대 5개 선택
-  → LlmReasoningService: 후보별 추천 이유 생성
-  → 상품별 complete 메시지 전송 후 SSE 연결 종료
-  → recommendation.served 이벤트 → 추천 이력 저장
+  → RecommendationAgentService: 명시 조건 보존과 검색 판단
+  → searchCatalog: 제한된 Hybrid 검색과 정책 검증
+  → 필요할 때 검색어를 바꿔 한 번 재검색
+  → status / result* / done 또는 error 전송
+  → 전송에 성공한 result만 recommendation.served 이벤트로 이력 저장
 ```
 
 현재 브라우저 SSE는 `EventSource`와 토큰 query parameter를 사용합니다. 일반 API의 Bearer 헤더 방식과 구분해야 합니다. [인증 가이드](docs/AUTH.md)
@@ -43,7 +42,7 @@ GET /api/recommendations/stream?query=...
 
 ## Agentic RAG 진행 상태
 
-단일 추천 에이전트가 읽기 전용 `searchCatalog`를 최대 두 번 호출하고 모델이 검색어와 재검색 여부를 결정하는 실행 계약을 구현했습니다. 기존 검색·상품 조회·검증은 도구 내부에서 재사용하며, 현재 HTTP/SSE 요청은 아직 이 서비스로 전환하지 않았습니다.
+단일 추천 에이전트가 읽기 전용 `searchCatalog`를 최대 두 번 호출하고 모델이 검색어와 재검색 여부를 결정하는 실행 계약을 구현했습니다. 기존 검색·상품 조회·검증은 도구 내부에서 재사용하며 HTTP/SSE 요청도 이 서비스에 연결되었습니다.
 
 명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한, 평가 기준과 남은 응답 연결 작업은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다.
 

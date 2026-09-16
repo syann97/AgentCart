@@ -111,6 +111,12 @@ public class RecommendationAgentService {
 
     public RecommendationAgentResult recommend(
             String query, Long memberId, RecommendationCancellationToken cancellationToken) {
+        return recommend(query, memberId, cancellationToken, RecommendationAgentProgressListener.NO_OP);
+    }
+
+    public RecommendationAgentResult recommend(
+            String query, Long memberId, RecommendationCancellationToken cancellationToken,
+            RecommendationAgentProgressListener progressListener) {
         Instant startedAt = clock.instant();
         String requestId = UUID.randomUUID().toString();
         RecommendationRequestContext requestContext = requestContextFactory.create(query, memberId);
@@ -123,7 +129,7 @@ public class RecommendationAgentService {
                     "가격 범위가 서로 충돌합니다. 조건을 확인해 주세요.", List.of());
         }
         if (chatModel == null) {
-            return fallback(state, new LinkedHashMap<>());
+            return fallback(state, new LinkedHashMap<>(), progressListener);
         }
 
         List<Message> conversation = new ArrayList<>();
@@ -139,7 +145,7 @@ public class RecommendationAgentService {
                 AssistantMessage assistant = response == null || response.getResult() == null
                         ? null : response.getResult().getOutput();
                 if (assistant == null) {
-                    return fallback(state, candidates);
+                    return fallback(state, candidates, progressListener);
                 }
 
                 if (assistant.hasToolCalls()) {
@@ -150,7 +156,7 @@ public class RecommendationAgentService {
                     }
                     if (assistant.getToolCalls().size() != 1
                             || !"searchCatalog".equals(assistant.getToolCalls().getFirst().name())) {
-                        return fallback(state, candidates);
+                        return fallback(state, candidates, progressListener);
                     }
                     AssistantMessage.ToolCall toolCall = assistant.getToolCalls().getFirst();
                     SearchCatalogRequest request = parseToolRequest(toolCall.arguments());
@@ -160,7 +166,7 @@ public class RecommendationAgentService {
                                 RecommendationAgentActionCode.DUPLICATE_SEARCH_BLOCKED,
                                 "같은 검색 조건이 반복되어 실행을 종료했습니다.", List.of());
                     }
-                    SearchCatalogResponse toolResponse = executeSearch(state, request);
+                    SearchCatalogResponse toolResponse = executeSearch(state, request, progressListener, false);
                     toolResponse.candidates().forEach(candidate -> candidates.put(candidate.productId(), candidate));
                     conversation.add(assistant);
                     conversation.add(toolResponseMessage(toolCall, toolResponse));
@@ -171,7 +177,7 @@ public class RecommendationAgentService {
                 if (terminal != null) {
                     return terminal;
                 }
-                return fallback(state, candidates);
+                return fallback(state, candidates, progressListener);
             }
             return finish(state, RecommendationAgentOutcome.FAILED,
                     RecommendationAgentActionCode.LLM_LIMIT_REACHED,
@@ -183,7 +189,7 @@ public class RecommendationAgentService {
             return finish(state, RecommendationAgentOutcome.FAILED,
                     RecommendationAgentActionCode.DEADLINE_EXCEEDED, "추천 처리 시간이 초과되었습니다.", List.of());
         } catch (InvalidModelResponseException e) {
-            return fallback(state, candidates);
+            return fallback(state, candidates, progressListener);
         } catch (RuntimeException e) {
             log.warn("recommendation agent failed: requestId={} error={}", requestId, e.getMessage());
             return finish(state, RecommendationAgentOutcome.FAILED,
@@ -209,10 +215,14 @@ public class RecommendationAgentService {
         return withinDeadline(state, () -> chatModel.call(new Prompt(List.copyOf(conversation), options.build())));
     }
 
-    private SearchCatalogResponse executeSearch(ExecutionState state, SearchCatalogRequest request) {
+    private SearchCatalogResponse executeSearch(
+            ExecutionState state, SearchCatalogRequest request,
+            RecommendationAgentProgressListener progressListener, boolean fallback) {
         if (state.searchCount >= MAX_SEARCHES) {
             throw new InvalidModelResponseException();
         }
+        checkCanStart(state, false);
+        progressListener.onSearchStarted(state.searchCount + 1, fallback);
         checkCanStart(state, false);
         state.searchCount++;
         SearchCatalogExecutionContext executionContext = new SearchCatalogExecutionContext(
@@ -228,7 +238,8 @@ public class RecommendationAgentService {
     }
 
     private RecommendationAgentResult fallback(
-            ExecutionState state, Map<Long, SearchCatalogCandidate> existingCandidates) {
+            ExecutionState state, Map<Long, SearchCatalogCandidate> existingCandidates,
+            RecommendationAgentProgressListener progressListener) {
         try {
             checkCanStart(state, false);
             SearchCatalogRequest request = new SearchCatalogRequest(
@@ -237,7 +248,8 @@ public class RecommendationAgentService {
             Map<Long, SearchCatalogCandidate> fallbackCandidates = new LinkedHashMap<>(existingCandidates);
             if (!state.searchFingerprints.contains(fingerprint) && state.searchCount < MAX_SEARCHES) {
                 state.searchFingerprints.add(fingerprint);
-                SearchCatalogResponse response = executeSearch(state, request);
+                SearchCatalogResponse response = executeSearch(
+                        state, request, progressListener, true);
                 response.candidates().forEach(candidate -> fallbackCandidates.put(candidate.productId(), candidate));
             }
             List<AgentRecommendation> results = fallbackCandidates.values().stream()

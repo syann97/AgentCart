@@ -8,6 +8,7 @@ import com.agentcart.recommendation.dto.SearchCatalogCandidate;
 import com.agentcart.recommendation.dto.SearchCatalogEmptyReason;
 import com.agentcart.recommendation.dto.SearchCatalogResponse;
 import com.agentcart.recommendation.service.RecommendationAgentService;
+import com.agentcart.recommendation.service.RecommendationAgentProgressListener;
 import com.agentcart.recommendation.service.RecommendationCancellationToken;
 import com.agentcart.recommendation.service.RecommendationRequestContextFactory;
 import com.agentcart.recommendation.service.SearchCatalogService;
@@ -84,6 +85,7 @@ class RecommendationAgentServiceTest {
     @Test
     @DisplayName("관련성 부족 후 검색어 변경 - 검색 2회와 LLM 3회로 종료")
     void recommend_changedSearch_runsOneResearch() {
+        RecommendationAgentProgressListener progressListener = mock(RecommendationAgentProgressListener.class);
         given(catalogService.search(any(), any())).willReturn(
                 success(candidate(1L, "일반 의자")), success(candidate(2L, "캠핑 의자")));
         given(chatModel.call(any(Prompt.class))).willReturn(
@@ -91,11 +93,14 @@ class RecommendationAgentServiceTest {
                 toolCall("call-2", "캠핑 접이식 의자", "가족 캠핑용 접이식 의자"),
                 text(successJson(2L, "가족 캠핑에 적합합니다", "product:2")));
 
-        RecommendationAgentResult result = service.recommend(QUERY, MEMBER_ID);
+        RecommendationAgentResult result = service.recommend(
+                QUERY, MEMBER_ID, new RecommendationCancellationToken(), progressListener);
 
         assertThat(result.outcome()).isEqualTo(RecommendationAgentOutcome.SUCCESS);
         assertThat(result.searchCount()).isEqualTo(2);
         assertThat(result.llmCallCount()).isEqualTo(3);
+        verify(progressListener).onSearchStarted(1, false);
+        verify(progressListener).onSearchStarted(2, false);
         verify(catalogService, times(2)).search(any(), any());
     }
 

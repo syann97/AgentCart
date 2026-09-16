@@ -17,7 +17,7 @@
 - Verify incremental rendering
 - Verify cleanup on disconnect
 - Distinguish normal completion, zero results, server failure, and a new search
-- Test the current `complete` item contract separately from the planned `status | result | done | error` contract
+- Test the `status | result | done | error` contract, including malformed and unknown events
 
 ## 실행
 

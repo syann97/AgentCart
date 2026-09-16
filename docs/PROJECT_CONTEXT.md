@@ -6,12 +6,12 @@ AgentCart는 상품 추천을 통해 Agentic RAG를 학습하는 개인 프로�
 
 - Spring Boot Backend와 Next.js Frontend를 사용합니다.
 - 회원·상품·장바구니·주문·Mock 결제·추천 이력 기능이 있습니다.
-- 추천은 LLM을 포함한 고정형 RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
+- 추천은 제한된 단일 에이전트와 `searchCatalog`를 사용하는 Agentic RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
 - 데이터의 1차 범위는 합성 상품 JSON 500개와 [10개 추천 시나리오](RECOMMENDATION_SCENARIOS.md)입니다.
 
 ## 진행 중인 구현
 
-단일 추천 에이전트가 기존 검색을 감싼 `searchCatalog`를 최대 두 번 호출하는 실행 서비스가 구현되었습니다. 가격·상품 상태·회원 문맥과 호출·시간 상한은 애플리케이션이 관리합니다. 현재 HTTP/SSE 요청은 아직 고정형 파이프라인을 사용하며, 에이전트 결과를 SSE 계약에 연결하는 작업은 후속 범위입니다.
+단일 추천 에이전트가 기존 검색을 감싼 `searchCatalog`를 최대 두 번 호출하며, HTTP/SSE 요청은 진행·결과·종료·오류 이벤트로 이 실행을 전달합니다. 가격·상품 상태·회원 문맥과 호출·시간 상한은 애플리케이션이 관리합니다. 후속 범위는 고정 평가셋의 실제 모델 품질 비교입니다.
 
 문서 정합성 정비와 에이전트 기반 코드는 단계별로 진행합니다. 현재/목표 구분과 남은 SSE 프로토콜 작업은 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 [구현 계획](AGENTIC_RAG_PLAN.md)을 기준으로 확인합니다.
 
