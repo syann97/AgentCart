@@ -44,7 +44,9 @@ GET /api/recommendations/stream?query=...
 
 단일 추천 에이전트가 읽기 전용 `searchCatalog`를 최대 두 번 호출하고 모델이 검색어와 재검색 여부를 결정하는 실행 계약을 구현했습니다. 기존 검색·상품 조회·검증은 도구 내부에서 재사용하며 HTTP/SSE 요청도 이 서비스에 연결되었습니다.
 
-명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한, 평가 기준과 남은 응답 연결 작업은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다.
+명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한과 평가 기준은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다.
+
+고정 snapshot의 실제 Agent 평가 harness와 호출·token·지연 계측을 추가했습니다. 2026-09-16 실행은 OpenAI credit 부족으로 모델 의존 질의를 완료하지 못했으므로 품질 비교와 기본 경로 승인은 [평가 실행 기록](evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md)에 따라 재실행해야 합니다.
 
 ## 데이터와 실행
 

@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. 실제 모델 품질 평가는 후속 범위이며 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현 / 실제 평가 재실행 필요**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. #181의 첫 실제 평가는 OpenAI credit 부족으로 모델 의존 질의를 완료하지 못해 품질 판정과 기본 경로 승인에 사용할 수 없습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -127,6 +127,6 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
 | 3. #179 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성, 도메인 결과 검증 | 완료 |
 | 4. #180 응답 | SSE 진행·종료·오류, 연결 취소, Frontend 상태 처리 | 완료 |
-| 5. 평가 | 고정 평가셋 회귀와 실제 모델 품질 비교 | 후속 구현 |
+| 5. #181 평가 | harness·token/호출 계측·실패 artifact 구현; 실제 모델 비교 | provider credit 준비 후 재실행 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.

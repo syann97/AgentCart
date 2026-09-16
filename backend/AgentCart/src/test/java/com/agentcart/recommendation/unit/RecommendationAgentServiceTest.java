@@ -22,6 +22,8 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.metadata.ChatResponseMetadata;
+import org.springframework.ai.chat.metadata.DefaultUsage;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.model.tool.ToolCallingChatOptions;
 import org.springframework.ai.tool.ToolCallback;
@@ -67,14 +69,18 @@ class RecommendationAgentServiceTest {
     void recommend_firstSearchSufficient_finishesWithinTwoLlmCalls() {
         given(catalogService.search(any(), any())).willReturn(success(candidate(1L, "캠핑 의자")));
         given(chatModel.call(any(Prompt.class))).willReturn(
-                toolCall("call-1", "캠핑 의자", "가족 캠핑 의자"),
-                text(successJson(1L, "접이식이라 이동하기 좋습니다", "product:1")));
+                withUsage(toolCall("call-1", "캠핑 의자", "가족 캠핑 의자"), 100, 20),
+                withUsage(text(successJson(1L, "접이식이라 이동하기 좋습니다", "product:1")), 200, 30));
 
         RecommendationAgentResult result = service.recommend(QUERY, MEMBER_ID);
 
         assertThat(result.outcome()).isEqualTo(RecommendationAgentOutcome.SUCCESS);
         assertThat(result.searchCount()).isEqualTo(1);
         assertThat(result.llmCallCount()).isEqualTo(2);
+        assertThat(result.promptTokens()).isEqualTo(300);
+        assertThat(result.completionTokens()).isEqualTo(50);
+        assertThat(result.totalTokens()).isEqualTo(350);
+        assertThat(result.chatModels()).containsExactly("gpt-4o-mini-2024-07-18");
         assertThat(result.recommendations()).singleElement().satisfies(item -> {
             assertThat(item.productName()).isEqualTo("캠핑 의자");
             assertThat(item.price()).isEqualByComparingTo("30000");
@@ -332,6 +338,13 @@ class RecommendationAgentServiceTest {
 
     private ChatResponse text(String content) {
         return new ChatResponse(List.of(new Generation(new AssistantMessage(content))));
+    }
+
+    private ChatResponse withUsage(ChatResponse response, int promptTokens, int completionTokens) {
+        return new ChatResponse(response.getResults(), ChatResponseMetadata.builder()
+                .model("gpt-4o-mini-2024-07-18")
+                .usage(new DefaultUsage(promptTokens, completionTokens))
+                .build());
     }
 
     private SearchCatalogResponse success(SearchCatalogCandidate... candidates) {
