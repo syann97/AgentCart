@@ -49,7 +49,6 @@ class AgenticRagEvaluationTest {
     @Autowired MemberRepository memberRepository;
     @Autowired OrderRepository orderRepository;
     @Autowired ObjectMapper objectMapper;
-    @Autowired org.springframework.ai.chat.model.ChatModel chatModel;
     @Autowired org.springframework.core.env.Environment environment;
     @Autowired @Qualifier("pgVectorJdbcTemplate") NamedParameterJdbcTemplate pgVectorJdbcTemplate;
 
@@ -86,8 +85,10 @@ class AgenticRagEvaluationTest {
             artifact.put("kind", "real-model-agentic-rag-evaluation");
             artifact.put("capturedAt", OffsetDateTime.now().toString());
             artifact.put("agentCommit", System.getenv("AGENTCART_EVALUATION_AGENT_COMMIT"));
-            artifact.put("chatProvider", environment.getProperty("spring.ai.model.chat"));
-            artifact.put("chatModelConfigured", chatModel.getDefaultOptions().getModel());
+            String chatProvider = environment.getRequiredProperty("spring.ai.model.chat");
+            artifact.put("chatProvider", chatProvider);
+            artifact.put("chatModelConfigured",
+                    environment.getRequiredProperty("spring.ai." + chatProvider + ".chat.model"));
             artifact.put("embeddingModel", "bge-m3");
             artifact.put("embeddingDimensions", 1024);
             artifact.put("snapshotId", "recommendation-catalog-2026-09-15");
