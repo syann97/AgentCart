@@ -27,7 +27,7 @@
 
 재고 lock은 `tryLock(waitTime, unit)` overload를 사용하고 고정 lease time을 코드에 지정하지 않습니다. 획득 대기 5초를 cache TTL이나 lock 유지 시간으로 설명하지 않습니다.
 
-Access token 30분, SSE emitter 60초, 상품 embedding 5초, 후보별 추천 이유 10초도 서로 다른 경계입니다. 인증 값은 [AUTH](AUTH.md), 추천 값은 [현재 추천 파이프라인](RECOMMENDATION_PIPELINE.md)이 담당합니다. [목표 설계](AGENTIC_RAG_PLAN.md)의 요청 전체 30초는 아직 구현되지 않은 값입니다.
+Access token 30분, SSE emitter 60초, Agent 요청 전체 30초, 상품 embedding 5초와 기존 기준선의 후보별 추천 이유 10초는 서로 다른 경계입니다. 인증 값은 [AUTH](AUTH.md), 추천 값은 [현재 추천 파이프라인](RECOMMENDATION_PIPELINE.md)이 담당합니다.
 
 ## 데이터 연결과 migration
 

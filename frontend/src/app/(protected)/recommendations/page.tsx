@@ -11,7 +11,16 @@ export default function RecommendationsPage() {
   const [input, setInput] = useState('');
   const [submittedQuery, setSubmittedQuery] = useState('');
 
-  const { results, isComplete, isSearching, start } = useRecommendationStream();
+  const {
+    results,
+    isComplete,
+    isSearching,
+    statusMessage,
+    outcome,
+    completionMessage,
+    error,
+    start,
+  } = useRecommendationStream();
   const { data: history, isLoading: historyLoading } = useRecommendationHistory();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,6 +57,10 @@ export default function RecommendationsPage() {
             &ldquo;{submittedQuery}&rdquo; 추천 결과
           </h2>
 
+          {isSearching && statusMessage && (
+            <p className="text-sm text-blue-600 mb-3" role="status">{statusMessage}</p>
+          )}
+
           {isSearching && results.length === 0 && (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
@@ -65,8 +78,14 @@ export default function RecommendationsPage() {
             </div>
           )}
 
-          {isComplete && results.length === 0 && (
-            <p className="text-gray-500 py-8 text-center text-sm">추천 결과가 없습니다.</p>
+          {isComplete && error && (
+            <p className="text-red-600 py-8 text-center text-sm" role="alert">{error.message}</p>
+          )}
+
+          {isComplete && !error && results.length === 0 && (
+            <p className="text-gray-500 py-8 text-center text-sm">
+              {emptyStateMessage(outcome, completionMessage)}
+            </p>
           )}
         </section>
       )}
@@ -110,6 +129,16 @@ export default function RecommendationsPage() {
       </section>
     </div>
   );
+}
+
+function emptyStateMessage(
+  outcome: 'SUCCESS' | 'NO_RESULTS' | 'OUT_OF_SCOPE' | 'CLARIFICATION_REQUIRED' | 'FALLBACK' | null,
+  message: string | null,
+) {
+  if (message) return message;
+  if (outcome === 'CLARIFICATION_REQUIRED') return '추천 조건을 조금 더 구체적으로 입력해 주세요.';
+  if (outcome === 'OUT_OF_SCOPE') return '현재 카탈로그에서 지원하지 않는 상품 요청입니다.';
+  return '추천 결과가 없습니다.';
 }
 
 function RecommendationCard({ result }: { result: RecommendationResult }) {

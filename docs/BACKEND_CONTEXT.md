@@ -18,7 +18,7 @@ Spring Framework·Security·Hibernate·Jackson 등 간접 의존성의 세부 �
 
 `application-local.yaml`은 개인 파일로 Git에 포함되지 않습니다. 실행 전 모델과 데이터 소스 설정은 [LOCAL_SETUP](LOCAL_SETUP.md)을 확인합니다.
 
-[현재 HTTP 추천 파이프라인](RECOMMENDATION_PIPELINE.md)은 `ChatModel` 직접 호출을 사용합니다. 별도의 `RecommendationAgentService`는 명시적 `ToolCallback`으로 제한된 도구 호출 루프를 구현했지만 아직 Controller에서 호출하지 않습니다. SSE 연결 범위는 [단일 에이전트 설계](AGENTIC_RAG_PLAN.md)의 후속 작업입니다.
+[현재 HTTP 추천 파이프라인](RECOMMENDATION_PIPELINE.md)은 `RecommendationAgentService`의 명시적 `ToolCallback`으로 제한된 도구 호출 루프를 실행합니다. `RecommendationStreamService`가 Agent 결과와 진행 상태를 SSE로 매핑하고 성공적으로 보낸 상품만 Kafka 이력 이벤트로 발행합니다.
 
 ## 직렬화와 테스트
 

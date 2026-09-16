@@ -30,4 +30,4 @@
 | [코드 리뷰](shared/code-review.md) | 변경 diff의 정확성·범위·검증 검토 |
 | [보안 리뷰](shared/security-review.md) | 인증·인가·secret·외부 입력 경계 검토 |
 
-추천 작업은 위 가이드보다 먼저 [현재 추천 파이프라인](../RECOMMENDATION_PIPELINE.md)과 [승인된 목표 설계](../AGENTIC_RAG_PLAN.md)를 구분합니다. 독립된 agent loop의 구현과 실제 HTTP/SSE 경로 연결 여부를 구분하고, 아직 없는 SSE 종료 이벤트를 구현된 전제로 삼지 않습니다.
+추천 작업은 위 가이드보다 먼저 [현재 추천 파이프라인](../RECOMMENDATION_PIPELINE.md)과 [승인된 목표 설계](../AGENTIC_RAG_PLAN.md)를 구분합니다. 구현된 agent loop와 SSE 계약, 아직 남은 실제 모델 평가 범위를 구분합니다.

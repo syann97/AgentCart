@@ -175,6 +175,22 @@ class RecommendationIntegrationTest {
     }
 
     @Test
+    @DisplayName("GET /api/recommendations/stream - 미인증 요청은 SSE 연결 전에 401 반환")
+    void stream_unauthenticated_returns401BeforeSseConnection() throws Exception {
+        mockMvc.perform(get("/api/recommendations/stream").param("query", "캠핑 의자"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET /api/recommendations/stream - 빈 질의는 SSE 연결 전에 400 반환")
+    void stream_blankQuery_returns400BeforeSseConnection() throws Exception {
+        mockMvc.perform(get("/api/recommendations/stream")
+                        .param("query", " ")
+                        .header("Authorization", "Bearer " + memberToken()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("searchCatalog 사전 필터 - 가격·카테고리·ACTIVE·재고·최근 주문을 MySQL에서 적용")
     void searchCatalogEligibility_explicitPolicies_returnsOnlyAllowedIds() {
         Product eligible = saveProduct("업무 노트 허용", 30_000, "문구·오피스", 10, ProductStatus.ACTIVE);

@@ -21,4 +21,4 @@
 
 [AUTH](AUTH.md)가 일반 API와 SSE의 인증 차이, sessionStorage와 인증 스토어의 실제 동작을 설명합니다.
 
-현재 추천 훅은 상품별 `complete` 메시지를 누적합니다. 단계별 진행과 명시적인 종료 이벤트는 [목표 설계](AGENTIC_RAG_PLAN.md)의 후속 구현입니다. 현재/목표 계약의 구분은 [FRONTEND_RULES](FRONTEND_RULES.md)를 따릅니다.
+현재 추천 훅은 `status | result | done | error` 판별 유니온을 사용합니다. `result`만 누적하고 `done`의 outcome 또는 `error`에서 연결과 loading 상태를 종료하며, transport 오류는 서버가 보낸 오류와 구분합니다. [FRONTEND_RULES](FRONTEND_RULES.md)

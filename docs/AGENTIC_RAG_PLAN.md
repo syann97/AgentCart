@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 단일 에이전트 실행 구현**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 transport 독립 결과 계약이 구현되었습니다. 현재 HTTP 요청은 아직 고정형 파이프라인이며 SSE 계약은 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. 실제 모델 품질 평가는 후속 범위이며 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -91,7 +91,7 @@ LLM·구조화 응답 실패 시 추가 모델 재시도로 상한을 늘리지 
 
 기존 `RecommendationResult`를 필요한 범위에서 확장하며 별도의 근거 검증 LLM은 추가하지 않습니다.
 
-## SSE 계약 — 구현 예정
+## SSE 계약 — 구현됨
 
 | type | 의미 |
 |---|---|
@@ -126,6 +126,7 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 1. #173 | 문서·skills·prompts 정합성, 현재/목표 구분, 공통 지침과 참조 검사 | 완료 |
 | 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
 | 3. #179 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성, 도메인 결과 검증 | 완료 |
-| 4. 응답·평가 | SSE 진행·종료·취소, 회귀 테스트와 실제 모델 평가 | 후속 구현 |
+| 4. #180 응답 | SSE 진행·종료·오류, 연결 취소, Frontend 상태 처리 | 완료 |
+| 5. 평가 | 고정 평가셋 회귀와 실제 모델 품질 비교 | 후속 구현 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
