@@ -9,11 +9,11 @@ AgentCart는 상품 추천을 통해 Agentic RAG를 학습하는 개인 프로�
 - 추천은 LLM을 포함한 고정형 RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
 - 데이터의 1차 범위는 합성 상품 JSON 500개와 [10개 추천 시나리오](RECOMMENDATION_SCENARIOS.md)입니다.
 
-## 다음 구현
+## 진행 중인 구현
 
-단일 추천 에이전트가 기존 검색을 감싼 `searchCatalog`를 호출하고, 결과가 부족할 때 한 번 재검색하는 [승인된 설계](AGENTIC_RAG_PLAN.md)를 구현합니다. 가격·상품 상태·회원 문맥은 애플리케이션이 관리합니다.
+단일 추천 에이전트가 기존 검색을 감싼 `searchCatalog`를 최대 두 번 호출하는 실행 서비스가 구현되었습니다. 가격·상품 상태·회원 문맥과 호출·시간 상한은 애플리케이션이 관리합니다. 현재 HTTP/SSE 요청은 아직 고정형 파이프라인을 사용하며, 에이전트 결과를 SSE 계약에 연결하는 작업은 후속 범위입니다.
 
-현재 [#173](https://github.com/syann97/AgentCart/issues/173)의 범위는 문서 정합성 정비입니다. 런타임 코드·의존성·SSE 프로토콜 변경은 후속 작업입니다.
+문서 정합성 정비와 에이전트 기반 코드는 단계별로 진행합니다. 현재/목표 구분과 남은 SSE 프로토콜 작업은 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 [구현 계획](AGENTIC_RAG_PLAN.md)을 기준으로 확인합니다.
 
 ## 작업 원칙
 

@@ -1,6 +1,6 @@
 # 현재 추천 파이프라인
 
-상태: **현재 요청 경로는 고정형 RAG 흐름**입니다. `searchCatalog` 도구 계약은 구현되었지만 아직 추천 요청의 모델 호출 루프에 연결되지 않았습니다. 에이전트 반복과 실행 상한은 [목표 설계](AGENTIC_RAG_PLAN.md)에 남아 있습니다.
+상태: **현재 HTTP 요청 경로는 고정형 RAG 흐름**입니다. `searchCatalog`를 사용하는 독립된 단일 에이전트 서비스와 실행 상한은 구현되었지만 Controller와 SSE 경로에는 아직 연결되지 않았습니다. 응답 전환 범위는 [목표 설계](AGENTIC_RAG_PLAN.md)에 남아 있습니다.
 
 ## 진입점
 
@@ -59,7 +59,7 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 ### 구현된 `searchCatalog` 계약
 
-[SearchCatalogService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java)와 Spring AI `ToolCallback` bean은 후속 에이전트가 호출할 읽기 전용 검색 경계를 제공합니다. 현재 `RecommendationService`는 이 도구를 호출하지 않습니다.
+[SearchCatalogService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java)와 Spring AI `ToolCallback` bean은 읽기 전용 검색 경계를 제공합니다. `RecommendationAgentService`가 이 도구를 호출하며, 현재 HTTP 경로의 `RecommendationService`는 호출하지 않습니다.
 
 - 모델 입력은 BM25 키워드, 의미 검색어, 선택적 추론 카테고리뿐입니다. 회원 ID, 명시 조건, 요청 ID, 검색 횟수와 deadline은 별도 서버 `ToolContext`로 전달합니다.
 - MySQL에서 `ACTIVE`, 양수 재고, 명시 가격·카테고리, 최근 7일 주문 제외를 적용해 허용 상품 ID를 먼저 계산합니다. 빈 집합이면 BM25·pgvector를 호출하지 않습니다.
@@ -67,6 +67,16 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 - 첫 의미 검색은 모델 입력과 관계없이 원본 질의를 사용합니다. 추론 카테고리는 사전 허용 ID를 줄이지 않고 evaluator의 완화 가능한 조건으로만 사용합니다.
 - 검색 결과는 최신 MySQL 상품 조회와 evaluator 정책을 다시 통과하며 최대 10개입니다. 상품 근거 ID는 `product:{id}` 형식입니다.
 - 정상 결과, 결과 없음 사유, deadline·embedding·저장소 오류를 구조화된 상태로 구분합니다. 존재하지 않는 상품 참조는 저장소 장애와 다른 빈 결과 사유입니다.
+
+### 구현된 단일 에이전트 실행
+
+[RecommendationAgentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationAgentService.java)는 transport와 분리된 도메인 결과를 반환합니다.
+
+- 정상 흐름은 LLM 2회·검색 1회, 재검색 흐름은 LLM 3회·검색 2회로 코드에서 제한합니다. 마지막 LLM 호출에는 도구를 노출하지 않습니다.
+- 회원 ID·명시 조건·request ID·검색 횟수·30초 deadline은 모델 입력이 아닌 서버 `ToolContext`로 전달합니다.
+- 정규화된 동일 검색 인자는 다시 실행하지 않으며, 취소 또는 deadline 이후 새 호출을 시작하지 않습니다.
+- 최종 결과는 검색 후보 ID와 `product:{id}` 근거를 검증하고 상품명·가격·카테고리·브랜드·점수는 서버 후보 데이터로 구성합니다. 최대 5개이며 0개 종료도 허용합니다.
+- 모델 또는 구조화 응답 실패 시 남은 검색 상한 안에서 원본 질의 일반 검색으로 fallback합니다. 후보별 추천 이유 LLM 호출은 이 에이전트 경로에서 사용하지 않습니다.
 
 ## 검증과 fallback
 
@@ -133,4 +143,4 @@ Future의 timeout이나 SSE 연결 종료가 실행 중인 외부 호출을 모�
 
 ## 후속 작업으로 남은 항목
 
-현행 추천 요청을 `searchCatalog`에 연결하는 모델 호출 루프, 근거 검증, 실행 취소와 SSE 종료 계약은 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 코드 변경과 회귀 검증이 필요합니다.
+현행 HTTP 추천 요청을 구현된 에이전트 서비스에 연결하고, 연결 종료를 실행 취소로 전달하며, SSE 진행·결과·정상 종료 계약과 회귀 평가를 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 구현해야 합니다.

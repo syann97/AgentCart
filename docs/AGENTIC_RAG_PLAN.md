@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 기반 코드와 검색 도구 구현**. 명시 조건 요청 컨텍스트와 `searchCatalog` 계약은 구현되었고, 모델의 도구 호출 반복과 SSE 계약은 아직 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 단일 에이전트 실행 구현**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 transport 독립 결과 계약이 구현되었습니다. 현재 HTTP 요청은 아직 고정형 파이프라인이며 SSE 계약은 구현되지 않았습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -22,7 +22,7 @@ flowchart TD
 
 정상 흐름은 첫 모델 호출에서 검색 인자를 만들고, 검색 결과를 받은 두 번째 호출에서 최종 응답을 생성합니다. 두 번째 호출이 재검색을 선택하면 검색 결과를 받은 세 번째 호출에서 종료합니다. 별도의 추천 이유 생성 호출을 추가하지 않습니다.
 
-이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 `searchCatalog`의 `ToolCallback` 계약은 #177에서 확정했습니다. 모델 호출 루프 연결은 후속 에이전트 단계입니다.
+이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 `searchCatalog`의 `ToolCallback` 계약은 #177, 모델 호출 루프는 #179에서 구현했습니다. HTTP/SSE 연결은 후속 단계입니다.
 
 ## 명시 조건과 사용자 의도
 
@@ -37,11 +37,11 @@ flowchart TD
 
 서버는 가격·명시 카테고리, 상품 존재·ACTIVE·양수 재고, 기존 최근 7일 주문 제외 정책을 적용합니다. 회원 식별자와 확정된 조건은 모델이 수정할 수 없는 요청 문맥에서 도구로 전달합니다.
 
-## 검색 도구 계약 — 구현됨, 에이전트 연결 예정
+## 검색 도구 계약 — 구현됨, 단일 에이전트에 연결됨
 
 도구명은 `searchCatalog` 하나입니다.
 
-#177에서 입력·출력 DTO, 서버 실행 문맥을 받는 Spring AI `ToolCallback`, MySQL 허용 ID 사전 필터, 제한된 BM25·pgvector 검색과 최신 상품 재검증을 구현했습니다. 현행 `RecommendationService` 대신 이 도구를 호출하는 agent loop는 다음 단계입니다.
+#177에서 입력·출력 DTO, 서버 실행 문맥을 받는 Spring AI `ToolCallback`, MySQL 허용 ID 사전 필터, 제한된 BM25·pgvector 검색과 최신 상품 재검증을 구현했습니다. #179의 `RecommendationAgentService`가 이 도구를 제한된 agent loop에서 호출합니다. 현행 HTTP 경로의 `RecommendationService` 교체는 후속 단계입니다.
 
 | 구분 | 내용 |
 |---|---|
@@ -82,7 +82,7 @@ flowchart TD
 
 LLM·구조화 응답 실패 시 추가 모델 재시도로 상한을 늘리지 않습니다. 필수 조건을 확인할 수 있고 시간이 남으면 일반 키워드 검색으로 fallback하고 그 모드를 표시합니다. deadline 이후에는 이미 검증된 결과만 사용하거나 오류로 종료합니다. 해석 불가능한 조건을 삭제해서 결과를 만들지 않습니다.
 
-## 응답과 근거 — 구현 예정
+## 응답과 근거 — 에이전트 도메인 결과 구현, SSE 매핑 예정
 
 - 모델은 제공된 후보 ID와 상품 근거만 사용해 전체 추천 이유를 한 번에 작성합니다.
 - 상품 ID·상품명·가격과 검증 가능한 조건은 서버 데이터로 구성합니다.
@@ -125,7 +125,7 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 |---|---|---|
 | 1. #173 | 문서·skills·prompts 정합성, 현재/목표 구분, 공통 지침과 참조 검사 | 완료 |
 | 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
-| 3. 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성 | 후속 구현 |
+| 3. #179 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성, 도메인 결과 검증 | 완료 |
 | 4. 응답·평가 | SSE 진행·종료·취소, 회귀 테스트와 실제 모델 평가 | 후속 구현 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
