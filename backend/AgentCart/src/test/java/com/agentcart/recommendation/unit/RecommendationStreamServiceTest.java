@@ -58,7 +58,8 @@ class RecommendationStreamServiceTest {
         RecommendationStreamService service = new RecommendationStreamService(agentService, eventProducer);
         given(agentService.recommend(eq("없는 상품"), eq(7L), any(), any()))
                 .willReturn(new RecommendationAgentResult("req-1", RecommendationAgentOutcome.NO_RESULTS,
-                        RecommendationAgentActionCode.NO_RESULTS, "결과 없음", List.of(), 1, 2, 10));
+                        RecommendationAgentActionCode.NO_RESULTS, "결과 없음", List.of(), 1, 2,
+                        10, 5, 15, List.of("gpt-4o-mini"), 10));
         List<RecommendationStreamEvent<?>> events = new ArrayList<>();
 
         service.stream("없는 상품", 7L, new RecommendationCancellationToken(), events::add);
@@ -72,7 +73,8 @@ class RecommendationStreamServiceTest {
         RecommendationStreamService service = new RecommendationStreamService(agentService, eventProducer);
         given(agentService.recommend(eq("오류"), eq(7L), any(), any()))
                 .willReturn(new RecommendationAgentResult("req-1", RecommendationAgentOutcome.FAILED,
-                        RecommendationAgentActionCode.PROCESSING_FAILED, "처리 실패", List.of(), 0, 1, 10));
+                        RecommendationAgentActionCode.PROCESSING_FAILED, "처리 실패", List.of(), 0, 1,
+                        10, 5, 15, List.of("gpt-4o-mini"), 10));
         List<RecommendationStreamEvent<?>> events = new ArrayList<>();
 
         service.stream("오류", 7L, new RecommendationCancellationToken(), events::add);
@@ -114,7 +116,8 @@ class RecommendationStreamServiceTest {
 
     private RecommendationAgentResult successResult(List<AgentRecommendation> recommendations) {
         return new RecommendationAgentResult("req-1", RecommendationAgentOutcome.SUCCESS,
-                RecommendationAgentActionCode.COMPLETED, "완료", recommendations, 1, 2, 10);
+                RecommendationAgentActionCode.COMPLETED, "완료", recommendations, 1, 2,
+                10, 5, 15, List.of("gpt-4o-mini"), 10);
     }
 
     private AgentRecommendation recommendation(long id) {

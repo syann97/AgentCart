@@ -23,10 +23,11 @@ import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.model.tool.ToolCallingChatOptions;
 import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -202,7 +203,8 @@ public class RecommendationAgentService {
             throw new InvalidModelResponseException();
         }
         checkCanStart(state, true);
-        ToolCallingChatOptions.Builder<?> options = ToolCallingChatOptions.builder().temperature(0.0);
+        OpenAiChatOptions.Builder options = OpenAiChatOptions.builder();
+        options.temperature(0.0);
         if (toolsAvailable) {
             SearchCatalogExecutionContext executionContext = new SearchCatalogExecutionContext(
                     state.requestContext, state.requestId, state.searchCount + 1, state.deadline);
@@ -212,7 +214,26 @@ public class RecommendationAgentService {
             options.toolCallbacks(List.of()).toolContext(Map.of());
         }
         state.llmCallCount++;
-        return withinDeadline(state, () -> chatModel.call(new Prompt(List.copyOf(conversation), options.build())));
+        ChatResponse response = withinDeadline(
+                state, () -> chatModel.call(new Prompt(List.copyOf(conversation), options.build())));
+        recordUsage(state, response);
+        return response;
+    }
+
+    private void recordUsage(ExecutionState state, ChatResponse response) {
+        if (response == null || response.getMetadata() == null) return;
+        if (response.getMetadata().getModel() != null && !response.getMetadata().getModel().isBlank()) {
+            state.chatModels.add(response.getMetadata().getModel());
+        }
+        Usage usage = response.getMetadata().getUsage();
+        if (usage == null) return;
+        state.promptTokens += valueOrZero(usage.getPromptTokens());
+        state.completionTokens += valueOrZero(usage.getCompletionTokens());
+        state.totalTokens += valueOrZero(usage.getTotalTokens());
+    }
+
+    private int valueOrZero(Integer value) {
+        return value == null ? 0 : value;
     }
 
     private SearchCatalogResponse executeSearch(
@@ -416,7 +437,9 @@ public class RecommendationAgentService {
                 state.requestId, actionCode, state.searchCount, state.llmCallCount,
                 recommendations.size(), elapsedMillis);
         return new RecommendationAgentResult(state.requestId, outcome, actionCode, message,
-                recommendations, state.searchCount, state.llmCallCount, elapsedMillis);
+                recommendations, state.searchCount, state.llmCallCount,
+                state.promptTokens, state.completionTokens, state.totalTokens,
+                List.copyOf(state.chatModels), elapsedMillis);
     }
 
     @PreDestroy
@@ -431,8 +454,12 @@ public class RecommendationAgentService {
         private final Instant deadline;
         private final RecommendationCancellationToken cancellationToken;
         private final Set<String> searchFingerprints = new LinkedHashSet<>();
+        private final Set<String> chatModels = new LinkedHashSet<>();
         private int searchCount;
         private int llmCallCount;
+        private int promptTokens;
+        private int completionTokens;
+        private int totalTokens;
 
         private ExecutionState(String requestId, RecommendationRequestContext requestContext,
                                Instant startedAt, Instant deadline,

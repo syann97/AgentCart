@@ -106,7 +106,7 @@ def calculate_metrics(baseline: dict, queries: dict, labels: dict, products: dic
         "conditionViolations": {**violations, "total": sum(violations.values())},
         "outOfCatalogQueriesReturningResults": sum(row["resultCount"] > 0 for row in out_of_catalog),
         "outOfCatalogFalsePositiveProducts": sum(row["resultCount"] for row in out_of_catalog),
-        "clarificationFailures": int(clarification["outcome"] != "clarification"),
+        "clarificationFailures": int(clarification["outcome"] not in {"clarification", "CLARIFICATION_REQUIRED"}),
         "totalResultCount": total_results,
         "totalLlmCallAttempts": total_calls,
         "latencyMillis": {
@@ -119,10 +119,65 @@ def calculate_metrics(baseline: dict, queries: dict, labels: dict, products: dic
     }
 
 
+def calculate_agent_metrics(run: dict, queries: dict, labels: dict, products: dict, fixtures: dict) -> dict:
+    metrics = calculate_metrics(run, queries, labels, products, fixtures)
+    evaluations = run["evaluations"]
+    searches = [row["searchCount"] for row in evaluations]
+    llm_calls = [row["llmCallAttempts"] for row in evaluations]
+    total_tokens = [row["totalTokens"] for row in evaluations]
+    eligible = [row for row in evaluations if row["family"] in {"supported", "constraint", "rephrased"}]
+    completed_eligible = [row for row in eligible if row["outcome"] != "FAILED"]
+    researched = [row for row in completed_eligible if row["searchCount"] == 2]
+    query_metrics = {row["queryId"]: row for row in metrics["queries"]}
+    metrics.update({
+        "failedQueries": sum(row["outcome"] == "FAILED" for row in evaluations),
+        "searchLimitViolations": sum(count > 2 for count in searches),
+        "llmLimitViolations": sum(count > 3 for count in llm_calls),
+        "duplicateSearchExecutions": sum(row["actionCode"] == "DUPLICATE_SEARCH_BLOCKED"
+                                         and row["searchCount"] > 1 for row in evaluations),
+        "firstSearchTermination": {
+            "eligibleCompletedQueries": len(completed_eligible),
+            "count": sum(row["searchCount"] <= 1 for row in completed_eligible),
+            "rate": (round(sum(row["searchCount"] <= 1 for row in completed_eligible)
+                           / len(completed_eligible), 6) if completed_eligible else None),
+        },
+        "research": {
+            "queryCount": len(researched),
+            "strictHitAt5Count": sum(bool(query_metrics[row["queryId"]]["strictHitAt5"])
+                                     for row in researched),
+            "acceptedHitAt5Count": sum(bool(query_metrics[row["queryId"]]["acceptedHitAt5"])
+                                       for row in researched),
+        },
+        "searchCount": {
+            "total": sum(searches),
+            "average": round(sum(searches) / len(searches), 6),
+            "maximum": max(searches),
+        },
+        "llmCallAttempts": {
+            "total": sum(llm_calls),
+            "average": round(sum(llm_calls) / len(llm_calls), 6),
+            "maximum": max(llm_calls),
+        },
+        "tokenUsage": {
+            "prompt": sum(row["promptTokens"] for row in evaluations),
+            "completion": sum(row["completionTokens"] for row in evaluations),
+            "total": sum(total_tokens),
+            "averageTotal": round(sum(total_tokens) / len(total_tokens), 6),
+        },
+        "latencyMillis": {
+            **metrics["latencyMillis"],
+            "average": round(metrics["latencyMillis"]["total"] / len(evaluations), 6),
+        },
+    })
+    return metrics
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--print-metrics", action="store_true")
+    parser.add_argument("--write-agent-metrics", action="store_true")
+    parser.add_argument("--blocked-reason")
     args = parser.parse_args()
     root = args.root.resolve()
     evaluation_dir = root / "evaluation" / "recommendation"
@@ -131,6 +186,7 @@ def main() -> int:
     labels = load_json(evaluation_dir / "labels.json")
     fixtures = load_json(evaluation_dir / "fixtures.json")
     baseline = load_json(evaluation_dir / "baselines" / "fixed-rag-79627c0.json")
+    agent_runs = [load_json(path) for path in sorted((evaluation_dir / "runs").glob("*.json"))]
     errors: list[str] = []
 
     if manifest["totals"] != {"files": 8, "jsonProducts": 500}:
@@ -195,7 +251,48 @@ def main() -> int:
             elif (result["price"], result["category"]) != (products[key]["price"], products[key]["category"]):
                 errors.append(f"baseline product facts differ from snapshot: {evaluation['queryId']} {key}")
 
-    serialized = json.dumps([manifest, queries, labels, fixtures, baseline], ensure_ascii=False)
+    for run in agent_runs:
+        run_ids = [row["queryId"] for row in run["evaluations"]]
+        if run_ids != EXPECTED_QUERY_IDS:
+            errors.append(f"agent run query IDs/order differ: {run_ids}")
+        runtime = run["runtimeSnapshot"]
+        if runtime["mysqlProducts"] != 500 or runtime["pgvectorRows"] != 500:
+            errors.append("agent runtime snapshot must contain 500 MySQL and 500 pgvector rows")
+        if runtime["sortedCommaSeparatedProductIdsSha256"] != manifest["mysqlSnapshot"]["sortedCommaSeparatedProductIdsSha256"]:
+            errors.append("agent runtime MySQL product ID digest differs from manifest")
+        for evaluation in run["evaluations"]:
+            if evaluation["query"] != query_text_by_id.get(evaluation["queryId"]):
+                errors.append(f"agent query text mismatch: {evaluation['queryId']}")
+            if evaluation["resultCount"] != len(evaluation["results"]):
+                errors.append(f"agent resultCount mismatch: {evaluation['queryId']}")
+            if evaluation["searchCount"] > 2 or evaluation["llmCallAttempts"] > 3:
+                errors.append(f"agent execution limit exceeded: {evaluation['queryId']}")
+            ids = [row["productId"] for row in evaluation["results"]]
+            if len(ids) != len(set(ids)):
+                errors.append(f"duplicate agent product ID: {evaluation['queryId']}")
+            for result in evaluation["results"]:
+                key = stable_key(result)
+                if key not in products:
+                    errors.append(f"unknown agent result key for {evaluation['queryId']}: {key}")
+                    continue
+                if (result["price"], result["category"]) != (products[key]["price"], products[key]["category"]):
+                    errors.append(f"agent product facts differ from snapshot: {evaluation['queryId']} {key}")
+                expected_evidence = f"product:{result['productId']}"
+                if result["evidenceIds"] != [expected_evidence]:
+                    errors.append(f"agent evidence differs: {evaluation['queryId']} {expected_evidence}")
+
+        agent_metrics = calculate_agent_metrics(run, queries, labels, products, fixtures)
+        if args.write_agent_metrics:
+            run["metrics"] = agent_metrics
+            run["evaluationStatus"] = "blocked" if agent_metrics["failedQueries"] else "completed"
+            if args.blocked_reason:
+                run["blockedReason"] = args.blocked_reason
+            output = evaluation_dir / "runs" / f"agentic-rag-{run['agentCommit'][:7]}.json"
+            output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        elif run.get("metrics") != agent_metrics:
+            errors.append(f"stored agent metrics differ: {run.get('agentCommit')}")
+
+    serialized = json.dumps([manifest, queries, labels, fixtures, baseline, agent_runs], ensure_ascii=False)
     if re.search(r"[A-Za-z]:[/\\]|(?:api[_-]?key|jwt[_-]?secret)\s*[:=]", serialized, re.IGNORECASE):
         errors.append("evaluation artifacts contain a local absolute path or secret-like assignment")
 
@@ -204,7 +301,11 @@ def main() -> int:
         errors.append("stored baseline metrics differ from deterministic recomputation")
 
     if args.print_metrics:
-        print(json.dumps(metrics, ensure_ascii=False, indent=2))
+        print(json.dumps({
+            "fixedRag": metrics,
+            "agentRuns": [calculate_agent_metrics(run, queries, labels, products, fixtures)
+                          for run in agent_runs],
+        }, ensure_ascii=False, indent=2))
     if errors:
         print("Evaluation validation failed:", file=sys.stderr)
         for error in errors:
