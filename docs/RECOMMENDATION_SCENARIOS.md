@@ -1,6 +1,6 @@
 # 추천 데이터 범위와 평가 계획
 
-상태: **현재 JSON 데이터의 범위 + 고정 평가 계획**. 재현 가능한 snapshot, 수동 label과 기존 고정형 RAG 기준선은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. 현재 Agent pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 구현 계약과 남은 평가 범위는 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
+상태: **현재 JSON 데이터의 범위 + 고정 평가 계획**. 재현 가능한 snapshot, 수동 label과 기존 고정형 RAG 기준선은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. #181 Agent 실행은 provider credit 부족으로 품질 비교가 보류됐습니다. 현재 Agent pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 구현 계약과 남은 평가 범위는 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
 
 ## 데이터 출처와 스냅샷
 

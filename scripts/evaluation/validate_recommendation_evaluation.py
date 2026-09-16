@@ -178,6 +178,7 @@ def main() -> int:
     parser.add_argument("--print-metrics", action="store_true")
     parser.add_argument("--write-agent-metrics", action="store_true")
     parser.add_argument("--blocked-reason")
+    parser.add_argument("--agent-commit")
     args = parser.parse_args()
     root = args.root.resolve()
     evaluation_dir = root / "evaluation" / "recommendation"
@@ -283,6 +284,8 @@ def main() -> int:
 
         agent_metrics = calculate_agent_metrics(run, queries, labels, products, fixtures)
         if args.write_agent_metrics:
+            if args.agent_commit:
+                run["agentCommit"] = args.agent_commit
             run["metrics"] = agent_metrics
             run["evaluationStatus"] = "blocked" if agent_metrics["failedQueries"] else "completed"
             if args.blocked_reason:

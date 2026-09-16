@@ -32,6 +32,7 @@ import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,14 +55,15 @@ class AgenticRagEvaluationTest {
     void captureAgenticRagEvaluation() throws Exception {
         Path root = Path.of(System.getenv("AGENTCART_EVALUATION_ROOT")).toAbsolutePath().normalize();
         Path output = Path.of(System.getenv("AGENTCART_EVALUATION_OUTPUT")).toAbsolutePath().normalize();
-        JsonNode queryDocument = objectMapper.readTree(root.resolve("evaluation/recommendation/queries.json").toFile());
+        JsonNode queryDocument = objectMapper.readTree(
+                Files.readString(root.resolve("evaluation/recommendation/queries.json")));
         List<Product> products = productRepository.findAll().stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
-        int vectorCount = pgVectorJdbcTemplate.getJdbcTemplate()
-                .queryForObject("SELECT COUNT(*) FROM product_embeddings", Integer.class);
-        int vectorProductCount = pgVectorJdbcTemplate.getJdbcTemplate()
-                .queryForObject("SELECT COUNT(DISTINCT product_id) FROM product_embeddings", Integer.class);
+        int vectorCount = pgVectorJdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM product_embeddings", Map.of(), Integer.class);
+        int vectorProductCount = pgVectorJdbcTemplate.queryForObject(
+                "SELECT COUNT(DISTINCT product_id) FROM product_embeddings", Map.of(), Integer.class);
 
         assertThat(products).hasSize(500);
         assertThat(vectorCount).isEqualTo(500);
@@ -115,7 +117,8 @@ class AgenticRagEvaluationTest {
         }
 
         Files.createDirectories(output.getParent());
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(output.toFile(), artifact);
+        Files.writeString(output,
+                objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(artifact) + System.lineSeparator());
     }
 
     private Order createRecentOrder(Member member, List<Product> products) {
