@@ -49,6 +49,7 @@ class AgenticRagEvaluationTest {
     @Autowired MemberRepository memberRepository;
     @Autowired OrderRepository orderRepository;
     @Autowired ObjectMapper objectMapper;
+    @Autowired org.springframework.core.env.Environment environment;
     @Autowired @Qualifier("pgVectorJdbcTemplate") NamedParameterJdbcTemplate pgVectorJdbcTemplate;
 
     @Test
@@ -84,7 +85,10 @@ class AgenticRagEvaluationTest {
             artifact.put("kind", "real-model-agentic-rag-evaluation");
             artifact.put("capturedAt", OffsetDateTime.now().toString());
             artifact.put("agentCommit", System.getenv("AGENTCART_EVALUATION_AGENT_COMMIT"));
-            artifact.put("chatModelConfigured", "gpt-4o-mini");
+            String chatProvider = environment.getRequiredProperty("spring.ai.model.chat");
+            artifact.put("chatProvider", chatProvider);
+            artifact.put("chatModelConfigured",
+                    environment.getRequiredProperty("spring.ai." + chatProvider + ".chat.model"));
             artifact.put("embeddingModel", "bge-m3");
             artifact.put("embeddingDimensions", 1024);
             artifact.put("snapshotId", "recommendation-catalog-2026-09-15");

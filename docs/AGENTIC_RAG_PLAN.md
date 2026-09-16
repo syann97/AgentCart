@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현 / 실제 평가 재실행 필요**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. #181의 첫 실제 평가는 OpenAI credit 부족으로 모델 의존 질의를 완료하지 못해 품질 판정과 기본 경로 승인에 사용할 수 없습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현 / Claude 실제 평가 완료 / 카테고리 후속 필요**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. #191 Claude 평가는 기준선보다 높은 Hit@5와 낮은 지연을 기록했지만 카테고리 조건 위반 2건 때문에 기본 경로 전환은 보류합니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 
@@ -69,7 +69,7 @@ flowchart TD
 
 | 항목 | 목표 |
 |---|---|
-| Chat 모델 | 현재 사용 모델 `gpt-4o-mini` 유지 |
+| Chat 모델 | 설정으로 OpenAI 또는 Anthropic 선택; #191 평가는 `claude-haiku-4-5` |
 | Embedding | 현재 Ollama `bge-m3` 유지 |
 | 에이전트 / 노출 도구 | 1개 / `searchCatalog` 1개 |
 | 검색 실행 | 요청당 최대 2회, fallback 검색도 이 상한에 포함 |
@@ -127,6 +127,6 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
 | 3. #179 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성, 도메인 결과 검증 | 완료 |
 | 4. #180 응답 | SSE 진행·종료·오류, 연결 취소, Frontend 상태 처리 | 완료 |
-| 5. #181 평가 | harness·token/호출 계측·실패 artifact 구현; 실제 모델 비교 | provider credit 준비 후 재실행 |
+| 5. #181, #191 평가 | harness·token/호출 계측, OpenAI 차단 기록, Claude 실제 모델 비교 | 완료; 카테고리 위반 2건 후속 필요 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
