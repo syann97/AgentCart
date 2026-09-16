@@ -10,7 +10,7 @@
 - `fixtures.json`: C04 평가 중 최근 7일 주문으로 삽입할 상품
 - `baselines/fixed-rag-79627c0.json`: commit `79627c0`의 실제 `gpt-4o-mini`/`bge-m3` 실행 결과와 재계산 가능한 지표
 - `runs/agentic-rag-*.json`: 실제 Agent 실행 결과, 검색·LLM 호출 수, token·지연과 재계산 지표
-- `AGENTIC_RAG_EVALUATION_2026-09-16.md`: #181 실행 판정과 재실행 조건
+- `AGENTIC_RAG_EVALUATION_2026-09-16.md`: OpenAI 차단 실행과 #191 Claude 완료 실행의 비교·판정
 
 상품 DB ID는 적재 순서에 따라 달라질 수 있어 label의 식별자로 쓰지 않습니다. `name|brand`가 중복되면 validator가 snapshot을 거부합니다. 기준선의 `productId`는 실행 당시 MySQL snapshot을 추적하기 위한 값입니다.
 
@@ -37,4 +37,4 @@ validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·f
 
 `AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit 환경 변수를 명시해야 합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
 
-2026-09-16 실행은 snapshot 검증과 A01 결정적 구체화에는 성공했지만 OpenAI 잔여 credit 부족으로 모델 의존 19개 질의가 완료되지 않았습니다. 이 artifact는 실패 실행의 재현 기록이며 Agent 품질 기준선으로 사용하지 않습니다. 자세한 판정은 [실행 기록](AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.
+2026-09-16 OpenAI 실행은 잔여 credit 부족으로 모델 의존 19개 질의를 완료하지 못해 품질 기준으로 사용하지 않습니다. #191에서 `claude-haiku-4-5`로 20개 질의를 다시 실행해 별도 artifact와 지표를 기록했습니다. Claude 실행은 Hit@5, 미지원 질의, 구체화와 실행 상한을 통과했지만 카테고리 조건 위반 2건 때문에 기본 경로 전환 완료 기준에는 미달했습니다. 자세한 비교와 후속 조치는 [실행 기록](AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.

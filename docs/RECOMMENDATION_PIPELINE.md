@@ -131,4 +131,4 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 ## 후속 작업으로 남은 항목
 
-고정 평가셋에서 기존 기준선과 Agent 경로의 품질·지연·호출 수를 비교하는 실제 모델 평가는 [승인된 계획](AGENTIC_RAG_PLAN.md)에 따라 후속 진행합니다.
+고정 평가셋의 Claude 실제 실행은 기존 기준선보다 Hit@5와 지연이 개선됐고 호출 상한을 지켰습니다. 다만 카테고리 조건 위반 2건이 남아 기본 경로 전환은 보류합니다. 결과와 후속 조치는 [평가 실행 기록](../evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.
