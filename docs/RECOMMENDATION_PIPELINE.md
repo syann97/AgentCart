@@ -23,7 +23,7 @@
 
 [RecommendationRequestContextFactory](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationRequestContextFactory.java)는 모델 호출 전에 지원되는 원화 가격 표현과 13개 카테고리·승인 별칭을 결정적으로 해석합니다. 값, 원문 근거, `EXPLICIT` 출처와 원본 질의·회원 ID를 [RecommendationRequestContext](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/RecommendationRequestContext.java)에 보존합니다. 역전된 가격 조건은 삭제하지 않고 `CLARIFICATION_REQUIRED`로 분류하며, 현행 리스트 응답에서는 검색과 모델 호출 없이 빈 결과로 종료합니다.
 
-[QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java)는 비교 기준으로 유지된 기존 `RecommendationService` 경로에서 `openAiChatModel`을 사용합니다. 현재 stream endpoint의 Agent 경로에서는 호출하지 않습니다.
+[QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java)는 비교 기준으로 유지된 기존 `RecommendationService` 경로에서 설정으로 선택한 `ChatModel`을 사용합니다. 현재 stream endpoint의 Agent 경로에서는 호출하지 않습니다.
 
 - 출력은 [EnrichedQuery](../backend/AgentCart/src/main/java/com/agentcart/recommendation/dto/EnrichedQuery.java)의 `enrichedQuery`, `bm25Keywords`, `categories`, `minPrice`, `maxPrice`입니다.
 - 응답 문자열의 첫 `{`부터 마지막 `}`까지를 JSON으로 파싱합니다. 추론 카테고리는 서버의 폐쇄형 분류로 정규화하고, 음수·역전 가격 범위는 사용하지 않습니다.

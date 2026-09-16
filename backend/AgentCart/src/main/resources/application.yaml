@@ -1,6 +1,9 @@
 spring:
   application:
     name: AgentCart
+  ai:
+    model:
+      chat: ${CHAT_PROVIDER:openai}
   profiles:
     active: local
   datasource:

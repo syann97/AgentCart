@@ -13,8 +13,17 @@
 
 공통 설정은 [application.yaml](../backend/AgentCart/src/main/resources/application.yaml)에 있고 기본 활성 profile은 `local`입니다. 아래 개인 파일은 `.gitignore` 대상입니다.
 
-- `backend/AgentCart/.env`: `bootRun` 작업이 읽는 환경 변수. `JWT_SECRET`, `OPENAI_API_KEY`를 관리하며 현재 로컬 profile의 Anthropic 항목을 유지하면 `ANTHROPIC_API_KEY`도 필요합니다. 이 자동 로드는 `bootRun`에만 정의되어 있어 IDE 실행이나 다른 Gradle task에 그대로 적용된다고 가정하지 않습니다.
-- `backend/AgentCart/src/main/resources/application-local.yaml`: CORS, cookie, MySQL, pgvector, Redis, OpenAI chat, Ollama embedding 연결 정보.
+- `backend/AgentCart/.env`: `bootRun` 작업이 읽는 환경 변수. `JWT_SECRET`, `CHAT_PROVIDER`와 선택한 공급자의 API key를 관리합니다. 이 자동 로드는 `bootRun`에만 정의되어 있어 IDE 실행이나 다른 Gradle task에 그대로 적용된다고 가정하지 않습니다.
+- `backend/AgentCart/src/main/resources/application-local.yaml`: CORS, cookie, MySQL, pgvector, OpenAI·Anthropic chat, Ollama embedding 연결 정보.
+
+Claude를 사용할 때는 `backend/AgentCart/.env`에 다음 두 줄을 추가합니다. 실제 key는 문서나 YAML에 기록하지 않습니다.
+
+```dotenv
+CHAT_PROVIDER=anthropic
+ANTHROPIC_API_KEY=발급받은_Claude_API_key
+```
+
+OpenAI로 되돌릴 때는 같은 파일에서 `CHAT_PROVIDER=openai`로 바꾸고 `OPENAI_API_KEY`를 설정합니다. `CHAT_PROVIDER`의 허용 값은 `openai`, `anthropic` 두 가지입니다. 선택하지 않으면 `openai`가 기본값입니다.
 
 로컬 설정의 구조는 다음과 같습니다. 비밀 값은 환경 변수로 둡니다.
 
@@ -26,6 +35,15 @@ cookie:
   secure: false
   same-site: Lax
 
+spring:
+  ai:
+    model:
+      chat: ${CHAT_PROVIDER:openai}
+```
+
+공통 `application.yaml`의 위 설정이 chat auto-configuration을 한 공급자로 제한합니다. 로컬 전용 `application-local.yaml`에는 두 공급자의 연결 설정을 둡니다.
+
+```yaml
 spring:
   autoconfigure:
     exclude:
@@ -47,6 +65,8 @@ spring:
   ai:
     anthropic:
       api-key: ${ANTHROPIC_API_KEY}
+      chat:
+        model: claude-haiku-4-5
     openai:
       api-key: ${OPENAI_API_KEY}
       chat:
@@ -61,7 +81,7 @@ spring:
           model: bge-m3
 ```
 
-OpenAI·Anthropic·Ollama starter가 모두 빌드에 선언되어 있지만, 현재 추천 서비스는 `openAiChatModel`과 `ollamaEmbeddingModel`을 명시적으로 사용합니다. starter 목록을 실제 모델 경로로 해석하지 않습니다.
+선택한 OpenAI 또는 Anthropic `ChatModel` 하나를 추천 Agent, 질의 확장, 추천 이유 생성에서 함께 사용합니다. 임베딩은 공급자 선택과 관계없이 `ollamaEmbeddingModel`과 `bge-m3`를 사용합니다.
 
 ## 실행 순서
 

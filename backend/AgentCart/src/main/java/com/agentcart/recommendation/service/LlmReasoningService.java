@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 public class LlmReasoningService {
 
     @Autowired(required = false)
-    @Qualifier("openAiChatModel")
     private ChatModel chatModel;
 
     private static final Pattern PRICE_PATTERN = Pattern.compile("\\d[\\d,.]*\\s*원");

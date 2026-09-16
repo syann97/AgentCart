@@ -7,7 +7,7 @@ Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입�
 ## 현재 구현
 
 - MySQL FULLTEXT와 pgvector 검색 결과를 순위 기반으로 결합합니다.
-- OpenAI 채팅 모델로 질의를 확장하고 후보별 추천 이유를 생성합니다.
+- 설정으로 선택한 OpenAI 또는 Anthropic Claude 채팅 모델로 추천 Agent를 실행하고 질의를 확장합니다.
 - 상품 상태, 카테고리, 최근 주문, 가격 조건을 검증합니다. 현재 fallback의 한계는 [추천 파이프라인](docs/RECOMMENDATION_PIPELINE.md)에 기록합니다.
 - 추천 전체 계산 후 상품별 SSE 메시지를 전송하고 Kafka로 추천 이력을 적재합니다.
 - 회원·인증, 상품 CRUD, 장바구니, 주문·재고 처리, Mock 결제가 구현되어 있습니다.
@@ -18,7 +18,7 @@ Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입�
 |---|---|---|
 | Backend | Java 25, Spring Boot 4.0.6, Spring AI 2.0.1 | [build.gradle](backend/AgentCart/build.gradle) |
 | Frontend | Next.js 15.5.18, React 19.1.0, TypeScript | [package.json](frontend/package.json) |
-| Chat / Embedding | 로컬 설정 기준 OpenAI `gpt-4o-mini` / Ollama `bge-m3` | [Backend Context](docs/BACKEND_CONTEXT.md) |
+| Chat / Embedding | OpenAI 또는 Anthropic Claude 선택 / Ollama `bge-m3` | [Backend Context](docs/BACKEND_CONTEXT.md) |
 | 저장소 | MySQL, PostgreSQL + pgvector, Redis | [Compose](docker-compose.yml) |
 | 이벤트 | Kafka, 추천 이력 Consumer | [Infrastructure Context](docs/INFRA_CONTEXT.md) |
 | 테스트 | JUnit·Mockito·Testcontainers, Vitest·Testing Library | [개발 가이드](docs/DEVELOPMENT.md) |

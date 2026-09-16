@@ -1,5 +1,6 @@
 package com.agentcart.recommendation.service;
 
+import com.agentcart.recommendation.config.RecommendationChatOptionsFactory;
 import com.agentcart.recommendation.config.SearchCatalogToolConfiguration;
 import com.agentcart.recommendation.dto.AgentRecommendation;
 import com.agentcart.recommendation.dto.CategoryConstraint;
@@ -27,7 +28,6 @@ import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,6 +75,7 @@ public class RecommendationAgentService {
     private final ToolCallback searchCatalogToolCallback;
     private final ObjectMapper objectMapper;
     private final ChatModel chatModel;
+    private final RecommendationChatOptionsFactory chatOptionsFactory;
     private final Clock clock;
     private final Duration deadlineDuration;
     private final ExecutorService executor;
@@ -84,9 +85,10 @@ public class RecommendationAgentService {
             RecommendationRequestContextFactory requestContextFactory,
             @Qualifier("searchCatalogToolCallback") ToolCallback searchCatalogToolCallback,
             ObjectMapper objectMapper,
-            @Qualifier("openAiChatModel") ObjectProvider<ChatModel> chatModelProvider) {
+            ObjectProvider<ChatModel> chatModelProvider,
+            RecommendationChatOptionsFactory chatOptionsFactory) {
         this(requestContextFactory, searchCatalogToolCallback, objectMapper, chatModelProvider.getIfAvailable(),
-                Clock.systemUTC(), DEFAULT_DEADLINE, Executors.newVirtualThreadPerTaskExecutor());
+                Clock.systemUTC(), DEFAULT_DEADLINE, Executors.newVirtualThreadPerTaskExecutor(), chatOptionsFactory);
     }
 
     public RecommendationAgentService(
@@ -97,10 +99,24 @@ public class RecommendationAgentService {
             Clock clock,
             Duration deadlineDuration,
             ExecutorService executor) {
+        this(requestContextFactory, searchCatalogToolCallback, objectMapper, chatModel, clock,
+                deadlineDuration, executor, new RecommendationChatOptionsFactory("openai"));
+    }
+
+    public RecommendationAgentService(
+            RecommendationRequestContextFactory requestContextFactory,
+            ToolCallback searchCatalogToolCallback,
+            ObjectMapper objectMapper,
+            ChatModel chatModel,
+            Clock clock,
+            Duration deadlineDuration,
+            ExecutorService executor,
+            RecommendationChatOptionsFactory chatOptionsFactory) {
         this.requestContextFactory = requestContextFactory;
         this.searchCatalogToolCallback = searchCatalogToolCallback;
         this.objectMapper = objectMapper;
         this.chatModel = chatModel;
+        this.chatOptionsFactory = chatOptionsFactory;
         this.clock = clock;
         this.deadlineDuration = deadlineDuration;
         this.executor = executor;
@@ -203,19 +219,21 @@ public class RecommendationAgentService {
             throw new InvalidModelResponseException();
         }
         checkCanStart(state, true);
-        OpenAiChatOptions.Builder options = OpenAiChatOptions.builder();
-        options.temperature(0.0);
+        List<ToolCallback> toolCallbacks;
+        Map<String, Object> toolContext;
         if (toolsAvailable) {
             SearchCatalogExecutionContext executionContext = new SearchCatalogExecutionContext(
                     state.requestContext, state.requestId, state.searchCount + 1, state.deadline);
-            options.toolCallbacks(searchCatalogToolCallback)
-                    .toolContext(SearchCatalogToolConfiguration.EXECUTION_CONTEXT_KEY, executionContext);
+            toolCallbacks = List.of(searchCatalogToolCallback);
+            toolContext = Map.of(SearchCatalogToolConfiguration.EXECUTION_CONTEXT_KEY, executionContext);
         } else {
-            options.toolCallbacks(List.of()).toolContext(Map.of());
+            toolCallbacks = List.of();
+            toolContext = Map.of();
         }
         state.llmCallCount++;
         ChatResponse response = withinDeadline(
-                state, () -> chatModel.call(new Prompt(List.copyOf(conversation), options.build())));
+                state, () -> chatModel.call(new Prompt(List.copyOf(conversation),
+                        chatOptionsFactory.create(0.0, toolCallbacks, toolContext))));
         recordUsage(state, response);
         return response;
     }

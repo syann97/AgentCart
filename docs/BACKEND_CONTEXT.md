@@ -14,7 +14,7 @@ Spring Framework·Security·Hibernate·Jackson 등 간접 의존성의 세부 �
 
 ## LLM과 임베딩
 
-현재 서비스는 `openAiChatModel`과 `ollamaEmbeddingModel`을 명시적으로 주입합니다. 로컬 설정에서 채팅은 `gpt-4o-mini`, 임베딩은 `bge-m3`를 사용합니다. OpenAI·Anthropic·Ollama starter가 함께 선언되어 있다는 사실과 실제 호출 모델을 구분합니다.
+추천 서비스는 `spring.ai.model.chat`으로 선택된 단일 `ChatModel`을 주입합니다. `CHAT_PROVIDER=openai`이면 OpenAI, `CHAT_PROVIDER=anthropic`이면 Claude를 사용하며 기본값은 OpenAI입니다. Agent 도구 호출 옵션도 선택한 공급자 형식으로 생성합니다. 임베딩은 공급자 선택과 관계없이 `ollamaEmbeddingModel`과 `bge-m3`를 사용합니다.
 
 `application-local.yaml`은 개인 파일로 Git에 포함되지 않습니다. 실행 전 모델과 데이터 소스 설정은 [LOCAL_SETUP](LOCAL_SETUP.md)을 확인합니다.
 
