@@ -1,6 +1,6 @@
-# 추천 평가 snapshot과 고정형 RAG 기준선
+# 추천 평가 snapshot과 버전별 재평가
 
-이 디렉터리는 500개 상품 snapshot, 20개 평가 질의, 사람이 검토한 relevance label, C04 최근 주문 fixture와 고정형 RAG의 실제 모델 실행 결과를 함께 고정합니다. 목표 agent 구현의 결과와 비교할 기준이며, 이 기준선 자체가 목표 동작을 만족한다는 의미는 아닙니다.
+이 디렉터리는 500개 상품 snapshot, 20개 평가 질의, relevance label, C04 최근 주문 fixture와 실제 모델 실행 결과를 함께 고정합니다. 원본 v1 입력·실행·보고서는 변경하지 않으며, 정책 해석을 고친 평가는 `v2/`에 별도 기록합니다. v2 label은 assistant 검토 결과이고 사람 검증 ground truth가 아닙니다.
 
 ## 파일
 
@@ -11,6 +11,9 @@
 - `baselines/fixed-rag-79627c0.json`: commit `79627c0`의 실제 `gpt-4o-mini`/`bge-m3` 실행 결과와 재계산 가능한 지표
 - `runs/agentic-rag-*.json`: 실제 Agent 실행 결과, 검색·LLM 호출 수, token·지연과 재계산 지표
 - `AGENTIC_RAG_EVALUATION_2026-09-16.md`: OpenAI 차단 실행과 #191 Claude 완료 실행의 비교·판정
+- `v2/definition.json`: 명시 정책, query intent, soft 기대 카테고리와 비교 대상 실행을 분리한 평가 정의
+- `v2/labels.json`: 두 완료 실행의 반환 상품 합집합을 검토한 relevance label과 provenance
+- `v2/reassessment.json`: 원본 실행을 수정하지 않고 v2 scorer로 산출한 결정적 재평가 결과
 
 상품 DB ID는 적재 순서에 따라 달라질 수 있어 label의 식별자로 쓰지 않습니다. `name|brand`가 중복되면 validator가 snapshot을 거부합니다. 기준선의 `productId`는 실행 당시 MySQL snapshot을 추적하기 위한 값입니다.
 
@@ -21,9 +24,10 @@
 ```bash
 python scripts/evaluation/validate_recommendation_evaluation.py
 python scripts/evaluation/validate_recommendation_evaluation.py --print-metrics
+python -m unittest discover -s scripts/evaluation -p "test_*.py"
 ```
 
-validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·fixture 참조, 기준선 결과의 상품 사실과 ID 중복, 로컬 절대 경로·secret 형태 문자열을 검사합니다. 이어 Hit@5, 조건 위반, 범위 밖 오탐, 구체화 실패, 결과·LLM 호출 시도 수, 지연시간을 다시 계산하여 저장된 metrics와 정확히 비교합니다. 이 검증은 모델이나 외부 서비스를 호출하지 않으므로 CI와 로컬에서 결정적입니다.
+validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·fixture 참조, 기준선 결과의 상품 사실과 ID 중복, 로컬 절대 경로·secret 형태 문자열을 검사합니다. 기존 v1 metrics를 원래 공식으로 확인한 뒤 원본 파일 hash, v2 판정 pool의 완전성, provenance와 v2 재평가 결과도 검증합니다. 이 검증은 모델이나 외부 서비스를 호출하지 않으므로 CI와 로컬에서 결정적입니다. 재평가 산출물을 의도적으로 갱신할 때만 `--write-reassessment`를 사용하며, 과거 실행 artifact를 쓰던 옵션은 거부됩니다.
 
 ## 실제 모델 실행과 mock 회귀 테스트
 
@@ -31,10 +35,12 @@ validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·f
 
 실제 모델 결과는 비결정적이고 비용이 발생하므로 일반 테스트에서 재실행하지 않습니다. backend의 mock 기반 단위·통합 테스트는 실행 상한, 후보 제한, 예외 경로 같은 결정적 계약을 검증하고, 이 디렉터리의 validator는 고정된 실제 실행 artifact를 검증합니다.
 
-엄격 Hit@5는 `relevant`만, 허용 Hit@5는 `relevant`와 `acceptableAlternatives`를 합쳐 계산합니다. S/C/R 17개 질의만 Hit@5 분모에 포함합니다. N 질의는 결과 없음, A01은 구체화 응답 여부를 별도 지표로 계산합니다.
+v2 엄격 Hit@5는 `relevant`만, 허용 Hit@5는 `relevant`와 `acceptable`을 합쳐 계산합니다. S/C/R 17개 질의만 Hit@5 분모에 포함합니다. 명시 가격·카테고리·재고·최근 주문·상태 정책은 relevance와 별도로 계산합니다. 판정이 없거나 상품 설명만으로 핵심 속성을 확정할 수 없는 결과는 `unjudged`로 남기고 Hit@5와 관련 상품 비율에 하한·상한을 함께 기록합니다. N 질의는 결과 없음, A01은 구체화 응답 여부를 별도 지표로 계산합니다.
 
 ## Agent 실제 실행
 
 `AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit 환경 변수를 명시해야 합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
 
-2026-09-16 OpenAI 실행은 잔여 credit 부족으로 모델 의존 19개 질의를 완료하지 못해 품질 기준으로 사용하지 않습니다. #191에서 `claude-haiku-4-5`로 20개 질의를 다시 실행해 별도 artifact와 지표를 기록했습니다. Claude 실행은 Hit@5, 미지원 질의, 구체화와 실행 상한을 통과했지만 카테고리 조건 위반 2건 때문에 기본 경로 전환 완료 기준에는 미달했습니다. 자세한 비교와 후속 조치는 [실행 기록](AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.
+2026-09-16 OpenAI 실행은 잔여 credit 부족으로 모델 의존 19개 질의를 완료하지 못했으므로 v2 품질 비교에서도 제외합니다. #191의 `claude-haiku-4-5` 완료 실행은 v2에서 엄격 Hit@5 0.941176, 허용 Hit@5 1.0, 관찰된 정책 준수 허용 Hit@5 1.0과 명시 정책 위반 0건을 기록했습니다. 기존 보고서의 카테고리 위반 2건은 S07·S10의 soft 기대 카테고리 불일치이며 사용자 명시 조건 위반이 아닙니다. Agent 결과 80개 중 2개는 `unjudged`이고 상품 status는 원시 snapshot에 없어 ACTIVE 준수 여부 80건이 unknown입니다.
+
+이 수치는 서로 다른 chat 모델의 단회 실행을 비교한 결과이므로 pipeline 변경만의 인과 효과로 해석하지 않습니다. v2 검토도 카탈로그 전체의 완전한 정답 집합이나 독립적인 사람 검증이 아닙니다. 당시 판단을 담은 [v1 실행 기록](AGENTIC_RAG_EVALUATION_2026-09-16.md)은 이력을 위해 그대로 보존합니다.

@@ -1,6 +1,6 @@
 # Agentic RAG 1차 구현 계획
 
-상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현 / Claude 실제 평가 완료 / 카테고리 후속 필요**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. #191 Claude 평가는 기준선보다 높은 Hit@5와 낮은 지연을 기록했지만 카테고리 조건 위반 2건 때문에 기본 경로 전환은 보류합니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
+상태: **승인된 목표 설계 / 단일 에이전트와 SSE 응답 구현 / Claude 실제 평가와 v2 재평가 완료**. 명시 조건 요청 컨텍스트, `searchCatalog`, 제한된 모델 도구 호출 반복과 `status | result | done | error` 계약이 구현되었습니다. #191 Claude 실행을 v2 정책으로 재산정한 결과 명시 정책 위반은 0건이고 허용 Hit@5는 1.0입니다. 기대 카테고리 불일치 2건은 soft scenario expectation으로 별도 기록하며, assistant 판정과 미판정 상품 2건이라는 한계가 있습니다. 현재 동작은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md)이 설명합니다.
 
 ## 목표와 규모
 

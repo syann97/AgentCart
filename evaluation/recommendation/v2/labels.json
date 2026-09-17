@@ -1,0 +1,751 @@
+{
+  "schemaVersion": 2,
+  "labelVersion": "2.0",
+  "definitionVersion": "2.0",
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "review": {
+    "reviewer": "Codex",
+    "reviewerType": "assistant",
+    "reviewedAt": "2026-09-16",
+    "humanValidated": false,
+    "method": "두 완료 실행의 질의별 상품 합집합을 이름으로 정렬하고 고정 snapshot의 상품명·설명을 읽어 같은 기준으로 판정했다. 실행 순위·추천 이유를 상품 근거로 쓰지 않았다.",
+    "limitations": "기존 결과와 지표를 본 이후의 assistant 단독 재검토이며 독립 맹검 또는 사람 검토로 주장하지 않는다. 카탈로그 전체의 완전한 정답 집합이 아니다.",
+    "poolRunIds": [
+      "fixed-rag-79627c0",
+      "agentic-rag-fd7971a"
+    ],
+    "evidenceFields": [
+      "name",
+      "description"
+    ],
+    "priceAndCategoryPolicy": "명시 가격·DB 카테고리·주문·재고 위반은 의미상 관련성 label에 합치지 않고 평가기에서 별도로 계산한다.",
+    "missingLabelPolicy": "명시된 판정이 없거나 속성 근거가 부족하면 unjudged. 정답·오답 어느 쪽에도 암묵 편입하지 않는다."
+  },
+  "labelMeaning": {
+    "relevant": "원문의 상품 종류·핵심 용도를 직접 충족하는 근거가 있다.",
+    "acceptable": "유용한 보조 제품이나 특정 날씨·설치·취사·규격 등에 의존하는 대안이다.",
+    "irrelevant": "요청 용도·대상과 다르거나 핵심 용도 근거가 없다.",
+    "unjudged": "핵심 속성이나 호환 근거가 부족해 판정을 유보한다."
+  },
+  "judgments": [
+    {
+      "queryId": "S01",
+      "products": [
+        {
+          "productKey": "돌잔치 기념 명패 세트|리틀우드",
+          "label": "relevant",
+          "reason": "이름·생년월일 각인 명패와 액자로 첫돌 기념 목적을 직접 충족한다."
+        },
+        {
+          "productKey": "돌잔치 순금 아기 반지|골든베이비",
+          "label": "relevant",
+          "reason": "아기 돌반지로 첫돌 선물 용도가 명시되어 있다. 48만원의 예산 초과는 가격 위반으로 별도 기록한다."
+        },
+        {
+          "productKey": "디지털 비접촉 아기 체온계|헬스맘",
+          "label": "acceptable",
+          "reason": "아이 양육에 실용적이고 돌잔치 선물 용도가 있으나 첫돌 기념보다는 건강관리 보조 제품이다."
+        },
+        {
+          "productKey": "디지털 포토 액자|픽스토리",
+          "label": "relevant",
+          "reason": "돌잔치 사진 보관·전시 용도가 직접 기재되어 있다. 가격 6만5천원의 상한 초과는 별도 검사한다."
+        },
+        {
+          "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+          "label": "acceptable",
+          "reason": "돌잔치 선물 용도가 기재되어 있지만 신생아 규격이므로 첫돌 아이의 사이즈에 따라 적합성이 달라진다."
+        },
+        {
+          "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+          "label": "acceptable",
+          "reason": "첫걸음 및 돌잔치 선물 용도는 있으나 아이 발 크기·발달 단계 확인이 필요하다."
+        },
+        {
+          "productKey": "아기 첫돌 한복 세트|마이베베",
+          "label": "relevant",
+          "reason": "첫돌 촬영·행사에 쓰는 한복으로 용도는 직접 일치한다. 8만9천원의 가격 위반과 분리한다."
+        },
+        {
+          "productKey": "유아용 도자기 식기 세트|마이베베",
+          "label": "relevant",
+          "reason": "이름 각인과 돌잔치 선물 용도가 명시된 식기 세트다."
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "products": [
+        {
+          "productKey": "공기정화 식물 몬스테라 화분|그린포레스트",
+          "label": "relevant",
+          "reason": "새로운 공간에 생기를 더하는 집들이 선물 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "다용도 수납정리함 3단|스마트케이스",
+          "label": "relevant",
+          "reason": "새집 정리정돈과 집들이 선물 용도가 기재되어 있다."
+        },
+        {
+          "productKey": "라탄 바스켓 정리함 2P|그린포레스트",
+          "label": "relevant",
+          "reason": "거실·침실에 두는 정리함이며 집들이 선물 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "본차이나 식기 6인 세트|포슬린하우스",
+          "label": "acceptable",
+          "reason": "신혼집 집들이 선물 근거는 있으나 6인용 구성은 가구 규모·취향에 따라 적합성이 달라진다."
+        },
+        {
+          "productKey": "북유럽풍 액자 3종 세트|월데코",
+          "label": "relevant",
+          "reason": "새집 벽 장식과 집들이 선물 목적에 직접 부합한다."
+        },
+        {
+          "productKey": "소이왁스 무향 캔들 3종 세트|캔들무드",
+          "label": "relevant",
+          "reason": "새집 분위기 연출과 이사 선물 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "아로마 디퓨저 선물세트|센트홈",
+          "label": "relevant",
+          "reason": "향과 무드 조명을 제공하는 집들이 선물 세트다."
+        },
+        {
+          "productKey": "원목 손잡이 머그컵 4P 세트|포슬린하우스",
+          "label": "relevant",
+          "reason": "집에서 쓰는 머그컵 세트로 집들이 선물 용도가 직접 기재되어 있다."
+        },
+        {
+          "productKey": "패브릭 도어매트|코지홈",
+          "label": "relevant",
+          "reason": "새집 현관을 꾸미는 집들이 선물로 설명되어 있다."
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "products": [
+        {
+          "productKey": "1~2인용 캡슐세탁기|리빙테크",
+          "label": "relevant",
+          "reason": "좁은 자취방 소량 세탁 용도가 직접 일치한다. 16만8천원의 예산 위반은 별도로 집계한다."
+        },
+        {
+          "productKey": "1인용 미니 냉장고|리빙테크",
+          "label": "relevant",
+          "reason": "좁은 공간의 음료·식재료 보관 가전이다. 14만5천원의 예산 위반은 별도로 집계한다."
+        },
+        {
+          "productKey": "1인용 휴대용 인덕션|쿡메이트",
+          "label": "relevant",
+          "reason": "좁은 주방의 자취용 조리에 적합한 컴팩트 가전이다."
+        },
+        {
+          "productKey": "3인용 미니 전기밥솥|쿡메이트",
+          "label": "relevant",
+          "reason": "1~3인 취사와 자취방 주방 사용 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "무선 핸디 청소기|클린업",
+          "label": "relevant",
+          "reason": "좁은 자취방의 청소에 직접 쓰는 가전이다."
+        },
+        {
+          "productKey": "소형 공기청정기|클린업",
+          "label": "relevant",
+          "reason": "작은 원룸의 미세먼지·냄새 감소용 소형 가전이다."
+        },
+        {
+          "productKey": "슬림형 전자레인지|리빙테크",
+          "label": "relevant",
+          "reason": "좁은 자리의 데우기·간단 조리에 쓰는 자취용 가전이다."
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "products": [
+        {
+          "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+          "label": "relevant",
+          "reason": "4인 가족 수용과 방수·전실 기능이 명시된 캠핑 주거 장비다."
+        },
+        {
+          "productKey": "디지털 포토 액자|픽스토리",
+          "label": "irrelevant",
+          "reason": "돌잔치 사진 전시 제품으로 가족 캠핑 장비라는 근거가 없다."
+        },
+        {
+          "productKey": "방수 휴대용 스피커형 캠핑랜턴|글로우텐트",
+          "label": "relevant",
+          "reason": "캠핑 밤의 조명과 음악을 함께 제공해 가족이 공유할 수 있다."
+        },
+        {
+          "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+          "label": "acceptable",
+          "reason": "캠핑 보온 장비이지만 4인 수용 근거는 없어 개인별 준비가 필요한 대안이다."
+        },
+        {
+          "productKey": "셀프 인플레이팅 캠핑 매트|아웃도어랩",
+          "label": "acceptable",
+          "reason": "캠핑용 취침 매트이나 가족 전체를 수용하는 크기·구성이 확인되지 않는다."
+        },
+        {
+          "productKey": "캠핑 텐트 풋프린트 방수 그라운드시트|그린필드",
+          "label": "acceptable",
+          "reason": "가족 텐트의 습기·마모 보호에 유용하나 실제 텐트와 규격 호환 확인이 필요하다."
+        },
+        {
+          "productKey": "해외용 멀티탭 USB 일체형|글로벌플러그",
+          "label": "irrelevant",
+          "reason": "해외 콘센트와 여행 충전용이며 야외 캠핑에 필요한 전원·방수 등 적합 근거가 없다."
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "products": [
+        {
+          "productKey": "네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리",
+          "label": "relevant",
+          "reason": "좁은 공간의 상체 근력 운동과 홈트레이닝이 명시되어 있다."
+        },
+        {
+          "productKey": "벽걸이형 접이식 풀업바|스트롱암",
+          "label": "relevant",
+          "reason": "집에서 등·팔 근력 운동에 쓰는 접이식 기구다. 원문에 벽 설치 금지 조건은 없다."
+        },
+        {
+          "productKey": "벽부착형 케이블 운동기구|스트롱암",
+          "label": "relevant",
+          "reason": "좁은 공간에서 여러 근력 운동을 하는 홈트레이닝 기구다. 예산 제한은 없다."
+        },
+        {
+          "productKey": "안티버스트 짐볼 65cm 발펌프 포함|필라엣지",
+          "label": "relevant",
+          "reason": "설명에 코어 근력 강화와 홈트레이닝이 명시되어 있어 v1의 무관 판정을 변경한다."
+        },
+        {
+          "productKey": "조절 가능 스미스 머신 프레임|스트롱암",
+          "label": "relevant",
+          "reason": "스쿼트·벤치프레스와 홈트레이닝 용도가 직접 명시되어 있다. 가격·설치 제한을 추가하지 않는다."
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "products": [
+        {
+          "productKey": "2단 슬라이드 데스크 정리함|데스크프로",
+          "label": "relevant",
+          "reason": "책상 위 필기구와 사무용품 정리에 직접 쓰인다."
+        },
+        {
+          "productKey": "3단 서랍형 서류정리함|오피스메이트",
+          "label": "relevant",
+          "reason": "책상 옆 문서·사무용품 정리에 직접 쓰인다."
+        },
+        {
+          "productKey": "USB-C 멀티포트 멀티탭|코드메이트",
+          "label": "acceptable",
+          "reason": "책상 기기 충전에는 유용한 업무 보조 제품이다. DB 명시 카테고리 불일치는 별도 검사한다."
+        },
+        {
+          "productKey": "대형 가죽 데스크매트 80x40|데스크프로",
+          "label": "relevant",
+          "reason": "키보드·마우스 패드와 방수 기능으로 사무 책상 사용에 직접 부합한다."
+        },
+        {
+          "productKey": "도자기 펜꽂이 책상정리세트|오피스메이트",
+          "label": "relevant",
+          "reason": "펜·가위·클립 정리를 위한 사무 책상 용품이다."
+        },
+        {
+          "productKey": "스테이플러 클립 사무용품 세트|오피스메이트",
+          "label": "relevant",
+          "reason": "스테이플러·클립·가위 등 책상 업무에 필요한 기본 문구 세트다."
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "products": [
+        {
+          "productKey": "겨울 호흡 방한 마스크|브레스가드",
+          "label": "relevant",
+          "reason": "입·코 주변의 찬바람 차단과 보온 근거가 있다."
+        },
+        {
+          "productKey": "겨울용 푹신 슬리퍼|포근발",
+          "label": "irrelevant",
+          "reason": "설명에서 실내 슬리퍼·자취방 실내화로 한정되며 출퇴근 착용 근거가 없다. v1의 허용 대안을 변경한다."
+        },
+        {
+          "productKey": "발열 기능성 보온장갑|웜핸드",
+          "label": "relevant",
+          "reason": "추운 날 출퇴근용 보온장갑이며 터치스크린 기능이 명시되어 있다."
+        },
+        {
+          "productKey": "방풍 귀마개|이어웜",
+          "label": "relevant",
+          "reason": "출퇴근길 방풍·방한 용도가 직접 명시되어 있다."
+        },
+        {
+          "productKey": "방한 귀달이 비니|포근발",
+          "label": "relevant",
+          "reason": "머리·귀를 감싸는 기모 안감과 일상 방한 용도가 있다."
+        },
+        {
+          "productKey": "충전식 손난로 보조배터리 겸용|웜핸드",
+          "label": "relevant",
+          "reason": "손을 따뜻하게 하는 겨울 방한 용도가 직접 있다. 디지털 카테고리는 명시된 제한이 아니며 관련성 배제 근거가 아니다."
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "products": [
+        {
+          "productKey": "내열 오븐장갑 한 쌍|쿡플랜",
+          "label": "relevant",
+          "reason": "뜨거운 그릇·팬을 다루는 조리 안전 도구다."
+        },
+        {
+          "productKey": "대용량 에어프라이어 7L|에어쿡",
+          "label": "acceptable",
+          "reason": "조리에는 유용하지만 대용량 튀김 조리 방식·가구 규모에 따라 필요성이 달라진다."
+        },
+        {
+          "productKey": "디지털 주방용 계량저울|키친메이트",
+          "label": "relevant",
+          "reason": "초보 조리·베이킹의 정확한 재료 계량에 쓰이는 기본 도구다."
+        },
+        {
+          "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+          "label": "relevant",
+          "reason": "조리 재료 비율을 맞추는 기본 계량 도구다."
+        },
+        {
+          "productKey": "신혼 주방용 광파오븐 전자레인지|쿡메이트",
+          "label": "acceptable",
+          "reason": "자동 메뉴 등 요리 초보 사용 근거가 있다. 가전으로 분류된 명시 카테고리 위반은 별도 기록한다."
+        },
+        {
+          "productKey": "주방용 쿠킹포일 대형|홈클린",
+          "label": "acceptable",
+          "reason": "오븐 조리·뒷정리에 쓰는 소모품으로 특정 조리 방식에 의존한다."
+        },
+        {
+          "productKey": "휴대용 미니 다용도 가위세트|올인툴",
+          "label": "relevant",
+          "reason": "식재료 손질과 자취방 주방의 기본 도구 용도가 명시되어 있다."
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "products": [
+        {
+          "productKey": "강아지 4륜 반려동물 유모차|펫트래블",
+          "label": "irrelevant",
+          "reason": "노령견·소형견 전용 설명으로 고양이 사용 적합 근거가 없다."
+        },
+        {
+          "productKey": "강아지 고양이 자동급수기|펫드라이브",
+          "label": "relevant",
+          "reason": "상품명에 고양이용이 명시되고 필터 순환 급수 기능이 있다."
+        },
+        {
+          "productKey": "고양이 깃털 낚싯대 장난감|캣플레이",
+          "label": "relevant",
+          "reason": "고양이 사냥 놀이와 운동을 위한 장난감이다."
+        },
+        {
+          "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+          "label": "relevant",
+          "reason": "고양이 외출·이동 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "고양이 캣닢 스크래처 보드|캣라이프",
+          "label": "relevant",
+          "reason": "고양이 스크래칭·스트레스 해소 용도가 있다."
+        },
+        {
+          "productKey": "고양이 폭스 숨숨집 하우스|캣하우스",
+          "label": "relevant",
+          "reason": "고양이가 쉬는 숨숨집으로 용도가 직접 일치한다."
+        },
+        {
+          "productKey": "고양이 화장실 모래 매트 더블레이어|캣클린",
+          "label": "relevant",
+          "reason": "고양이 화장실 주변 모래 정리 용도가 직접 일치한다."
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "products": [
+        {
+          "productKey": "기내용 미니 하드 캐리어|트래블메이트",
+          "label": "irrelevant",
+          "reason": "항공 여행·출장 운반 용도이며 산행 장비라는 근거가 없다."
+        },
+        {
+          "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+          "label": "acceptable",
+          "reason": "가볍고 등산에 쓰지만 빙판·급경사 지형에 의존하는 보조 장비다."
+        },
+        {
+          "productKey": "접이식 캠핑 테이블|아웃도어라이프",
+          "label": "irrelevant",
+          "reason": "캠핑·차박·베란다 테이블 용도만 있고 산행 휴대·사용 근거는 없다. 같은 카테고리여도 무관 판정을 유지한다."
+        },
+        {
+          "productKey": "편광 등산용 선글라스|선가드",
+          "label": "acceptable",
+          "reason": "가벼운 등산용 눈 보호 장비지만 강한 햇빛 상황의 보조 제품이다."
+        },
+        {
+          "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+          "label": "acceptable",
+          "reason": "가벼운 등산 취사용 근거가 있으나 취사를 계획한 경우의 대안이다."
+        },
+        {
+          "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+          "label": "acceptable",
+          "reason": "가벼움·컴팩트함과 등산 사용이 명시되어 있다. 날씨 대응 보조품이며 생활용품 분류만으로 배제하지 않는다."
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "products": [
+        {
+          "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+          "label": "relevant",
+          "reason": "캠핑 주거 장비로 용도는 직접 부합한다. 32만원의 범위 초과는 가격 정책 지표로 분리한다."
+        },
+        {
+          "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+          "label": "relevant",
+          "reason": "캠핑 취침·보온 목적이 명시되어 있다."
+        },
+        {
+          "productKey": "알루미늄 폴딩 캠핑 의자|아웃도어랩",
+          "label": "relevant",
+          "reason": "휴대 가능한 캠핑 의자로 용도가 직접 일치한다."
+        },
+        {
+          "productKey": "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+          "label": "relevant",
+          "reason": "캠핑 휴식용 해먹과 휴대용 파우치가 명시되어 있다."
+        },
+        {
+          "productKey": "캠핑용 휴대용 도끼 장작패개|툴마스터",
+          "label": "acceptable",
+          "reason": "캠핑 장작 처리 용도지만 장작을 사용하는 상황에 한정된 보조 장비다."
+        },
+        {
+          "productKey": "캠핑용 휴대용 샤워기 세트|워시아웃도어",
+          "label": "acceptable",
+          "reason": "캠핑 세정 용도는 있으나 물탱크·차박·오지 환경에 의존한다."
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "products": [
+        {
+          "productKey": "돌잔치 기념 명패 세트|리틀우드",
+          "label": "relevant",
+          "reason": "첫돌 이름·생년월일 기념 선물로 S01과 동일하게 판정한다."
+        },
+        {
+          "productKey": "돌잔치 순금 아기 반지|골든베이비",
+          "label": "relevant",
+          "reason": "첫돌 선물 목적은 직접 일치한다. 가격 상한 위반은 S01과 같이 별도 기록한다."
+        },
+        {
+          "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+          "label": "acceptable",
+          "reason": "돌잔치 선물 설명은 있으나 신생아 사이즈의 연령 적합성이 조건부이므로 S01과 같은 대안 판정이다."
+        },
+        {
+          "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+          "label": "acceptable",
+          "reason": "첫걸음·돌잔치 선물로 쓰이나 사이즈 확인이 필요하여 S01과 동일한 대안 판정이다."
+        },
+        {
+          "productKey": "아기 첫돌 한복 세트|마이베베",
+          "label": "relevant",
+          "reason": "첫돌 행사·촬영 용도가 직접 일치한다. 가격 위반과 분리한다."
+        },
+        {
+          "productKey": "아기 침대 모빌 음악기 세트|꿈나라키즈",
+          "label": "acceptable",
+          "reason": "아기 수면·돌잔치 선물 근거가 있으나 발달 단계와 사용 중인 침대에 따라 필요성이 달라진다."
+        },
+        {
+          "productKey": "유아용 도자기 식기 세트|마이베베",
+          "label": "relevant",
+          "reason": "각인 가능한 돌잔치 선물용 식기로 S01과 동일하게 판정한다."
+        },
+        {
+          "productKey": "플로럴 향수 50ml|퍼퓸노트",
+          "label": "irrelevant",
+          "reason": "일반적인 특별한 날 선물 근거만 있고 첫돌·아기 선물 용도는 없다."
+        }
+      ]
+    },
+    {
+      "queryId": "C03",
+      "products": [
+        {
+          "productKey": "논슬립 웨이트 트레이닝 장갑|바디팩토리",
+          "label": "irrelevant",
+          "reason": "마찰·굳은살 방지 목적이며 겨울 보온 근거가 없다."
+        },
+        {
+          "productKey": "발열 기능성 보온장갑|웜핸드",
+          "label": "relevant",
+          "reason": "겨울 보온 용도가 명시된 장갑이다."
+        },
+        {
+          "productKey": "캠핑용 내열 장갑 화로 장갑|파이어가드",
+          "label": "irrelevant",
+          "reason": "고온의 화로·그릴 보호 목적을 겨울 방한 기능으로 해석할 수 없다."
+        },
+        {
+          "productKey": "터치스크린 등산용 장갑|윈터그립",
+          "label": "relevant",
+          "reason": "방풍·보온 기능이 직접 기재되어 겨울 장갑 용도는 부합한다. 명시 패션·의류 카테고리 위반은 별도로 기록한다."
+        },
+        {
+          "productKey": "터치스크린 방한 장갑|핸디웜",
+          "label": "relevant",
+          "reason": "기모 안감과 한겨울 손 보온 기능이 명시되어 있다."
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "products": [
+        {
+          "productKey": "대용량 에어프라이어 7L|에어쿡",
+          "label": "relevant",
+          "reason": "음식 조리에 쓰는 주방 제품으로 원문 용도에 부합한다."
+        },
+        {
+          "productKey": "디지털 주방용 계량저울|키친메이트",
+          "label": "relevant",
+          "reason": "주방 재료 계량 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "밀폐 보관용기 10종 세트|홈클린",
+          "label": "relevant",
+          "reason": "식재료·반찬의 냉장·냉동 보관 용기다."
+        },
+        {
+          "productKey": "본차이나 식기 세트|쿡플랜",
+          "label": "relevant",
+          "reason": "일상 식사와 접대에 쓰는 주방 식기다. 원문에 가격·초보 조건은 없다."
+        },
+        {
+          "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+          "label": "relevant",
+          "reason": "주방 재료 비율 계량 도구다."
+        },
+        {
+          "productKey": "스테인리스 그릇건조대|키친아트",
+          "label": "relevant",
+          "reason": "주방 그릇 건조·수납 목적이 명확하다."
+        },
+        {
+          "productKey": "스테인리스 키친타올홀더|키친아트",
+          "label": "relevant",
+          "reason": "주방 키친타올 정리 도구다."
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "products": [
+        {
+          "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+          "label": "relevant",
+          "reason": "야영과 비·눈 차단을 위한 방수 텐트 근거가 있다."
+        },
+        {
+          "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+          "label": "relevant",
+          "reason": "방수 이중지퍼와 가족 캠핑용 주거 기능이 있다."
+        },
+        {
+          "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+          "label": "relevant",
+          "reason": "넓은 공간에 비를 막는 방수 타프로 숙박 쉘터를 보완한다."
+        },
+        {
+          "productKey": "방한 고글형 선글라스|스노우뷰",
+          "label": "irrelevant",
+          "reason": "눈의 바람·자외선 보호 제품으로 숙박 공간의 비바람 차단과는 다르다."
+        },
+        {
+          "productKey": "방한 등산용 발토시|윈터그립",
+          "label": "irrelevant",
+          "reason": "등산화 주변 찬바람·눈 차단 제품이며 숙박 공간을 보호하는 근거가 없다."
+        },
+        {
+          "productKey": "방한 부츠커버|마운틴게이트",
+          "label": "irrelevant",
+          "reason": "신발 주변 보온 제품으로 야외 숙박 공간의 방수·방풍 근거가 없다."
+        },
+        {
+          "productKey": "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+          "label": "irrelevant",
+          "reason": "휴식·하중 지지 기능만 있고 비바람을 차단하는 덮개 근거가 없다."
+        },
+        {
+          "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+          "label": "unjudged",
+          "reason": "간이 쉘터 용도는 있으나 방수·방풍 성능이 설명에 없어 핵심 속성 충족 여부를 확정할 수 없다."
+        },
+        {
+          "productKey": "차박용 사이드 텐트 도킹형|오토캠프",
+          "label": "acceptable",
+          "reason": "방수 숙박 공간을 제공하지만 도킹할 차량을 준비한 경우에 적합한 대안이다."
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "products": [
+        {
+          "productKey": "1인용 휴대용 인덕션|쿡메이트",
+          "label": "irrelevant",
+          "reason": "원룸 조리용 가전이며 수납·청소 도움 근거가 없다."
+        },
+        {
+          "productKey": "다용도 철제 선반|스마트케이스",
+          "label": "relevant",
+          "reason": "부족한 수납공간을 보완하는 원룸 정리용 선반이다."
+        },
+        {
+          "productKey": "벽걸이형 무선 청소기 거치대|클린업",
+          "label": "acceptable",
+          "reason": "청소기 보관에는 도움 되나 보유 청소기와 호환이 필요한 보조 제품이다."
+        },
+        {
+          "productKey": "소형 공기청정기|클린업",
+          "label": "acceptable",
+          "reason": "원룸의 미세먼지·냄새 관리에 도움 되나 물건 수납·표면 청소에 직접 쓰이지는 않는다."
+        },
+        {
+          "productKey": "원룸용 4단 서랍장|스마트케이스",
+          "label": "relevant",
+          "reason": "좁은 원룸의 수납 부족 해결 용도가 직접 명시되어 있다."
+        },
+        {
+          "productKey": "접이식 좌식 책상|오피스핏",
+          "label": "irrelevant",
+          "reason": "접어서 보관하는 공간 절약 기능만으로 다른 물건 수납이나 청소 목적을 충족하지 않는다. v1 대안을 변경한다."
+        },
+        {
+          "productKey": "투명 수납박스 대형 세트|스마트케이스",
+          "label": "relevant",
+          "reason": "짐이 많은 자취방의 물건 정리·수납에 쓰인다."
+        },
+        {
+          "productKey": "휴대용 접이식 빗자루 세트|클린업",
+          "label": "relevant",
+          "reason": "작게 보관할 수 있고 좁은 자취방 청소에 직접 쓰인다."
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "products": [
+        {
+          "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+          "label": "unjudged",
+          "reason": "고양이용으로 명명되어 있으며 반려견 체형·규격 호환 근거가 없어 개의 이동 적합성을 확정할 수 없다."
+        },
+        {
+          "productKey": "다용도 수납정리함 3단|스마트케이스",
+          "label": "irrelevant",
+          "reason": "실내 소품·의류 정리 제품으로 반려견 이동 용도 근거가 없다."
+        },
+        {
+          "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+          "label": "relevant",
+          "reason": "소형 반려동물의 안전한 이동·장시간 외출 용도가 명시되어 있다."
+        },
+        {
+          "productKey": "반려동물용 차량 시트커버|펫드라이브",
+          "label": "relevant",
+          "reason": "반려동물과의 차량 동행·여행을 위한 좌석 보호 제품이다."
+        },
+        {
+          "productKey": "아기 위생 마스크 10매 세트|리틀세이프",
+          "label": "irrelevant",
+          "reason": "사람 유아용 마스크로 반려견 이동과 관련 없다."
+        },
+        {
+          "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+          "label": "relevant",
+          "reason": "반려동물 여행·이동용 운반 제품이다. 특정 항공사의 실제 반입 승인을 보장하는 판정은 아니다."
+        },
+        {
+          "productKey": "휴대용 미니 라벨프린터|프린트고",
+          "label": "irrelevant",
+          "reason": "홈오피스 파일 정리용 제품으로 반려견 이동 용도 근거가 없다."
+        }
+      ]
+    },
+    {
+      "queryId": "N01",
+      "products": []
+    },
+    {
+      "queryId": "N02",
+      "products": [
+        {
+          "productKey": "소형 공기청정기|클린업",
+          "label": "irrelevant",
+          "reason": "원룸 공기 관리 제품이며 자동차 세차 기능이 없다."
+        },
+        {
+          "productKey": "스테인리스 키친타올홀더|키친아트",
+          "label": "irrelevant",
+          "reason": "주방 타올 정리용이며 자동차 세척 기능이 없다."
+        },
+        {
+          "productKey": "심플 디자인 벽시계|월데코",
+          "label": "irrelevant",
+          "reason": "실내 장식·시간 표시 제품으로 세차와 관련 없다."
+        },
+        {
+          "productKey": "유아용 다기능 접이식 보행기|토이프렌즈",
+          "label": "irrelevant",
+          "reason": "아기의 걸음마 연습 제품으로 세차와 관련 없다."
+        },
+        {
+          "productKey": "크리스탈 와인잔 2P 세트|글라스리에",
+          "label": "irrelevant",
+          "reason": "음료용 유리잔으로 자동차 세차와 관련 없다."
+        }
+      ]
+    },
+    {
+      "queryId": "A01",
+      "products": [
+        {
+          "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+          "label": "relevant",
+          "reason": "캠핑 용도 자체는 일치한다. 충돌한 가격 조건으로 구체화가 필요한 요청에 상품을 반환한 실패는 정책·종료 계약에서 별도 집계한다."
+        }
+      ]
+    }
+  ]
+}
