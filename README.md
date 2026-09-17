@@ -46,7 +46,7 @@ GET /api/recommendations/stream?query=...
 
 명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한과 평가 기준은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다.
 
-고정 snapshot의 실제 Agent 평가 harness와 호출·token·지연 계측을 추가했습니다. 2026-09-16 실행은 OpenAI credit 부족으로 모델 의존 질의를 완료하지 못했으므로 품질 비교와 기본 경로 승인은 [평가 실행 기록](evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md)에 따라 재실행해야 합니다.
+고정 snapshot의 실제 Agent 평가 harness와 호출·token·지연 계측을 추가했습니다. 2026-09-16 Claude 완료 실행은 v2 평가 정책으로 별도 재산정했으며, 명시 정책 위반 0건과 허용 Hit@5 1.0을 기록했습니다. 원본 실행·v1 판정은 변경하지 않고 보존합니다. 평가 버전과 해석 한계는 [추천 평가 README](evaluation/recommendation/README.md)를 참조합니다.
 
 ## 데이터와 실행
 

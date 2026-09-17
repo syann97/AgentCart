@@ -1,0 +1,569 @@
+{
+  "schemaVersion": 2,
+  "definitionVersion": "2.0",
+  "metricVersion": "2.0",
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "annotationReview": {
+    "reviewer": "Codex",
+    "reviewerType": "assistant",
+    "humanValidated": false,
+    "method": "원문과 승인된 명시 조건 계약을 읽어 독립적으로 작성한 고정 주석이다. 런타임 파서를 실행하거나 파싱 결과를 정답으로 복사하지 않았다."
+  },
+  "policies": {
+    "source": "APPLICATION_POLICY",
+    "positiveStock": true,
+    "recentOrderWindowDays": 7,
+    "requiredStatus": "ACTIVE",
+    "evidenceLimit": "stock은 고정 JSON snapshot 기준이다. 원시 실행과 snapshot에 상품 status가 없으면 ACTIVE 준수는 unknown으로 기록한다. 실제 실행 시점 상태를 추정하지 않는다."
+  },
+  "hashEncoding": "SHA-256 of UTF-8 content with CRLF normalized to LF",
+  "preservedHistory": [
+    {
+      "path": "evaluation/recommendation/queries.json",
+      "sha256": "9fd75060bd01cf9f8e8a5f6193b0759c1a79022b43c1a1ed254919434db3dc92"
+    },
+    {
+      "path": "evaluation/recommendation/labels.json",
+      "sha256": "158e93b53e943dd711b93b2e9f298828de0b48597a4a2f43aa4fe28ff5f49bce"
+    },
+    {
+      "path": "evaluation/recommendation/snapshot-manifest.json",
+      "sha256": "08cc4ddb04f62b5652ea2373893e660cda6d9aaaacb572d3f394ac2502f5eba3"
+    },
+    {
+      "path": "evaluation/recommendation/fixtures.json",
+      "sha256": "2d3824a11982ab057ac2a7b31eea0320c18a665a04caf34cf021129c65b377c5"
+    },
+    {
+      "path": "evaluation/recommendation/baselines/fixed-rag-79627c0.json",
+      "sha256": "49681475dbfb4a9d7ee3fcbd628696743f8d23e85dea912e8768af8c761d6964"
+    },
+    {
+      "path": "evaluation/recommendation/runs/agentic-rag-c795264.json",
+      "sha256": "633f00f91c43bffd911b848d25ffd84289412d0f5b79b085998a897d60adfc46"
+    },
+    {
+      "path": "evaluation/recommendation/runs/agentic-rag-fd7971a.json",
+      "sha256": "2eb704465a1c945f2f84cf502f41f2c90214762ea30d9a61fce174f15c99f5a9"
+    },
+    {
+      "path": "evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md",
+      "sha256": "57689e3658c077686f878fc2cfd94b9332df354eba604c597bb8fbd71bf2b58f"
+    }
+  ],
+  "runs": [
+    {
+      "id": "fixed-rag-79627c0",
+      "path": "evaluation/recommendation/baselines/fixed-rag-79627c0.json",
+      "includeInQualityComparison": true
+    },
+    {
+      "id": "agentic-rag-c795264",
+      "path": "evaluation/recommendation/runs/agentic-rag-c795264.json",
+      "includeInQualityComparison": false,
+      "exclusionReason": "OpenAI credit 부족으로 모델 의존 질의 19개가 FAILED. 품질 지표를 계산하거나 완료 실행과 합산하지 않는다."
+    },
+    {
+      "id": "agentic-rag-fd7971a",
+      "path": "evaluation/recommendation/runs/agentic-rag-fd7971a.json",
+      "includeInQualityComparison": true
+    }
+  ],
+  "queries": [
+    {
+      "id": "S01",
+      "family": "supported",
+      "query": "돌잔치 선물 5만원 이하",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "maxPrice": {
+          "value": 50000,
+          "evidence": "5만원 이하",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "돌잔치 선물",
+        "criterion": "첫돌 기념 또는 아이 양육에 쓰는 선물. 신생아 전용 규격은 연령 적합성이 불확실한 대안으로 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "유아동"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S02",
+      "family": "supported",
+      "query": "새집에 어울리는 집들이 선물",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "새집에 어울리는 집들이 선물",
+        "criterion": "새집의 생활·장식에 쓰는 선물. 넓은 선물 목적을 특정 DB 카테고리로 강제하지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "생활용품",
+          "인테리어·소품",
+          "주방용품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S03",
+      "family": "supported",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "maxPrice": {
+          "value": 100000,
+          "evidence": "10만원 이하",
+          "source": "EXPLICIT"
+        },
+        "categories": {
+          "value": [
+            "가전"
+          ],
+          "evidence": "가전",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "자취방에서 쓸",
+        "criterion": "좁은 자취방에 적합한 가전. 가격과 명시 카테고리는 별도 정책 지표로 검사한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "가전"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S04",
+      "family": "supported",
+      "query": "4인 가족 캠핑용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "캠핑·아웃도어"
+          ],
+          "evidence": "캠핑용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "4인 가족",
+        "criterion": "가족 캠핑에 쓰는 장비. 4인 수용이 명시된 주거 장비와 개인용·차량 의존 보조 장비를 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "캠핑·아웃도어"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S05",
+      "family": "supported",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "집에서 근력 운동",
+        "criterion": "집에서 근력 운동에 쓰는 장비. 예산·설치 불가 조건을 임의로 추가하지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "스포츠·피트니스"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S06",
+      "family": "supported",
+      "query": "회사 책상에서 쓸 사무용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "문구·오피스"
+          ],
+          "evidence": "사무용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "회사 책상에서 쓸",
+        "criterion": "사무실 책상의 필기·정리·업무 보조 용도. 사무용품 카테고리 제약과 용도 적합성은 별도 검사한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "문구·오피스"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S07",
+      "family": "supported",
+      "query": "겨울 출퇴근 방한용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "겨울 출퇴근 방한용품",
+        "criterion": "겨울 출퇴근의 추위·바람을 막는 휴대·착용 제품. 실내 전용 보온 제품은 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "패션·의류"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S08",
+      "family": "supported",
+      "query": "요리 초보에게 필요한 주방용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "주방용품"
+          ],
+          "evidence": "주방용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "요리 초보에게 필요한",
+        "criterion": "초보 조리의 기본 손질·계량·안전·보관 도구. 특정 조리 방식 전용 기기는 대안으로 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "주방용품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S09",
+      "family": "supported",
+      "query": "고양이를 위한 반려동물용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "반려동물용품"
+          ],
+          "evidence": "반려동물용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "고양이를 위한",
+        "criterion": "고양이에게 쓰는 제품. 개 전용 제품에 고양이 사용 가능성을 만들어내지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "반려동물용품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "S10",
+      "family": "supported",
+      "query": "가벼운 등산용품 추천",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "가벼운 등산용품",
+        "criterion": "휴대하기 쉬운 산행 장비. 기본 보행·조명·식수 장비와 날씨·지형·취사 조건부 대안을 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "캠핑·아웃도어",
+          "스포츠·피트니스"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "C01",
+      "family": "constraint",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "minPrice": {
+          "value": 30000,
+          "evidence": "3만원 이상",
+          "source": "EXPLICIT"
+        },
+        "maxPrice": {
+          "value": 50000,
+          "evidence": "5만원 이하",
+          "source": "EXPLICIT"
+        },
+        "categories": {
+          "value": [
+            "캠핑·아웃도어"
+          ],
+          "evidence": "캠핑용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "캠핑용품",
+        "criterion": "캠핑 용도 적합성을 판정하고 원문 가격 범위와 카테고리 준수 여부는 별도로 검사한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "캠핑·아웃도어"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "C02",
+      "family": "constraint",
+      "query": "50,000원 이하 돌잔치 선물",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "maxPrice": {
+          "value": 50000,
+          "evidence": "50,000원 이하",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "돌잔치 선물",
+        "criterion": "S01과 같은 선물 기준을 적용한다. 표기만 다른 가격 상한도 별도로 검사한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "유아동"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "C03",
+      "family": "constraint",
+      "query": "패션·의류 카테고리의 겨울 장갑",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "패션·의류"
+          ],
+          "evidence": "패션·의류",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "겨울 장갑",
+        "criterion": "손의 겨울 보온이 근거에 있어야 한다. 운동 마찰 방지나 고온 보호만 있는 장갑은 구분한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "패션·의류"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "C04",
+      "family": "constraint",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {
+        "categories": {
+          "value": [
+            "주방용품"
+          ],
+          "evidence": "주방용품",
+          "source": "EXPLICIT"
+        },
+        "excludeRecentFixture": {
+          "value": "C04",
+          "evidence": "최근 7일 안에 산 상품은 빼고",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "주방용품 추천",
+        "criterion": "주방에서 쓰는 상품의 용도 적합성과 최근 주문 제외 정책을 별도로 검사한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "주방용품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "R01",
+      "family": "rephrased",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "야외 숙박 때 비바람을 막아 줄",
+        "criterion": "숙박 공간의 비바람 차단 장비. 신체 일부 보온·휴식 장비를 숙박 쉘터로 간주하지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "캠핑·아웃도어"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "R02",
+      "family": "rephrased",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "좁은 원룸 수납과 청소",
+        "criterion": "좁은 원룸의 수납 또는 청소에 직접 도움 되는 제품. 일반 자취용품이라는 이유만으로 관련하다고 보지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "생활용품",
+          "가전",
+          "인테리어·소품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "R03",
+      "family": "rephrased",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "targetOutcome": "recommendations",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "반려견과 이동",
+        "criterion": "반려견의 이동·차량 동행 장비. 고양이 전용 규격의 반려견 사용 가능성이 없으면 미판정한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "반려동물용품"
+        ],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "N01",
+      "family": "out_of_catalog",
+      "query": "여자 악세사리 선물",
+      "targetOutcome": "empty",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "여자 악세사리 선물",
+        "criterion": "성인 여성용 액세서리 목적. 고정 평가의 결과 없음 기대를 유지하며 새 후보의 관련성은 별도 검토한다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "N02",
+      "family": "out_of_catalog",
+      "query": "자동차 세차용품 추천",
+      "targetOutcome": "empty",
+      "explicitConstraints": {},
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "자동차 세차용품",
+        "criterion": "자동차 세차 용도. 단순 생활용품·선물을 대체 결과로 인정하지 않는다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [],
+        "hardConstraint": false
+      }
+    },
+    {
+      "id": "A01",
+      "family": "ambiguous",
+      "query": "5만원 이상 3만원 이하 캠핑용품",
+      "targetOutcome": "clarification",
+      "explicitConstraints": {
+        "minPrice": {
+          "value": 50000,
+          "evidence": "5만원 이상",
+          "source": "EXPLICIT"
+        },
+        "maxPrice": {
+          "value": 30000,
+          "evidence": "3만원 이하",
+          "source": "EXPLICIT"
+        },
+        "categories": {
+          "value": [
+            "캠핑·아웃도어"
+          ],
+          "evidence": "캠핑용품",
+          "source": "EXPLICIT"
+        }
+      },
+      "intent": {
+        "source": "QUERY_INTENT",
+        "evidence": "5만원 이상 3만원 이하",
+        "criterion": "양립할 수 없는 가격 범위이므로 구체화가 필요하다. 반환 상품의 의미상 캠핑 관련성과 정상 종료 계약은 별개다."
+      },
+      "expectedRelatedCategories": {
+        "source": "SCENARIO_EXPECTATION",
+        "values": [
+          "캠핑·아웃도어"
+        ],
+        "hardConstraint": false
+      }
+    }
+  ]
+}

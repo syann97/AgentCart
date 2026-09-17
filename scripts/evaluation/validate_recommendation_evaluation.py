@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the frozen recommendation evaluation set and recompute baseline metrics."""
+"""Validate frozen v1 history and the versioned v2 offline reassessment."""
 
 from __future__ import annotations
 
@@ -10,6 +10,8 @@ import math
 import re
 import sys
 from pathlib import Path
+
+from reassess_recommendation_evaluation import build_reassessment
 
 
 EXPECTED_QUERY_IDS = [
@@ -35,6 +37,7 @@ def percentile_nearest_rank(values: list[int], percentile: float) -> int:
 
 
 def calculate_metrics(baseline: dict, queries: dict, labels: dict, products: dict, fixtures: dict) -> dict:
+    """Historical v1 formula; retain it to verify the original stored metrics."""
     label_by_id = {row["queryId"]: row for row in labels["judgments"]}
     baseline_by_id = {row["queryId"]: row for row in baseline["evaluations"]}
     fixture_by_id = fixtures["fixtures"]
@@ -176,10 +179,14 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument("--print-metrics", action="store_true")
-    parser.add_argument("--write-agent-metrics", action="store_true")
-    parser.add_argument("--blocked-reason")
-    parser.add_argument("--agent-commit")
+    parser.add_argument("--write-reassessment", action="store_true",
+                        help="write only v2/reassessment.json after validating all inputs")
+    parser.add_argument("--write-agent-metrics", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--blocked-reason", help=argparse.SUPPRESS)
+    parser.add_argument("--agent-commit", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.write_agent_metrics or args.blocked_reason or args.agent_commit:
+        parser.error("v1 execution artifacts are frozen; use --write-reassessment to write a separate v2 assessment")
     root = args.root.resolve()
     evaluation_dir = root / "evaluation" / "recommendation"
     manifest = load_json(evaluation_dir / "snapshot-manifest.json")
@@ -283,16 +290,7 @@ def main() -> int:
                     errors.append(f"agent evidence differs: {evaluation['queryId']} {expected_evidence}")
 
         agent_metrics = calculate_agent_metrics(run, queries, labels, products, fixtures)
-        if args.write_agent_metrics:
-            if args.agent_commit:
-                run["agentCommit"] = args.agent_commit
-            run["metrics"] = agent_metrics
-            run["evaluationStatus"] = "blocked" if agent_metrics["failedQueries"] else "completed"
-            if args.blocked_reason:
-                run["blockedReason"] = args.blocked_reason
-            output = evaluation_dir / "runs" / f"agentic-rag-{run['agentCommit'][:7]}.json"
-            output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        elif run.get("metrics") != agent_metrics:
+        if run.get("metrics") != agent_metrics:
             errors.append(f"stored agent metrics differ: {run.get('agentCommit')}")
 
     serialized = json.dumps([manifest, queries, labels, fixtures, baseline, agent_runs], ensure_ascii=False)
@@ -303,18 +301,25 @@ def main() -> int:
     if baseline.get("metrics") != metrics:
         errors.append("stored baseline metrics differ from deterministic recomputation")
 
-    if args.print_metrics:
-        print(json.dumps({
-            "fixedRag": metrics,
-            "agentRuns": [calculate_agent_metrics(run, queries, labels, products, fixtures)
-                          for run in agent_runs],
-        }, ensure_ascii=False, indent=2))
+    reassessment = None
+    output = evaluation_dir / "v2" / "reassessment.json"
+    try:
+        reassessment = build_reassessment(root, products, fixtures)
+        if not args.write_reassessment and (not output.exists() or load_json(output) != reassessment):
+            errors.append("stored v2 reassessment differs; review inputs and run --write-reassessment")
+    except (ValueError, KeyError, TypeError, OSError) as error:
+        errors.append(f"v2 reassessment: {error}")
     if errors:
         print("Evaluation validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
-    print("Recommendation evaluation snapshot valid: 8 files, 500 products, 20 queries.")
+    if args.write_reassessment:
+        with output.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(json.dumps(reassessment, ensure_ascii=False, indent=2) + "\n")
+    if args.print_metrics:
+        print(json.dumps(reassessment, ensure_ascii=False, indent=2))
+    print("Recommendation evaluation valid: 8 files, 500 products, 20 queries; v1 preserved and v2 verified.")
     return 0
 
 

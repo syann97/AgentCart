@@ -1,6 +1,6 @@
 # 추천 데이터 범위와 평가 계획
 
-상태: **현재 JSON 데이터의 범위 + 고정 평가 결과**. 재현 가능한 snapshot, 수동 label, 기존 고정형 RAG 기준선과 #191 Claude Agent 실행은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. Claude 실행은 Hit@5와 실행 상한을 통과했지만 카테고리 조건 위반 2건이 남았습니다. 현재 Agent pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 구현 계약과 후속 범위는 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
+상태: **현재 JSON 데이터의 범위 + 고정 평가 결과**. 재현 가능한 snapshot, 기존 v1 label, 기존 고정형 RAG 기준선과 #191 Claude Agent 실행은 [추천 평가 README](../evaluation/recommendation/README.md)에 고정했습니다. v2는 명시 정책과 의미 관련성을 분리해 Claude 실행의 명시 정책 위반 0건과 허용 Hit@5 1.0을 기록했습니다. v2 relevance label은 assistant 검토이며 사람 검증으로 간주하지 않습니다. 현재 Agent pipeline은 [RECOMMENDATION_PIPELINE](RECOMMENDATION_PIPELINE.md), 구현 계약과 후속 범위는 [AGENTIC_RAG_PLAN](AGENTIC_RAG_PLAN.md)이 설명합니다.
 
 ## 데이터 출처와 스냅샷
 
@@ -63,7 +63,7 @@ JSON 항목 수와 실제 MySQL 상품 수, pgvector embedding 수는 다를 수
 
 ## 약 20개 평가 질의 초안
 
-아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다. 평가 질의와 사람이 검토한 안정 상품 키 label은 [queries.json](../evaluation/recommendation/queries.json)과 [labels.json](../evaluation/recommendation/labels.json)에 있습니다.
+아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다. 원본 평가 질의와 v1 label은 [queries.json](../evaluation/recommendation/queries.json)과 [labels.json](../evaluation/recommendation/labels.json)에 있습니다. 현재 재평가 정의와 assistant 검토 label은 [v2/definition.json](../evaluation/recommendation/v2/definition.json)과 [v2/labels.json](../evaluation/recommendation/v2/labels.json)을 사용합니다.
 
 | ID | 질의 | 검증 목적 | 목표 outcome |
 |---|---|---|---|

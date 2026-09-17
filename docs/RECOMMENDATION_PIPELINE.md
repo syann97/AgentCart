@@ -131,4 +131,4 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 ## 후속 작업으로 남은 항목
 
-고정 평가셋의 Claude 실제 실행은 기존 기준선보다 Hit@5와 지연이 개선됐고 호출 상한을 지켰습니다. 다만 카테고리 조건 위반 2건이 남아 기본 경로 전환은 보류합니다. 결과와 후속 조치는 [평가 실행 기록](../evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md)을 참조합니다.
+고정 평가셋의 Claude 실제 실행은 호출 상한을 지켰고, v2 재평가에서 허용 Hit@5 1.0과 명시 정책 위반 0건을 기록했습니다. S07·S10의 기대 카테고리 불일치 2건은 사용자가 명시한 카테고리 제약이 아니므로 정책 위반과 분리합니다. 원본 실행과 v1 판정은 보존하며, assistant 판정·미판정 상품과 모델 간 단회 비교의 한계는 [추천 평가 README](../evaluation/recommendation/README.md)에 기록합니다.
