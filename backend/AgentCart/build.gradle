@@ -94,11 +94,16 @@ dependencyManagement {
     }
 }
 
+def nativeAccessJvmArg = '--enable-native-access=ALL-UNNAMED'
+
 tasks.named('test') {
     useJUnitPlatform()
+    jvmArgs nativeAccessJvmArg
 }
 
 tasks.named('bootRun') {
+    jvmArgs nativeAccessJvmArg
+
     def envFile = file('.env')
     if (envFile.exists()) {
         envFile.readLines().each { line ->

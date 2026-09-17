@@ -98,6 +98,8 @@ Backend는 `backend/AgentCart`에서 실행합니다.
 .\gradlew.bat bootRun --args="--spring.profiles.active=local"
 ```
 
+Gradle의 `bootRun`과 `test` 작업은 Kafka client가 사용하는 `zstd-jni`의 네이티브 라이브러리를 Java 25에서 로드할 수 있도록 `--enable-native-access=ALL-UNNAMED`를 애플리케이션·테스트 JVM에 전달합니다. IntelliJ의 Application 실행 구성처럼 Gradle task를 거치지 않고 Backend를 시작할 때는 VM options에 같은 값을 추가합니다. 설정하지 않으면 현재 Java 25에서는 restricted method 경고와 함께 실행되지만, 향후 Java 릴리스에서는 네이티브 접근이 차단될 수 있습니다.
+
 Frontend는 `frontend`에서 실행합니다.
 
 ```powershell
