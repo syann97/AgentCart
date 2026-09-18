@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Issue PR Workflow"
+  short_description: "Consistent issues, PRs, and troubleshooting records"
+  default_prompt: "Use $github-issue-pr-workflow to complete this issue through a review-ready PR with verification and troubleshooting history."
