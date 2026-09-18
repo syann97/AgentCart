@@ -14,6 +14,8 @@
 - `v2/definition.json`: 명시 정책, query intent, soft 기대 카테고리와 비교 대상 실행을 분리한 평가 정의
 - `v2/labels.json`: 두 완료 실행의 반환 상품 합집합을 검토한 relevance label과 provenance
 - `v2/reassessment.json`: 원본 실행을 수정하지 않고 v2 scorer로 산출한 결정적 재평가 결과
+- `executions/raw/<run-id>.json`: 신규 실제 모델 실행의 수정하지 않는 schema v2 원시 결과
+- `executions/assessments/<run-id>.json`: 원시 결과와 분리해 생성한 v2.1 오프라인 채점 결과
 
 상품 DB ID는 적재 순서에 따라 달라질 수 있어 label의 식별자로 쓰지 않습니다. `name|brand`가 중복되면 validator가 snapshot을 거부합니다. 기준선의 `productId`는 실행 당시 MySQL snapshot을 추적하기 위한 값입니다.
 
@@ -39,7 +41,34 @@ v2 엄격 Hit@5는 `relevant`만, 허용 Hit@5는 `relevant`와 `acceptable`을 
 
 ## Agent 실제 실행
 
-`AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit 환경 변수를 명시해야 합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
+`AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit과 run ID 환경 변수를 명시해야 합니다. run ID 형식은 `agentic-rag-<commit>-<UTC YYYYMMDDTHHMMSSZ>-r<반복번호>`이며, 같은 commit의 반복 실행도 별도 파일로 남깁니다. 출력 파일이 이미 있으면 실행 전에 실패합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
+
+PowerShell에서 다음과 같이 원시 실행을 수집합니다. `<run-id>`와 commit은 실제 실행 대상으로 바꾸고, output은 저장소 내부의 새 경로를 사용합니다.
+
+```powershell
+$env:AGENTCART_EVALUATION_ENABLED = "true"
+$env:AGENTCART_EVALUATION_ROOT = (Resolve-Path .).Path
+$env:AGENTCART_EVALUATION_AGENT_COMMIT = "<40자리 commit>"
+$env:AGENTCART_EVALUATION_RUN_ID = "<run-id>"
+$env:AGENTCART_EVALUATION_OUTPUT = Join-Path (Resolve-Path .).Path "evaluation/recommendation/executions/raw/<run-id>.json"
+Push-Location backend/AgentCart
+.\gradlew.bat test --tests "com.agentcart.recommendation.evaluation.AgenticRagEvaluationTest"
+Pop-Location
+```
+
+수집된 raw run은 수정하지 않고 별도 assessment로 채점합니다.
+
+```powershell
+python -B scripts/evaluation/score_recommendation_run.py `
+  --run evaluation/recommendation/executions/raw/<run-id>.json `
+  --definition evaluation/recommendation/v2/definition.json `
+  --labels evaluation/recommendation/v2/labels.json `
+  --manifest evaluation/recommendation/snapshot-manifest.json `
+  --fixtures evaluation/recommendation/fixtures.json `
+  --output evaluation/recommendation/executions/assessments/<run-id>.json
+```
+
+scorer는 raw run, snapshot, 질의·상품 사실, 중복 결과와 실행 상한을 검증한 후 `metricVersion=2.1-observed-policy`로 채점합니다. 요청 직후 DB에서 관측한 status·stock만 정책 근거로 사용하며 삭제·조회 누락은 unknown으로 집계합니다. label에 없는 상품-질의 조합도 `unjudged`로 남습니다. `FAILED` 질의가 하나라도 있는 실행은 품질 비교에서 제외하고 metrics를 만들지 않습니다. 기존 raw run이나 assessment 경로가 이미 있으면 덮어쓰지 않습니다.
 
 2026-09-16 OpenAI 실행은 잔여 credit 부족으로 모델 의존 19개 질의를 완료하지 못했으므로 v2 품질 비교에서도 제외합니다. #191의 `claude-haiku-4-5` 완료 실행은 v2에서 엄격 Hit@5 0.941176, 허용 Hit@5 1.0, 관찰된 정책 준수 허용 Hit@5 1.0과 명시 정책 위반 0건을 기록했습니다. 기존 보고서의 카테고리 위반 2건은 S07·S10의 soft 기대 카테고리 불일치이며 사용자 명시 조건 위반이 아닙니다. Agent 결과 80개 중 2개는 `unjudged`이고 상품 status는 원시 snapshot에 없어 ACTIVE 준수 여부 80건이 unknown입니다.
 
