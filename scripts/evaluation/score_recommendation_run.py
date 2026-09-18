@@ -24,6 +24,10 @@ OBSERVATION_SOURCE = "POST_RESPONSE_DATABASE_READ"
 
 def parse_timestamp(value: str) -> datetime:
     """Parse ISO-8601 timestamps on Python versions that do not accept a trailing Z."""
+    if isinstance(value, str):
+        value = re.sub(
+            r"(?<=\d{2}:\d{2}:\d{2})\.(\d{6})\d+(?=Z|[+-]\d{2}:\d{2}$)",
+            r".\1", value)
     if isinstance(value, str) and value.endswith("Z"):
         value = value[:-1] + "+00:00"
     parsed = datetime.fromisoformat(value)

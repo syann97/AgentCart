@@ -14,6 +14,7 @@
 - `v2/definition.json`: 명시 정책, query intent, soft 기대 카테고리와 비교 대상 실행을 분리한 평가 정의
 - `v2/labels.json`: 두 완료 실행의 반환 상품 합집합을 검토한 relevance label과 provenance
 - `v2/reassessment.json`: 원본 실행을 수정하지 않고 v2 scorer로 산출한 결정적 재평가 결과
+- `grounding-v1.json`: S10·R01·R03의 선택 및 이유 문제와 S07·S10 대조 사례를 상품명·설명 근거로 판정한 assistant rubric
 - `executions/raw/<run-id>.json`: 신규 실제 모델 실행의 수정하지 않는 schema v2 원시 결과
 - `executions/assessments/<run-id>.json`: 원시 결과와 분리해 생성한 v2.1 오프라인 채점 결과
 
@@ -38,6 +39,8 @@ validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·f
 실제 모델 결과는 비결정적이고 비용이 발생하므로 일반 테스트에서 재실행하지 않습니다. backend의 mock 기반 단위·통합 테스트는 실행 상한, 후보 제한, 예외 경로 같은 결정적 계약을 검증하고, 이 디렉터리의 validator는 고정된 실제 실행 artifact를 검증합니다.
 
 v2 엄격 Hit@5는 `relevant`만, 허용 Hit@5는 `relevant`와 `acceptable`을 합쳐 계산합니다. S/C/R 17개 질의만 Hit@5 분모에 포함합니다. 명시 가격·카테고리·재고·최근 주문·상태 정책은 relevance와 별도로 계산합니다. 판정이 없거나 상품 설명만으로 핵심 속성을 확정할 수 없는 결과는 `unjudged`로 남기고 Hit@5와 관련 상품 비율에 하한·상한을 함께 기록합니다. N 질의는 결과 없음, A01은 구체화 응답 여부를 별도 지표로 계산합니다.
+
+`grounding-v1.json`은 relevance와 추천 이유의 사실 근거를 분리합니다. 이유는 상품명·설명에 핵심 주장이 직접 있으면 `supported`, 없는 성능·호환성·용도를 단정하면 `unsupported`, 근거만으로 확정할 수 없으면 `unjudged`입니다. 기존 Claude 실행의 실제 이유 문구와 v2 relevance label을 참조하므로 validator는 과거 기록을 바꾸지 않고 기준의 출처가 유지되는지 검사합니다. 이는 assistant 검토 기준이며 사람 검증 결과가 아닙니다.
 
 ## Agent 실제 실행
 

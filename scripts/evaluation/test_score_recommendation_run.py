@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 from score_recommendation_run import (
-    build_assessment, catalog_fingerprint, load_products, validate_run,
+    build_assessment, catalog_fingerprint, load_products, parse_timestamp, validate_run,
 )
 from reassess_recommendation_evaluation import load_json, stable_key
 
@@ -57,6 +57,11 @@ class ScoreRecommendationRunTest(unittest.TestCase):
 
     def validate(self, run):
         validate_run(run, self.definition, self.products, self.manifest)
+
+    def test_java_nanosecond_timestamp_is_accepted_on_python_38(self):
+        parsed = parse_timestamp("2026-09-18T09:52:04.123456789+09:00")
+        self.assertEqual(123456, parsed.microsecond)
+        self.assertIsNotNone(parsed.utcoffset())
 
     def test_raw_run_has_no_metrics_and_scores_observed_policy(self):
         run = self.raw_run()

@@ -31,6 +31,49 @@ def stable_key(product: dict) -> str:
     return f"{product['name']}|{product['brand']}"
 
 
+def validate_grounding_rubric(rubric: dict, queries: dict, products: dict,
+                              labels: dict, source_run: dict) -> list[str]:
+    errors = []
+    if rubric.get("schemaVersion") != 1 or rubric.get("rubricVersion") != "grounding-1.0":
+        errors.append("unsupported grounding rubric version")
+    review = rubric.get("review", {})
+    if (review.get("reviewerType") != "assistant" or review.get("humanValidated") is not False
+            or not review.get("method", "").strip()):
+        errors.append("grounding rubric must preserve assistant review provenance")
+    if set(rubric.get("labels", {})) != {"supported", "unsupported", "unjudged"}:
+        errors.append("grounding rubric must define supported, unsupported and unjudged")
+
+    query_by_id = {row["id"]: row["query"] for row in queries["queries"]}
+    judgments = {row["queryId"]: {p["productKey"]: p["label"] for p in row["products"]}
+                 for row in labels["judgments"]}
+    source_results = {row["queryId"]: {stable_key(p): p for p in row["results"]}
+                      for row in source_run["evaluations"]}
+    cases = rubric.get("cases", [])
+    case_ids = [row.get("caseId") for row in cases]
+    if len(cases) != 5 or len(case_ids) != len(set(case_ids)):
+        errors.append("grounding rubric must contain five unique cases")
+    if sum(row.get("role") == "problem" for row in cases) != 3 or sum(
+            row.get("role") == "contrast" for row in cases) != 2:
+        errors.append("grounding rubric must retain three problem and two contrast cases")
+    for case in cases:
+        query_id = case.get("queryId")
+        product_key = case.get("productKey")
+        source = source_results.get(query_id, {}).get(product_key)
+        if case.get("query") != query_by_id.get(query_id):
+            errors.append(f"grounding query differs from the frozen query: {case.get('caseId')}")
+        if product_key not in products:
+            errors.append(f"unknown grounding product: {case.get('caseId')}")
+        if judgments.get(query_id, {}).get(product_key) != case.get("relevanceBefore"):
+            errors.append(f"grounding relevance differs from v2 label: {case.get('caseId')}")
+        if source is None or source.get("reason") != case.get("reasonBefore"):
+            errors.append(f"grounding reason differs from the source run: {case.get('caseId')}")
+        if case.get("reasonLabelBefore") not in {"supported", "unsupported", "unjudged"}:
+            errors.append(f"invalid grounding reason label: {case.get('caseId')}")
+        if not case.get("requiredEvidence", "").strip() or not case.get("judgment", "").strip():
+            errors.append(f"grounding case needs evidence and rationale: {case.get('caseId')}")
+    return errors
+
+
 def percentile_nearest_rank(values: list[int], percentile: float) -> int:
     ordered = sorted(values)
     return ordered[max(0, math.ceil(percentile * len(ordered)) - 1)]
@@ -193,6 +236,8 @@ def main() -> int:
     queries = load_json(evaluation_dir / "queries.json")
     labels = load_json(evaluation_dir / "labels.json")
     fixtures = load_json(evaluation_dir / "fixtures.json")
+    grounding = load_json(evaluation_dir / "grounding-v1.json")
+    v2_labels = load_json(evaluation_dir / "v2" / "labels.json")
     baseline = load_json(evaluation_dir / "baselines" / "fixed-rag-79627c0.json")
     agent_runs = [load_json(path) for path in sorted((evaluation_dir / "runs").glob("*.json"))]
     errors: list[str] = []
@@ -293,7 +338,16 @@ def main() -> int:
         if run.get("metrics") != agent_metrics:
             errors.append(f"stored agent metrics differ: {run.get('agentCommit')}")
 
-    serialized = json.dumps([manifest, queries, labels, fixtures, baseline, agent_runs], ensure_ascii=False)
+    grounding_source = next((run for run in agent_runs
+                             if run.get("agentCommit", "").startswith("fd7971a")), None)
+    if grounding_source is None:
+        errors.append("grounding source run is missing")
+    else:
+        errors.extend(validate_grounding_rubric(
+            grounding, queries, products, v2_labels, grounding_source))
+
+    serialized = json.dumps(
+        [manifest, queries, labels, fixtures, grounding, baseline, agent_runs], ensure_ascii=False)
     if re.search(r"[A-Za-z]:[/\\]|(?:api[_-]?key|jwt[_-]?secret)\s*[:=]", serialized, re.IGNORECASE):
         errors.append("evaluation artifacts contain a local absolute path or secret-like assignment")
 

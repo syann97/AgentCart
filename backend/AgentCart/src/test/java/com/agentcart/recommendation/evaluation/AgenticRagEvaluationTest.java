@@ -61,7 +61,7 @@ class AgenticRagEvaluationTest {
         String agentCommit = System.getenv("AGENTCART_EVALUATION_AGENT_COMMIT");
         String runId = System.getenv("AGENTCART_EVALUATION_RUN_ID");
         RecommendationEvaluationArtifactSupport.requireValidRunId(runId, agentCommit);
-        assertThat(output).startsWith(root);
+        assertThat(output.startsWith(root)).isTrue();
         assertThat(output).doesNotExist();
         JsonNode queryDocument = objectMapper.readTree(
                 Files.readString(root.resolve("evaluation/recommendation/v2/definition.json")));
