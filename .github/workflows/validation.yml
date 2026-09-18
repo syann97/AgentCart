@@ -65,7 +65,7 @@ jobs:
 
       - name: Run Backend unit tests
         working-directory: backend/AgentCart
-        run: ./gradlew --no-daemon test --tests 'com.agentcart.*.unit.*'
+        run: bash ./gradlew --no-daemon test --tests 'com.agentcart.*.unit.*'
 
       - name: Confirm unit tests executed
         run: |
