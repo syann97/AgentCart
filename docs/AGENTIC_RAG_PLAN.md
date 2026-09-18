@@ -22,11 +22,11 @@ flowchart TD
 
 정상 흐름은 첫 모델 호출에서 검색 인자를 만들고, 검색 결과를 받은 두 번째 호출에서 최종 응답을 생성합니다. 두 번째 호출이 재검색을 선택하면 검색 결과를 받은 세 번째 호출에서 종료합니다. 별도의 추천 이유 생성 호출을 추가하지 않습니다.
 
-이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 `searchCatalog`의 `ToolCallback` 계약은 #177, 모델 호출 루프는 #179에서 구현했습니다. HTTP/SSE 연결은 후속 단계입니다.
+이는 모델에 도구 결과를 전달하고 다음 응답 또는 도구 호출을 받는 방식입니다. [OpenAI Function Calling](https://developers.openai.com/api/docs/guides/function-calling), [Spring AI Tool Calling](https://docs.spring.io/spring-ai/reference/api/tools.html). 의존성 기준은 Spring AI `2.0.1`이며 `searchCatalog`의 `ToolCallback` 계약은 #177, 모델 호출 루프는 #179, HTTP/SSE 연결은 #180에서 구현했습니다.
 
 ## 명시 조건과 사용자 의도
 
-이 절의 요청 컨텍스트, 결정적 가격 파서, 카테고리 분류·별칭, 조건 병합 우선순위와 양수 재고 검사는 #176에서 구현되었습니다. 입력 구체화 상태를 별도 SSE outcome으로 전달하는 계약은 후속 응답 단계에 남아 있습니다.
+이 절의 요청 컨텍스트, 결정적 가격 파서, 카테고리 분류·별칭, 조건 병합 우선순위와 양수 재고 검사는 #176에서 구현되었습니다. 입력 구체화 상태를 별도 SSE `done` outcome으로 전달하는 계약은 #180에서 구현했습니다.
 
 - 원본 질의는 전체 요청 동안 유지합니다. 모델이 만든 검색어가 사용자 원문을 대체하지 않습니다.
 - 가격의 초기 지원 표현은 원/KRW 기준 상한·하한·범위입니다. 예: `5만원 이하`, `3만원 이상`, `3만~5만원`, `50,000원 이하`. 경계 포함 여부와 범위 역전은 테스트로 고정합니다.
@@ -41,7 +41,7 @@ flowchart TD
 
 도구명은 `searchCatalog` 하나입니다.
 
-#177에서 입력·출력 DTO, 서버 실행 문맥을 받는 Spring AI `ToolCallback`, MySQL 허용 ID 사전 필터, 제한된 BM25·pgvector 검색과 최신 상품 재검증을 구현했습니다. #179의 `RecommendationAgentService`가 이 도구를 제한된 agent loop에서 호출합니다. 현행 HTTP 경로의 `RecommendationService` 교체는 후속 단계입니다.
+#177에서 입력·출력 DTO, 서버 실행 문맥을 받는 Spring AI `ToolCallback`, MySQL 허용 ID 사전 필터, 제한된 BM25·pgvector 검색과 최신 상품 재검증을 구현했습니다. #179의 `RecommendationAgentService`가 이 도구를 제한된 agent loop에서 호출하며, #180에서 현행 HTTP/SSE 경로를 Agent 서비스에 연결했습니다. 기존 `RecommendationService`는 평가 비교 기준으로 유지합니다.
 
 | 구분 | 내용 |
 |---|---|
@@ -82,7 +82,7 @@ flowchart TD
 
 LLM·구조화 응답 실패 시 추가 모델 재시도로 상한을 늘리지 않습니다. 필수 조건을 확인할 수 있고 시간이 남으면 일반 키워드 검색으로 fallback하고 그 모드를 표시합니다. deadline 이후에는 이미 검증된 결과만 사용하거나 오류로 종료합니다. 해석 불가능한 조건을 삭제해서 결과를 만들지 않습니다.
 
-## 응답과 근거 — 에이전트 도메인 결과 구현, SSE 매핑 예정
+## 응답과 근거 — 구현됨
 
 - 모델은 제공된 후보 ID와 상품 근거만 사용해 전체 추천 이유를 한 번에 작성합니다.
 - 상품 ID·상품명·가격과 검증 가능한 조건은 서버 데이터로 구성합니다.
@@ -127,6 +127,7 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 2. #175–#177 기반 코드 | Spring AI 안정 버전, 명시 조건 요청 컨텍스트, `searchCatalog`와 검색 전후 정책 | 완료 |
 | 3. #179 에이전트 | 제한된 도구 호출 반복, 통합 이유 생성, 도메인 결과 검증 | 완료 |
 | 4. #180 응답 | SSE 진행·종료·오류, 연결 취소, Frontend 상태 처리 | 완료 |
-| 5. #181, #191 평가 | harness·token/호출 계측, OpenAI 차단 기록, Claude 실제 모델 비교 | 완료; 카테고리 위반 2건 후속 필요 |
+| 5. #181, #191, #193 평가 | harness·token/호출 계측, OpenAI 차단 기록, Claude 실제 모델 비교와 v2 재평가 | 완료; soft 기대 카테고리 불일치 2건을 명시 정책 위반과 분리 |
+| 6. #197, #198 평가 보강 | raw run 분리 채점과 관찰 정책 근거, 상품 선택·추천 이유 근거 개선 및 반복 평가 | 완료; 허용 Hit@5 17/17과 정책 위반 0건 유지, 세 문제 사례 3/3 → 0/3 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.
