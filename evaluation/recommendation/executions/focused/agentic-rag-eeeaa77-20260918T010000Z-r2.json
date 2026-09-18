@@ -1,0 +1,244 @@
+{
+  "evaluations" : [ {
+    "queryId" : "S10",
+    "family" : "supported",
+    "query" : "가벼운 등산용품 추천",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "가벼운 등산용품 4개를 추천합니다.",
+    "results" : [ {
+      "productId" : 500,
+      "name" : "등산화 미끄럼 방지 체인스패치",
+      "brand" : "윈터그립",
+      "description" : "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다.",
+      "price" : 19000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0,
+      "reason" : "등산화에 착용하는 미끄럼 방지 용품으로, 가벼운 무게로 배낭에 휴대하기 좋습니다.",
+      "evidenceIds" : [ "product:500" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:10.121350700+09:00",
+        "productId" : 500,
+        "productKey" : "등산화 미끄럼 방지 체인스패치|윈터그립",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 494,
+      "name" : "편광 등산용 선글라스",
+      "brand" : "선가드",
+      "description" : "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다.",
+      "price" : 35000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.919128152808884,
+      "reason" : "등산용 선글라스로 가벼운 프레임이 적용되어 장시간 착용해도 부담이 적습니다.",
+      "evidenceIds" : [ "product:494" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:10.121350700+09:00",
+        "productId" : 494,
+        "productKey" : "편광 등산용 선글라스|선가드",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 215,
+      "name" : "휴대용 부탄가스 캠핑 버너",
+      "brand" : "파이어캠프",
+      "description" : "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다.",
+      "price" : 28000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.7075111062463141,
+      "reason" : "등산 시 취사용으로 적합한 휴대용 버너로, 가벼운 무게를 갖추고 있습니다.",
+      "evidenceIds" : [ "product:215" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:10.121350700+09:00",
+        "productId" : 215,
+        "productKey" : "휴대용 부탄가스 캠핑 버너|파이어캠프",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 241,
+      "name" : "휴대용 원터치 자동 우산",
+      "brand" : "데일리굿즈",
+      "description" : "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다.",
+      "price" : 15000.00,
+      "category" : "생활용품",
+      "score" : 0.9469549675505922,
+      "reason" : "등산에 사용 가능한 휴대용 우산으로, 가벼운 무게와 컴팩트한 사이즈를 갖추고 있습니다.",
+      "evidenceIds" : [ "product:241" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:10.121350700+09:00",
+        "productId" : 241,
+        "productKey" : "휴대용 원터치 자동 우산|데일리굿즈",
+        "status" : "ACTIVE",
+        "stock" : 90
+      }
+    } ],
+    "resultCount" : 4,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4995,
+    "completionTokens" : 1135,
+    "totalTokens" : 6130,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 15928
+  }, {
+    "queryId" : "R01",
+    "family" : "rephrased",
+    "query" : "야외 숙박 때 비바람을 막아 줄 장비",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "야외 숙박 시 비바람을 막아주는 장비 3개를 추천합니다.",
+    "results" : [ {
+      "productId" : 493,
+      "name" : "1인용 비비색 방수텐트",
+      "brand" : "서바이벌기어",
+      "description" : "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다.",
+      "price" : 58000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9753627298412185,
+      "reason" : "방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아주는 1인용 비비색 방수텐트로, 야외 숙박 시 비바람 방어에 직접적으로 효과적입니다.",
+      "evidenceIds" : [ "product:493" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:20.961859300+09:00",
+        "productId" : 493,
+        "productKey" : "1인용 비비색 방수텐트|서바이벌기어",
+        "status" : "ACTIVE",
+        "stock" : 30
+      }
+    }, {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "description" : "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다.",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8610676911005803,
+      "reason" : "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합하며, 강한 방수 성능으로 야외 숙박 시 비바람을 효과적으로 차단합니다.",
+      "evidenceIds" : [ "product:210" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:20.961859300+09:00",
+        "productId" : 210,
+        "productKey" : "4인용 거실형 캠핑 텐트|캠프힐",
+        "status" : "ACTIVE",
+        "stock" : 20
+      }
+    }, {
+      "productId" : 219,
+      "name" : "방수 차광 캠핑 타프 4x4m",
+      "brand" : "캠프힐",
+      "description" : "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다.",
+      "price" : 95000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8960187751400386,
+      "reason" : "강한 방수 기능을 갖춘 4x4m 대형 캠핑 타프로, 텐트와 함께 사용하여 야외 숙박 시 넓은 공간을 비바람으로부터 보호할 수 있습니다.",
+      "evidenceIds" : [ "product:219" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:20.961859300+09:00",
+        "productId" : 219,
+        "productKey" : "방수 차광 캠핑 타프 4x4m|캠프힐",
+        "status" : "ACTIVE",
+        "stock" : 25
+      }
+    } ],
+    "resultCount" : 3,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 5088,
+    "completionTokens" : 1001,
+    "totalTokens" : 6089,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 10814
+  }, {
+    "queryId" : "R03",
+    "family" : "rephrased",
+    "query" : "반려견과 이동할 때 필요한 물건",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "반려견과 이동할 때 필요한 물건 2개를 추천합니다.",
+    "results" : [ {
+      "productId" : 651,
+      "name" : "반려동물 캐리어형 백팩",
+      "brand" : "펫드라이브",
+      "description" : "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다.",
+      "price" : 56000.00,
+      "category" : "반려동물용품",
+      "score" : 1.0,
+      "reason" : "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있으며, 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다.",
+      "evidenceIds" : [ "product:651" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:31.043915800+09:00",
+        "productId" : 651,
+        "productKey" : "반려동물 캐리어형 백팩|펫드라이브",
+        "status" : "ACTIVE",
+        "stock" : 36
+      }
+    }, {
+      "productId" : 227,
+      "name" : "항공기 기내 반입 반려동물 이동장",
+      "brand" : "펫프렌즈",
+      "description" : "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다.",
+      "price" : 55000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9348925212552794,
+      "reason" : "항공사 기준에 맞춘 사이즈의 반려동물 이동장으로, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 반려견을 안전하게 이동시킬 수 있습니다.",
+      "evidenceIds" : [ "product:227" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T10:02:31.043915800+09:00",
+        "productId" : 227,
+        "productKey" : "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+        "status" : "ACTIVE",
+        "stock" : 35
+      }
+    } ],
+    "resultCount" : 2,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 5003,
+    "completionTokens" : 927,
+    "totalTokens" : 5930,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 10059
+  } ],
+  "schemaVersion" : 2,
+  "kind" : "real-model-agentic-rag-focused-run",
+  "runId" : "agentic-rag-eeeaa77-20260918T010000Z-r2",
+  "capturedAt" : "2026-09-18T10:01:54.045063900+09:00",
+  "agentCommit" : "eeeaa77",
+  "chatProvider" : "anthropic",
+  "chatModelConfigured" : "claude-haiku-4-5",
+  "embeddingModel" : "bge-m3",
+  "embeddingDimensions" : 1024,
+  "snapshotId" : "recommendation-catalog-2026-09-15",
+  "selectedQueryIds" : [ "S10", "R01", "R03" ],
+  "inputHashes" : {
+    "definitionSha256" : "24634aa1582faa6870101d08e8d92960acabe33b1628803cdefc49ee898cec19",
+    "labelsSha256" : "98b4a799ee6db7fe4ceb7c941785b573081779e025b59392b281d15e083b5349",
+    "scorerSha256" : "3427c0dfd1fdc963dedf5e541560fa669620823a5a493d6d52b0de695e38fda6"
+  },
+  "catalogSnapshot" : {
+    "source" : "MYSQL_PRE_RUN_READ",
+    "observedAt" : "2026-09-18T10:01:54.150000300+09:00",
+    "productCount" : 500,
+    "immutableFactsSha256" : "7a991c7ace5ec012a5002a20ae7c2daa72d844da384533049fee40d6f7b9d1f4"
+  },
+  "runtimeSnapshot" : {
+    "mysqlProducts" : 500,
+    "minimumProductId" : 195,
+    "maximumProductId" : 694,
+    "sortedCommaSeparatedProductIdsSha256" : "40883feffe90c108a2b9e798f1e8877630e76f677ebfafe187348300f8db7d93",
+    "pgvectorRows" : 500,
+    "pgvectorProductIds" : 500
+  },
+  "promptSources" : [ "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationAgentService.java", "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java" ]
+}

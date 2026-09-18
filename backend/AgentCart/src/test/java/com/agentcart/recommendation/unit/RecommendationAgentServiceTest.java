@@ -19,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.messages.ToolResponseMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
@@ -86,6 +87,34 @@ class RecommendationAgentServiceTest {
             assertThat(item.price()).isEqualByComparingTo("30000");
             assertThat(item.evidenceIds()).containsExactly("product:1");
         });
+    }
+
+    @Test
+    @DisplayName("상품 선택 지시 - 원문 핵심 요구와 후보 설명을 대조하고 근거 없는 속성 추론을 금지")
+    void recommend_selectionPrompt_requiresCandidateEvidenceForVerifiableClaims() {
+        SearchCatalogCandidate candidate = new SearchCatalogCandidate(
+                "product:1", 1L, "원터치 텐트", "설치가 빠른 간이 쉘터입니다.",
+                BigDecimal.valueOf(65_000), "캠핑·아웃도어", "브랜드", 10,
+                1, 1, 0.9, 1.0);
+        given(catalogService.search(any(), any())).willReturn(success(candidate));
+        given(chatModel.call(any(Prompt.class))).willReturn(
+                toolCall("call-1", "방수 텐트", "비바람을 막는 야외 숙박 장비"),
+                text(noResultsJson()));
+
+        service.recommend("야외 숙박 때 비바람을 막아 줄 장비", MEMBER_ID);
+
+        ArgumentCaptor<Prompt> prompts = ArgumentCaptor.forClass(Prompt.class);
+        verify(chatModel, times(2)).call(prompts.capture());
+        String systemPrompt = prompts.getAllValues().getFirst().getInstructions().getFirst().getText();
+        ToolResponseMessage toolResponse = (ToolResponseMessage) prompts.getAllValues().getLast()
+                .getInstructions().getLast();
+        String candidateEvidence = toolResponse.getResponses().getFirst().responseData();
+
+        assertThat(systemPrompt)
+                .contains("사용자 원문의 대상, 용도, 필수 성능")
+                .contains("방수·방풍, 무게·휴대성, 크기·규격, 동물 종·대상 호환성")
+                .contains("카테고리가 달라도");
+        assertThat(candidateEvidence).contains("원터치 텐트").contains("설치가 빠른 간이 쉘터입니다.");
     }
 
     @Test

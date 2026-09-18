@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "rubricVersion": "grounding-1.0",
+  "createdAt": "2026-09-18",
+  "review": {
+    "reviewer": "Codex",
+    "reviewerType": "assistant",
+    "humanValidated": false,
+    "method": "상품명·설명과 사용자 원문의 대상·용도·필수 속성을 직접 대조"
+  },
+  "labels": {
+    "supported": "추천 이유의 핵심 주장이 상품명 또는 설명에 직접 근거를 둔다.",
+    "unsupported": "추천 이유가 상품명과 설명에 없는 성능·호환성·용도를 단정하거나 확대한다.",
+    "unjudged": "상품명과 설명만으로 핵심 주장의 참·거짓을 확정할 수 없다."
+  },
+  "cases": [
+    {
+      "caseId": "S10-camping-table",
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "접이식 캠핑 테이블|아웃도어라이프",
+      "role": "problem",
+      "requiredEvidence": "산행 중 휴대·사용할 수 있다는 근거",
+      "relevanceBefore": "irrelevant",
+      "reasonBefore": "가벼운 알루미늄 소재의 접이식 캠핑 테이블로, 한 손으로도 들 수 있어 등산 캠프에서 활용하기 좋습니다.",
+      "reasonLabelBefore": "unsupported",
+      "judgment": "설명은 가벼움과 캠핑·차박·베란다 용도만 말한다. 등산 캠프 용도는 근거 없이 확대됐으므로 후보에서 제외한다."
+    },
+    {
+      "caseId": "R01-pop-up-tent",
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+      "role": "problem",
+      "requiredEvidence": "비 또는 바람을 차단하는 성능 근거",
+      "relevanceBefore": "unjudged",
+      "reasonBefore": "원터치 자동 텐트로 빠른 설치가 가능하며 캠핑이나 야외 활동 시 비바람으로부터 신속하게 보호할 수 있습니다.",
+      "reasonLabelBefore": "unsupported",
+      "judgment": "설명은 자동 설치와 간이 쉘터 용도만 말한다. 방수·방풍 성능을 단정할 근거가 없으므로 비바람 보호 후보에서 제외한다."
+    },
+    {
+      "caseId": "R03-cat-carrier",
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "role": "problem",
+      "requiredEvidence": "반려견 체형 또는 사용 규격과의 호환 근거",
+      "relevanceBefore": "unjudged",
+      "reasonBefore": "통풍이 잘되는 메쉬 창과 두꺼운 어깨끈 패딩으로 장시간 이동에도 편안하며, 반려동물 외출용품으로 특화되어 있습니다.",
+      "reasonLabelBefore": "unsupported",
+      "judgment": "상품명과 설명은 고양이용이라고 명시한다. 반려견 호환 근거가 없으므로 일반 반려동물용으로 넓혀 추천하지 않는다."
+    },
+    {
+      "caseId": "S07-hand-warmer",
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "충전식 손난로 보조배터리 겸용|웜핸드",
+      "role": "contrast",
+      "requiredEvidence": "겨울 외출에서 손을 따뜻하게 하는 휴대 방한 용도",
+      "relevanceBefore": "relevant",
+      "reasonBefore": "손을 따뜻하게 해주면서 스마트폰 충전도 가능한 다기능 손난로로, 겨울 출퇴근 시 실용적인 방한용품입니다.",
+      "reasonLabelBefore": "supported",
+      "judgment": "설명에 추운 날 손 보온과 겨울 방한용품 용도가 직접 있다. 디지털 카테고리라는 이유로 제외하지 않는다."
+    },
+    {
+      "caseId": "S10-compact-umbrella",
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "role": "contrast",
+      "requiredEvidence": "가벼운 산행 휴대 또는 날씨 대응 용도",
+      "relevanceBefore": "acceptable",
+      "reasonBefore": "가벼운 무게와 컴팩트한 사이즈의 자동 우산으로, 등산 중 갑작스러운 날씨 변화에 대비하기 좋습니다.",
+      "reasonLabelBefore": "supported",
+      "judgment": "설명에 가벼움·컴팩트함과 등산 사용이 직접 있다. 생활용품 카테고리라는 이유로 제외하지 않는다."
+    }
+  ]
+}

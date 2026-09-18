@@ -1,0 +1,1793 @@
+{
+  "evaluations" : [ {
+    "queryId" : "S01",
+    "family" : "supported",
+    "query" : "돌잔치 선물 5만원 이하",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "돌잔치 선물로 5만원 이하의 상품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 196,
+      "name" : "돌잔치 기념 명패 세트",
+      "brand" : "리틀우드",
+      "description" : "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다.",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 1.0,
+      "reason" : "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트로 돌잔치 기념 선물로 최적의 상품입니다.",
+      "evidenceIds" : [ "product:196" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:49:55.140880900+09:00",
+        "productId" : 196,
+        "productKey" : "돌잔치 기념 명패 세트|리틀우드",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 197,
+      "name" : "유아용 도자기 식기 세트",
+      "brand" : "마이베베",
+      "description" : "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다.",
+      "price" : 42000.00,
+      "category" : "유아동",
+      "score" : 0.9675116846960425,
+      "reason" : "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품이며 실용적입니다.",
+      "evidenceIds" : [ "product:197" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:49:55.140880900+09:00",
+        "productId" : 197,
+        "productKey" : "유아용 도자기 식기 세트|마이베베",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 208,
+      "name" : "아기 첫걸음 가죽 신발",
+      "brand" : "베이비웰",
+      "description" : "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다.",
+      "price" : 32000.00,
+      "category" : "유아동",
+      "score" : 0.8595925348472978,
+      "reason" : "미끄럼 방지 처리된 천연 가죽 소재의 아기 첫걸음 신발로 돌잔치 선물로 자주 선택되는 상품입니다.",
+      "evidenceIds" : [ "product:208" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:49:55.140880900+09:00",
+        "productId" : 208,
+        "productKey" : "아기 첫걸음 가죽 신발|베이비웰",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 262,
+      "name" : "신생아 우주복 내의 5종 세트",
+      "brand" : "코튼베이비",
+      "description" : "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다.",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 0.8846051533473963,
+      "reason" : "부드러운 면 소재의 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며 돌잔치 선물로 인기 있습니다.",
+      "evidenceIds" : [ "product:262" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:49:55.140880900+09:00",
+        "productId" : 262,
+        "productKey" : "신생아 우주복 내의 5종 세트|코튼베이비",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    }, {
+      "productId" : 265,
+      "name" : "디지털 비접촉 아기 체온계",
+      "brand" : "헬스맘",
+      "description" : "이마에 가까이 대기만 하면 1초 안에 체온을 측정하는 비접촉식 디지털 체온계입니다. 발열 알림 기능이 있어 신생아를 키우는 부모에게 유용한 돌잔치 선물입니다.",
+      "price" : 32000.00,
+      "category" : "유아동",
+      "score" : 0.7867805438210809,
+      "reason" : "비접촉식 디지털 체온계로 신생아를 키우는 부모에게 실용적인 돌잔치 선물입니다.",
+      "evidenceIds" : [ "product:265" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:49:55.140880900+09:00",
+        "productId" : 265,
+        "productKey" : "디지털 비접촉 아기 체온계|헬스맘",
+        "status" : "ACTIVE",
+        "stock" : 65
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4271,
+    "completionTokens" : 644,
+    "totalTokens" : 4915,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 16311
+  }, {
+    "queryId" : "S02",
+    "family" : "supported",
+    "query" : "새집에 어울리는 집들이 선물",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "새집에 어울리는 집들이 선물 5가지를 추천드립니다.",
+    "results" : [ {
+      "productId" : 317,
+      "name" : "패브릭 도어매트",
+      "brand" : "코지홈",
+      "description" : "현관 입구에 두기 좋은 패브릭 소재의 도어매트입니다. 새집의 첫 인상을 깔끔하게 만들어주는 집들이 선물 아이디어입니다.",
+      "price" : 17000.00,
+      "category" : "인테리어·소품",
+      "score" : 1.0,
+      "reason" : "현관 입구에 두기 좋은 패브릭 도어매트로 새집의 첫 인상을 깔끔하게 만들어주는 실용적인 집들이 선물입니다.",
+      "evidenceIds" : [ "product:317" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:02.517599100+09:00",
+        "productId" : 317,
+        "productKey" : "패브릭 도어매트|코지홈",
+        "status" : "ACTIVE",
+        "stock" : 75
+      }
+    }, {
+      "productId" : 301,
+      "name" : "소이왁스 무향 캔들 3종 세트",
+      "brand" : "캔들무드",
+      "description" : "콩기름으로 만든 친환경 소이왁스 캔들 3개 세트로 은은한 분위기를 연출합니다. 새집으로 이사한 친구에게 주는 집들이 선물로 인기가 높습니다.",
+      "price" : 22000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.9514379270098782,
+      "reason" : "친환경 소이왁스 캔들 3종 세트로 새집에 은은한 분위기를 연출하며 집들이 선물로 인기가 높습니다.",
+      "evidenceIds" : [ "product:301" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:02.517599100+09:00",
+        "productId" : 301,
+        "productKey" : "소이왁스 무향 캔들 3종 세트|캔들무드",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    }, {
+      "productId" : 306,
+      "name" : "북유럽풍 액자 3종 세트",
+      "brand" : "월데코",
+      "description" : "심플한 일러스트가 담긴 북유럽풍 액자 3개 세트입니다. 가벼운 무게로 벽에 걸기 쉬워 새집 인테리어를 꾸미는 집들이 선물로 좋습니다.",
+      "price" : 27000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.8926041336116965,
+      "reason" : "북유럽풍 액자 3종 세트로 새집 인테리어를 꾸미는 데 최적이며 가벼워 설치가 쉬운 집들이 선물입니다.",
+      "evidenceIds" : [ "product:306" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:02.517599100+09:00",
+        "productId" : 306,
+        "productKey" : "북유럽풍 액자 3종 세트|월데코",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 312,
+      "name" : "원목 손잡이 머그컵 4P 세트",
+      "brand" : "포슬린하우스",
+      "description" : "도자기 컵에 원목 손잡이를 더한 머그컵 4개 세트입니다. 따뜻한 느낌을 주는 디자인으로 신혼집 집들이 선물로 잘 어울립니다.",
+      "price" : 29000.00,
+      "category" : "주방용품",
+      "score" : 0.8529898100969883,
+      "reason" : "원목 손잡이 머그컵 4P 세트로 따뜻한 느낌을 주는 디자인으로 신혼집 집들이 선물로 잘 어울립니다.",
+      "evidenceIds" : [ "product:312" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:02.517599100+09:00",
+        "productId" : 312,
+        "productKey" : "원목 손잡이 머그컵 4P 세트|포슬린하우스",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 305,
+      "name" : "공기정화 식물 몬스테라 화분",
+      "brand" : "그린포레스트",
+      "description" : "키우기 쉬운 몬스테라를 세라믹 화분에 심어 보내드립니다. 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택되는 식물입니다.",
+      "price" : 25000.00,
+      "category" : "인테리어·소품",
+      "score" : 0.7783836918619124,
+      "reason" : "키우기 쉬운 몬스테라 화분으로 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택됩니다.",
+      "evidenceIds" : [ "product:305" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:02.517599100+09:00",
+        "productId" : 305,
+        "productKey" : "공기정화 식물 몬스테라 화분|그린포레스트",
+        "status" : "ACTIVE",
+        "stock" : 45
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4153,
+    "completionTokens" : 734,
+    "totalTokens" : 4887,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 7343
+  }, {
+    "queryId" : "S03",
+    "family" : "supported",
+    "query" : "자취방에서 쓸 10만원 이하 가전",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "자취방에서 사용할 수 있는 10만원 이하의 가전제품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 359,
+      "name" : "3인용 미니 전기밥솥",
+      "brand" : "쿡메이트",
+      "description" : "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있습니다. 매일 밥을 지어 먹는 자취 필수템으로 빠지지 않는 가전입니다.",
+      "price" : 49000.00,
+      "category" : "가전",
+      "score" : 1.0,
+      "reason" : "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있는 자취 필수템입니다.",
+      "evidenceIds" : [ "product:359" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:09.373152200+09:00",
+        "productId" : 359,
+        "productKey" : "3인용 미니 전기밥솥|쿡메이트",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 335,
+      "name" : "무선 핸디 청소기",
+      "brand" : "클린업",
+      "description" : "가볍고 강력한 흡입력을 가진 무선 핸디 청소기입니다. 좁은 자취방을 빠르게 청소할 수 있어 자취 필수템으로 사랑받습니다.",
+      "price" : 68000.00,
+      "category" : "가전",
+      "score" : 0.9506057568785785,
+      "reason" : "가볍고 강력한 흡입력의 무선 핸디 청소기로 좁은 자취방을 빠르게 청소할 수 있습니다.",
+      "evidenceIds" : [ "product:335" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:09.373152200+09:00",
+        "productId" : 335,
+        "productKey" : "무선 핸디 청소기|클린업",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 336,
+      "name" : "소형 공기청정기",
+      "brand" : "클린업",
+      "description" : "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여줍니다. 건강을 생각하는 자취생에게 자취 필수템으로 추천됩니다.",
+      "price" : 89000.00,
+      "category" : "가전",
+      "score" : 0.9057317903167145,
+      "reason" : "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여 건강한 자취생활을 지원합니다.",
+      "evidenceIds" : [ "product:336" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:09.373152200+09:00",
+        "productId" : 336,
+        "productKey" : "소형 공기청정기|클린업",
+        "status" : "ACTIVE",
+        "stock" : 45
+      }
+    }, {
+      "productId" : 331,
+      "name" : "1인용 휴대용 인덕션",
+      "brand" : "쿡메이트",
+      "description" : "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있습니다. 자취생을 위한 자취 필수템으로 자주 추천되는 제품입니다.",
+      "price" : 32000.00,
+      "category" : "가전",
+      "score" : 0.9089312424297459,
+      "reason" : "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있는 자취 필수템입니다.",
+      "evidenceIds" : [ "product:331" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:09.373152200+09:00",
+        "productId" : 331,
+        "productKey" : "1인용 휴대용 인덕션|쿡메이트",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 332,
+      "name" : "슬림형 전자레인지",
+      "brand" : "리빙테크",
+      "description" : "좁은 자리에도 들어가는 슬림한 디자인의 전자레인지입니다. 데우기와 간단한 조리가 모두 가능해 자취 필수템으로 손꼽힙니다.",
+      "price" : 78000.00,
+      "category" : "가전",
+      "score" : 0.8391406135566817,
+      "reason" : "좁은 자리에도 들어가는 슬림한 디자인의 전자레인지로 데우기와 간단한 조리가 모두 가능합니다.",
+      "evidenceIds" : [ "product:332" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:09.373152200+09:00",
+        "productId" : 332,
+        "productKey" : "슬림형 전자레인지|리빙테크",
+        "status" : "ACTIVE",
+        "stock" : 40
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4157,
+    "completionTokens" : 728,
+    "totalTokens" : 4885,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6831
+  }, {
+    "queryId" : "S04",
+    "family" : "supported",
+    "query" : "4인 가족 캠핑용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "4인 가족 캠핑용품 추천 결과입니다. 텐트, 침낭, 매트 등 캠핑 필수용품을 추천드립니다.",
+    "results" : [ {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "description" : "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다.",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9681233893786114,
+      "reason" : "4인 가족 캠핑에 최적화된 거실형 텐트로 방수 5000mm의 이중지퍼와 통풍 메쉬창, 전실 공간이 있어 가족 캠핑에 적합합니다.",
+      "evidenceIds" : [ "product:210" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:18.394532900+09:00",
+        "productId" : 210,
+        "productKey" : "4인용 거실형 캠핑 텐트|캠프힐",
+        "status" : "ACTIVE",
+        "stock" : 20
+      }
+    }, {
+      "productId" : 217,
+      "name" : "사계절 차박 캠핑 침낭",
+      "brand" : "아웃도어랩",
+      "description" : "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭입니다. 차박, 백패킹, 캠핑 시 따뜻하게 사용할 수 있으며 압축 가방이 함께 제공됩니다.",
+      "price" : 42000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9505893047125042,
+      "reason" : "사계절 사용 가능한 캠핑 침낭으로 극세사 충전재로 보온성이 우수하며 압축 가방이 함께 제공되어 가족 캠핑에 필수적입니다.",
+      "evidenceIds" : [ "product:217" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:18.394532900+09:00",
+        "productId" : 217,
+        "productKey" : "사계절 차박 캠핑 침낭|아웃도어랩",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 221,
+      "name" : "셀프 인플레이팅 캠핑 매트",
+      "brand" : "아웃도어랩",
+      "description" : "공기를 자동으로 채워주는 셀프 인플레이팅 캠핑 매트입니다. 가볍고 부피가 작아 백패킹, 차박, 등산 시 휴대하기 좋습니다.",
+      "price" : 38000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9584196615914474,
+      "reason" : "셀프 인플레이팅 방식의 캠핑 매트로 가볍고 부피가 작아 4인 가족이 함께 사용하기 편리합니다.",
+      "evidenceIds" : [ "product:221" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:18.394532900+09:00",
+        "productId" : 221,
+        "productKey" : "셀프 인플레이팅 캠핑 매트|아웃도어랩",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 284,
+      "name" : "캠핑 텐트 풋프린트 방수 그라운드시트",
+      "brand" : "그린필드",
+      "description" : "텐트 바닥에 깔아 습기와 마모를 방지해주는 캠핑 텐트 풋프린트입니다. 고밀도 방수 원단으로 제작되어 캠핑·차박 시 텐트 수명을 늘려줍니다.",
+      "price" : 24000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9187923492476672,
+      "reason" : "텐트 바닥에 깔아 습기와 마모를 방지하는 방수 그라운드시트로 텐트 수명을 늘려주는 필수 보조용품입니다.",
+      "evidenceIds" : [ "product:284" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:18.394532900+09:00",
+        "productId" : 284,
+        "productKey" : "캠핑 텐트 풋프린트 방수 그라운드시트|그린필드",
+        "status" : "ACTIVE",
+        "stock" : 56
+      }
+    }, {
+      "productId" : 279,
+      "name" : "캠핑용 원터치 모기장 텐트",
+      "brand" : "그린필드",
+      "description" : "자동으로 펼쳐지는 원터치 방식의 캠핑용 모기장으로 설치가 매우 간단합니다. 통풍이 잘되는 메쉬 원단을 사용해 여름철 캠핑·차박 시 벌레 걱정 없이 휴식할 수 있습니다.",
+      "price" : 26000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9267250496595761,
+      "reason" : "원터치 방식의 모기장 텐트로 설치가 간단하고 여름철 캠핑 시 벌레 걱정 없이 휴식할 수 있습니다.",
+      "evidenceIds" : [ "product:279" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:18.394532900+09:00",
+        "productId" : 279,
+        "productKey" : "캠핑용 원터치 모기장 텐트|그린필드",
+        "status" : "ACTIVE",
+        "stock" : 67
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 2,
+    "llmCallAttempts" : 3,
+    "promptTokens" : 5664,
+    "completionTokens" : 938,
+    "totalTokens" : 6602,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 8998
+  }, {
+    "queryId" : "S05",
+    "family" : "supported",
+    "query" : "집에서 근력 운동할 때 쓸 제품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "집에서 근력 운동할 때 사용할 수 있는 다양한 제품들을 찾았습니다.",
+    "results" : [ {
+      "productId" : 361,
+      "name" : "네오프렌 코팅 덤벨 세트 2kg×2",
+      "brand" : "바디팩토리",
+      "description" : "미끄러짐을 방지하는 네오프렌 코팅이 적용된 2kg 덤벨 2개 세트입니다. 좁은 공간에서도 부담 없이 상체 근력 운동을 할 수 있어 홈트레이닝 입문자에게 적합합니다.",
+      "price" : 18000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.9801649983869386,
+      "reason" : "홈트레이닝 입문자를 위한 기본적인 덤벨 세트로, 미끄럼 방지 코팅이 적용되어 안전하고 편안한 상체 근력 운동이 가능합니다.",
+      "evidenceIds" : [ "product:361" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:24.668391800+09:00",
+        "productId" : 361,
+        "productKey" : "네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    }, {
+      "productId" : 364,
+      "name" : "벽걸이형 접이식 풀업바",
+      "brand" : "스트롱암",
+      "description" : "문틀에 설치 없이 벽면에 고정하는 접이식 풀업바로 등과 팔 근력 운동에 활용됩니다. 사용 후 접어서 보관할 수 있어 좁은 홈트레이닝 공간에 적합합니다.",
+      "price" : 45000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.8771968999683164,
+      "reason" : "벽면에 설치하는 접이식 풀업바로 등과 팔 근력 운동에 효과적이며, 좁은 공간에서도 사용 가능합니다.",
+      "evidenceIds" : [ "product:364" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:24.668391800+09:00",
+        "productId" : 364,
+        "productKey" : "벽걸이형 접이식 풀업바|스트롱암",
+        "status" : "ACTIVE",
+        "stock" : 35
+      }
+    }, {
+      "productId" : 363,
+      "name" : "안티버스트 짐볼 65cm 발펌프 포함",
+      "brand" : "필라엣지",
+      "description" : "65cm 사이즈의 안티버스트 짐볼로 코어 근력 강화와 균형 운동에 적합합니다. 전용 발펌프가 함께 제공되어 홈트레이닝 공간에서 바로 공기 주입 후 사용할 수 있습니다.",
+      "price" : 22000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.8703888311297983,
+      "reason" : "코어 근력 강화와 균형 운동에 적합한 짐볼로, 발펌프가 포함되어 있어 바로 사용할 수 있습니다.",
+      "evidenceIds" : [ "product:363" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:24.668391800+09:00",
+        "productId" : 363,
+        "productKey" : "안티버스트 짐볼 65cm 발펌프 포함|필라엣지",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 380,
+      "name" : "벽부착형 케이블 운동기구",
+      "brand" : "스트롱암",
+      "description" : "벽면에 설치하는 케이블 풀리 시스템으로 다양한 근력 운동 동작이 가능합니다. 좁은 공간에서도 헬스장 수준의 케이블 운동을 즐길 수 있는 홈트레이닝 장비입니다.",
+      "price" : 410000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 1.0,
+      "reason" : "벽면에 설치하는 케이블 운동기구로 헬스장 수준의 다양한 근력 운동 동작을 좁은 공간에서도 수행할 수 있습니다.",
+      "evidenceIds" : [ "product:380" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:24.668391800+09:00",
+        "productId" : 380,
+        "productKey" : "벽부착형 케이블 운동기구|스트롱암",
+        "status" : "ACTIVE",
+        "stock" : 20
+      }
+    }, {
+      "productId" : 389,
+      "name" : "조절 가능 스미스 머신 프레임",
+      "brand" : "스트롱암",
+      "description" : "바벨 가이드 레일이 적용된 컴팩트 스미스 머신 프레임으로 스쿼트와 벤치프레스를 안전하게 수행할 수 있습니다. 안전바가 내장되어 있어 보조자 없이도 홈트레이닝으로 본격적인 근력 운동을 할 수 있습니다.",
+      "price" : 550000.00,
+      "category" : "스포츠·피트니스",
+      "score" : 0.8522189607093494,
+      "reason" : "스쿼트와 벤치프레스 등 본격적인 근력 운동을 안전하게 수행할 수 있는 컴팩트 스미스 머신으로, 보조자 없이도 사용 가능합니다.",
+      "evidenceIds" : [ "product:389" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:24.668391800+09:00",
+        "productId" : 389,
+        "productKey" : "조절 가능 스미스 머신 프레임|스트롱암",
+        "status" : "ACTIVE",
+        "stock" : 22
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4447,
+    "completionTokens" : 729,
+    "totalTokens" : 5176,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6251
+  }, {
+    "queryId" : "S06",
+    "family" : "supported",
+    "query" : "회사 책상에서 쓸 사무용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "회사 책상에서 사용할 수 있는 사무용품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 414,
+      "name" : "스테이플러 클립 사무용품 세트",
+      "brand" : "오피스메이트",
+      "description" : "스테이플러, 클립, 가위, 테이프 커터 등이 포함된 사무용품 세트입니다. 자주 쓰는 사무용품을 한 번에 갖출 수 있어 홈오피스를 처음 구성할 때 유용합니다.",
+      "price" : 13000.00,
+      "category" : "문구·오피스",
+      "score" : 1.0,
+      "reason" : "스테이플러, 클립, 가위, 테이프 커터 등 자주 쓰는 사무용품을 한 번에 갖출 수 있는 세트로, 책상에서 필요한 기본 사무용품을 효율적으로 구성할 수 있습니다.",
+      "evidenceIds" : [ "product:414" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:32.247681400+09:00",
+        "productId" : 414,
+        "productKey" : "스테이플러 클립 사무용품 세트|오피스메이트",
+        "status" : "ACTIVE",
+        "stock" : 68
+      }
+    }, {
+      "productId" : 416,
+      "name" : "2단 슬라이드 데스크 정리함",
+      "brand" : "데스크프로",
+      "description" : "슬라이드 방식으로 열고 닫을 수 있는 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류해 보관합니다. 컴팩트한 크기로 홈오피스 책상 위 공간을 절약해줍니다.",
+      "price" : 17000.00,
+      "category" : "문구·오피스",
+      "score" : 0.9475943005255346,
+      "reason" : "슬라이드 방식의 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류 보관하며, 컴팩트한 크기로 책상 공간을 절약할 수 있습니다.",
+      "evidenceIds" : [ "product:416" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:32.247681400+09:00",
+        "productId" : 416,
+        "productKey" : "2단 슬라이드 데스크 정리함|데스크프로",
+        "status" : "ACTIVE",
+        "stock" : 58
+      }
+    }, {
+      "productId" : 393,
+      "name" : "대형 가죽 데스크매트 80x40",
+      "brand" : "데스크프로",
+      "description" : "80x40 사이즈의 인조가죽 데스크매트로 키보드와 마우스 패드 역할을 동시에 합니다. 방수 처리가 되어 있어 사무용품 관리가 편리하고 홈오피스 책상을 깔끔하게 정리해줍니다.",
+      "price" : 23000.00,
+      "category" : "문구·오피스",
+      "score" : 0.9364876426066443,
+      "reason" : "80x40 사이즈의 인조가죽 데스크매트로 키보드와 마우스 패드 역할을 하며, 방수 처리로 사무용품 관리가 편리하고 책상을 깔끔하게 정리해줍니다.",
+      "evidenceIds" : [ "product:393" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:32.247681400+09:00",
+        "productId" : 393,
+        "productKey" : "대형 가죽 데스크매트 80x40|데스크프로",
+        "status" : "ACTIVE",
+        "stock" : 65
+      }
+    }, {
+      "productId" : 398,
+      "name" : "3단 서랍형 서류정리함",
+      "brand" : "오피스메이트",
+      "description" : "3단 서랍으로 구성된 서류정리함으로 각종 문서와 사무용품을 종류별로 분류해 보관할 수 있습니다. 책상 옆에 두고 사용하기 좋은 사이즈로 홈오피스 정리에 유용합니다.",
+      "price" : 29000.00,
+      "category" : "문구·오피스",
+      "score" : 0.9169900192687355,
+      "reason" : "3단 서랍형 서류정리함으로 문서와 사무용품을 종류별로 분류 보관할 수 있으며, 책상 옆에 두고 사용하기 좋은 사이즈입니다.",
+      "evidenceIds" : [ "product:398" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:32.247681400+09:00",
+        "productId" : 398,
+        "productKey" : "3단 서랍형 서류정리함|오피스메이트",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 399,
+      "name" : "도자기 펜꽂이 책상정리세트",
+      "brand" : "오피스메이트",
+      "description" : "펜과 가위, 클립 등을 한 곳에 정리할 수 있는 도자기 소재의 펜꽂이 세트입니다. 심플한 디자인으로 홈오피스 책상 위를 깔끔하게 꾸며줍니다.",
+      "price" : 9000.00,
+      "category" : "문구·오피스",
+      "score" : 0.8966979259747491,
+      "reason" : "도자기 소재의 펜꽂이 세트로 펜, 가위, 클립 등을 한 곳에 정리할 수 있으며, 심플한 디자인으로 책상 위를 깔끔하게 꾸며줍니다.",
+      "evidenceIds" : [ "product:399" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:32.247681400+09:00",
+        "productId" : 399,
+        "productKey" : "도자기 펜꽂이 책상정리세트|오피스메이트",
+        "status" : "ACTIVE",
+        "stock" : 80
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4301,
+    "completionTokens" : 823,
+    "totalTokens" : 5124,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 7550
+  }, {
+    "queryId" : "S07",
+    "family" : "supported",
+    "query" : "겨울 출퇴근 방한용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "겨울 출퇴근에 적합한 방한용품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 678,
+      "name" : "발열 기능성 보온장갑",
+      "brand" : "웜핸드",
+      "description" : "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다.",
+      "price" : 16000.00,
+      "category" : "패션·의류",
+      "score" : 0.9067102703136596,
+      "reason" : "터치스크린 사용이 가능한 보온장갑으로 출퇴근길 스마트폰 사용이 필요한 직장인에게 최적화되었습니다.",
+      "evidenceIds" : [ "product:678" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:39.459898300+09:00",
+        "productId" : 678,
+        "productKey" : "발열 기능성 보온장갑|웜핸드",
+        "status" : "ACTIVE",
+        "stock" : 66
+      }
+    }, {
+      "productId" : 677,
+      "name" : "방한 귀달이 비니",
+      "brand" : "포근발",
+      "description" : "안쪽에 보드라운 기모 안감이 더해진 비니 모자로 머리와 귀를 따뜻하게 감싸줍니다. 겨울 등산이나 캠핑은 물론 일상 방한용품으로도 두루 활용 가능합니다.",
+      "price" : 17000.00,
+      "category" : "패션·의류",
+      "score" : 0.9871085057114626,
+      "reason" : "기모 안감이 있는 비니 모자로 머리와 귀를 따뜻하게 감싸주며 일상 방한용품으로 두루 활용 가능합니다.",
+      "evidenceIds" : [ "product:677" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:39.459898300+09:00",
+        "productId" : 677,
+        "productKey" : "방한 귀달이 비니|포근발",
+        "status" : "ACTIVE",
+        "stock" : 72
+      }
+    }, {
+      "productId" : 424,
+      "name" : "방풍 귀마개",
+      "brand" : "이어웜",
+      "description" : "강한 바람을 차단해주는 방풍 귀마개로 겨울철 등하교, 출퇴근길 방한에 효과적입니다. 헤드밴드형으로 머리에 부담 없이 고정됩니다.",
+      "price" : 9000.00,
+      "category" : "패션·의류",
+      "score" : 1.0,
+      "reason" : "방풍 귀마개로 강한 바람을 차단하며 헤드밴드형으로 머리에 부담 없이 고정되어 출퇴근길에 편리합니다.",
+      "evidenceIds" : [ "product:424" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:39.459898300+09:00",
+        "productId" : 424,
+        "productKey" : "방풍 귀마개|이어웜",
+        "status" : "ACTIVE",
+        "stock" : 100
+      }
+    }, {
+      "productId" : 431,
+      "name" : "겨울 호흡 방한 마스크",
+      "brand" : "브레스가드",
+      "description" : "차가운 바람을 막아주는 겨울 방한 마스크로 입과 코 주변을 따뜻하게 유지합니다. 통기성과 보온성을 함께 고려해 답답함이 적습니다.",
+      "price" : 7000.00,
+      "category" : "패션·의류",
+      "score" : 0.9046106187426606,
+      "reason" : "겨울 방한 마스크로 입과 코 주변을 따뜻하게 유지하면서 통기성도 좋아 출퇴근 시 답답함이 적습니다.",
+      "evidenceIds" : [ "product:431" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:39.459898300+09:00",
+        "productId" : 431,
+        "productKey" : "겨울 호흡 방한 마스크|브레스가드",
+        "status" : "ACTIVE",
+        "stock" : 100
+      }
+    }, {
+      "productId" : 644,
+      "name" : "충전식 손난로 보조배터리 겸용",
+      "brand" : "웜핸드",
+      "description" : "추운 날 손을 따뜻하게 해주면서 동시에 스마트폰 충전도 가능한 다기능 손난로입니다. 겨울 방한용품으로 인기 있으며 캠핑이나 등산길 보조배터리로도 사용할 수 있습니다.",
+      "price" : 23000.00,
+      "category" : "디지털·IT기기",
+      "score" : 0.7796588556044409,
+      "reason" : "충전식 손난로 겸 보조배터리로 손을 따뜻하게 하면서 스마트폰 충전도 가능한 다기능 제품입니다.",
+      "evidenceIds" : [ "product:644" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:39.459898300+09:00",
+        "productId" : 644,
+        "productKey" : "충전식 손난로 보조배터리 겸용|웜핸드",
+        "status" : "ACTIVE",
+        "stock" : 62
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4214,
+    "completionTokens" : 743,
+    "totalTokens" : 4957,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 7190
+  }, {
+    "queryId" : "S08",
+    "family" : "supported",
+    "query" : "요리 초보에게 필요한 주방용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "요리 초보자를 위한 필수 주방용품 5가지를 추천합니다.",
+    "results" : [ {
+      "productId" : 453,
+      "name" : "스테인리스 계량컵 스푼 세트",
+      "brand" : "키친메이트",
+      "description" : "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다.",
+      "price" : 12000.00,
+      "category" : "주방용품",
+      "score" : 0.9497350307758936,
+      "reason" : "정확한 계량은 요리 초보자에게 가장 중요합니다. 스테인리스 계량컵과 스푼 세트로 재료 비율을 정밀하게 맞출 수 있어 성공적인 요리의 첫 단계입니다.",
+      "evidenceIds" : [ "product:453" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:46.336542900+09:00",
+        "productId" : 453,
+        "productKey" : "스테인리스 계량컵 스푼 세트|키친메이트",
+        "status" : "ACTIVE",
+        "stock" : 85
+      }
+    }, {
+      "productId" : 458,
+      "name" : "내열 오븐장갑 한 쌍",
+      "brand" : "쿡플랜",
+      "description" : "고온에서도 손을 안전하게 보호해주는 내열 오븐장갑입니다. 오븐이나 에어프라이어 사용 시 뜨거운 그릇과 팬을 다룰 때 필수적인 주방용품입니다.",
+      "price" : 9000.00,
+      "category" : "주방용품",
+      "score" : 0.8769196421188762,
+      "reason" : "오븐이나 에어프라이어 사용 시 필수적인 안전용품입니다. 초보자가 뜨거운 조리기구를 안전하게 다루기 위해 꼭 필요합니다.",
+      "evidenceIds" : [ "product:458" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:46.336542900+09:00",
+        "productId" : 458,
+        "productKey" : "내열 오븐장갑 한 쌍|쿡플랜",
+        "status" : "ACTIVE",
+        "stock" : 90
+      }
+    }, {
+      "productId" : 468,
+      "name" : "스테인리스 채반 세트",
+      "brand" : "홈클린",
+      "description" : "크기별로 구성된 스테인리스 채반 세트로 채소 세척, 면 요리 물기 제거 등에 활용할 수 있습니다. 튼튼한 손잡이가 달려 있어 사용이 편리합니다.",
+      "price" : 17000.00,
+      "category" : "주방용품",
+      "score" : 0.9009868617597041,
+      "reason" : "채소 세척, 면 요리 물기 제거 등 기본적인 조리 과정에서 자주 사용되는 필수 도구입니다. 크기별 세트로 다양한 상황에 대응할 수 있습니다.",
+      "evidenceIds" : [ "product:468" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:46.336542900+09:00",
+        "productId" : 468,
+        "productKey" : "스테인리스 채반 세트|홈클린",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    }, {
+      "productId" : 675,
+      "name" : "휴대용 미니 다용도 가위세트",
+      "brand" : "올인툴",
+      "description" : "휴대에 편리한 케이스가 포함된 다용도 가위와 칼 세트입니다. 캠핑이나 등산에서 식재료 손질에 사용하거나 자취방 주방의 기본 도구로도 활용할 수 있습니다.",
+      "price" : 11000.00,
+      "category" : "주방용품",
+      "score" : 0.8644797773664405,
+      "reason" : "식재료 손질을 위한 기본 도구입니다. 자취방 주방의 필수 아이템으로 초보자가 갖춰야 할 가위와 칼 세트입니다.",
+      "evidenceIds" : [ "product:675" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:46.336542900+09:00",
+        "productId" : 675,
+        "productKey" : "휴대용 미니 다용도 가위세트|올인툴",
+        "status" : "ACTIVE",
+        "stock" : 68
+      }
+    }, {
+      "productId" : 469,
+      "name" : "디지털 주방용 계량저울",
+      "brand" : "키친메이트",
+      "description" : "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다.",
+      "price" : 16000.00,
+      "category" : "주방용품",
+      "score" : 1.0,
+      "reason" : "베이킹이나 정밀한 계량이 필요한 요리에 유용합니다. 0.1g 단위까지 측정 가능하여 초보자도 정확한 요리를 할 수 있습니다.",
+      "evidenceIds" : [ "product:469" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:46.336542900+09:00",
+        "productId" : 469,
+        "productKey" : "디지털 주방용 계량저울|키친메이트",
+        "status" : "ACTIVE",
+        "stock" : 75
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4214,
+    "completionTokens" : 793,
+    "totalTokens" : 5007,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6854
+  }, {
+    "queryId" : "S09",
+    "family" : "supported",
+    "query" : "고양이를 위한 반려동물용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "고양이를 위한 반려동물용품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 290,
+      "name" : "고양이 깃털 낚싯대 장난감",
+      "brand" : "캣플레이",
+      "description" : "탄성 있는 막대 끝에 깃털과 방울이 달린 고양이 낚싯대 장난감입니다. 고양이의 사냥 본능을 자극해 운동 부족을 해소해주는 인기 반려동물용품입니다.",
+      "price" : 9000.00,
+      "category" : "반려동물용품",
+      "score" : 1.0,
+      "reason" : "탄성 있는 막대 끝에 깃털과 방울이 달린 고양이 낚싯대 장난감으로, 고양이의 사냥 본능을 자극해 운동 부족을 해소해주는 인기 반려동물용품입니다.",
+      "evidenceIds" : [ "product:290" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:54.729915200+09:00",
+        "productId" : 290,
+        "productKey" : "고양이 깃털 낚싯대 장난감|캣플레이",
+        "status" : "ACTIVE",
+        "stock" : 95
+      }
+    }, {
+      "productId" : 288,
+      "name" : "고양이 외출용 백팩 캐리어",
+      "brand" : "펫트래블",
+      "description" : "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다.",
+      "price" : 65000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9693077346718493,
+      "reason" : "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어로, 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다.",
+      "evidenceIds" : [ "product:288" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:54.729915200+09:00",
+        "productId" : 288,
+        "productKey" : "고양이 외출용 백팩 캐리어|펫트래블",
+        "status" : "ACTIVE",
+        "stock" : 42
+      }
+    }, {
+      "productId" : 234,
+      "name" : "고양이 캣닢 스크래처 보드",
+      "brand" : "캣라이프",
+      "description" : "골판지 소재로 제작된 고양이 스크래처 보드로 캣닢이 포함되어 있습니다. 가구를 보호하고 고양이의 스트레스 해소에 도움을 줍니다.",
+      "price" : 9000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9603929649008455,
+      "reason" : "골판지 소재로 제작된 고양이 스크래처 보드로 캣닢이 포함되어 있으며, 가구를 보호하고 고양이의 스트레스 해소에 도움을 줍니다.",
+      "evidenceIds" : [ "product:234" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:54.729915200+09:00",
+        "productId" : 234,
+        "productKey" : "고양이 캣닢 스크래처 보드|캣라이프",
+        "status" : "ACTIVE",
+        "stock" : 100
+      }
+    }, {
+      "productId" : 298,
+      "name" : "고양이 화장실 모래 매트 더블레이어",
+      "brand" : "캣클린",
+      "description" : "고양이가 화장실에서 나올 때 발에 묻은 모래를 털어주는 이중 구조 매트입니다. 모래 알갱이가 바닥으로 통과하지 않도록 설계되어 청결 유지에 효과적인 반려동물용품입니다.",
+      "price" : 21000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9447839938385548,
+      "reason" : "고양이가 화장실에서 나올 때 발에 묻은 모래를 털어주는 이중 구조 매트로, 모래 알갱이가 바닥으로 통과하지 않도록 설계되어 청결 유지에 효과적입니다.",
+      "evidenceIds" : [ "product:298" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:54.729915200+09:00",
+        "productId" : 298,
+        "productKey" : "고양이 화장실 모래 매트 더블레이어|캣클린",
+        "status" : "ACTIVE",
+        "stock" : 68
+      }
+    }, {
+      "productId" : 294,
+      "name" : "고양이 폭스 숨숨집 하우스",
+      "brand" : "캣하우스",
+      "description" : "포근한 극세사 소재로 만들어진 동굴형 고양이 숨숨집입니다. 사계절 사용 가능하며 세탁이 쉬워 고양이가 안심하고 쉴 수 있는 반려동물 침구용품입니다.",
+      "price" : 33000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9313938904158554,
+      "reason" : "포근한 극세사 소재로 만들어진 동굴형 고양이 숨숨집으로, 사계절 사용 가능하며 세탁이 쉬워 고양이가 안심하고 쉴 수 있는 반려동물 침구용품입니다.",
+      "evidenceIds" : [ "product:294" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:50:54.729915200+09:00",
+        "productId" : 294,
+        "productKey" : "고양이 폭스 숨숨집 하우스|캣하우스",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4274,
+    "completionTokens" : 831,
+    "totalTokens" : 5105,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 8372
+  }, {
+    "queryId" : "S10",
+    "family" : "supported",
+    "query" : "가벼운 등산용품 추천",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "가벼운 등산용품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 500,
+      "name" : "등산화 미끄럼 방지 체인스패치",
+      "brand" : "윈터그립",
+      "description" : "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다.",
+      "price" : 19000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0,
+      "reason" : "등산화에 착용하는 미끄럼 방지 체인스패치로, 가벼운 무게로 배낭에 휴대하기 좋아 등산 시 필수 안전용품입니다.",
+      "evidenceIds" : [ "product:500" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:01.698070800+09:00",
+        "productId" : 500,
+        "productKey" : "등산화 미끄럼 방지 체인스패치|윈터그립",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 494,
+      "name" : "편광 등산용 선글라스",
+      "brand" : "선가드",
+      "description" : "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다.",
+      "price" : 35000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.919128152808884,
+      "reason" : "산 정상에서의 강한 햇빛과 자외선을 차단하는 편광 렌즈 선글라스로, 가벼운 프레임으로 장시간 착용에 적합합니다.",
+      "evidenceIds" : [ "product:494" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:01.698070800+09:00",
+        "productId" : 494,
+        "productKey" : "편광 등산용 선글라스|선가드",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 215,
+      "name" : "휴대용 부탄가스 캠핑 버너",
+      "brand" : "파이어캠프",
+      "description" : "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다.",
+      "price" : 28000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.7075111062463141,
+      "reason" : "자동점화 기능의 휴대용 부탄가스 버너로, 가벼운 무게로 등산 시 취사용으로 매우 실용적입니다.",
+      "evidenceIds" : [ "product:215" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:01.698070800+09:00",
+        "productId" : 215,
+        "productKey" : "휴대용 부탄가스 캠핑 버너|파이어캠프",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 657,
+      "name" : "접이식 캠핑 테이블",
+      "brand" : "아웃도어라이프",
+      "description" : "가벼운 알루미늄 소재로 만들어져 한 손으로도 들 수 있는 접이식 테이블입니다. 캠핑이나 차박은 물론 베란다에서 작은 홈파티를 즐길 때도 활용할 수 있습니다.",
+      "price" : 42000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8376316437759963,
+      "reason" : "가벼운 알루미늄 소재의 접이식 캠핑 테이블로, 한 손으로도 들 수 있어 등산 캠프에서 활용하기 좋습니다.",
+      "evidenceIds" : [ "product:657" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:01.698070800+09:00",
+        "productId" : 657,
+        "productKey" : "접이식 캠핑 테이블|아웃도어라이프",
+        "status" : "ACTIVE",
+        "stock" : 45
+      }
+    }, {
+      "productId" : 241,
+      "name" : "휴대용 원터치 자동 우산",
+      "brand" : "데일리굿즈",
+      "description" : "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다.",
+      "price" : 15000.00,
+      "category" : "생활용품",
+      "score" : 0.9469549675505922,
+      "reason" : "한 번의 터치로 개폐 가능한 휴대용 우산으로, 가벼운 무게와 컴팩트한 사이즈로 등산 중 날씨 변화에 대비할 수 있습니다.",
+      "evidenceIds" : [ "product:241" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:01.698070800+09:00",
+        "productId" : 241,
+        "productKey" : "휴대용 원터치 자동 우산|데일리굿즈",
+        "status" : "ACTIVE",
+        "stock" : 90
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4157,
+    "completionTokens" : 724,
+    "totalTokens" : 4881,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6947
+  }, {
+    "queryId" : "C01",
+    "family" : "constraint",
+    "query" : "3만원 이상 5만원 이하 캠핑용품",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "3만원 이상 5만원 이하의 캠핑용품 10개를 찾았습니다.",
+    "results" : [ {
+      "productId" : 271,
+      "name" : "야외용 캠핑 해먹 휴대용",
+      "brand" : "릴렉스아웃도어",
+      "description" : "낙하산 원단으로 제작되어 가벼우면서도 200kg까지 견딜 수 있는 캠핑 해먹입니다. 휴대용 파우치에 담아 다닐 수 있어 캠핑·아웃도어 여행에 적합합니다.",
+      "price" : 32000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0,
+      "reason" : "낙하산 원단으로 제작된 가벼운 캠핑 해먹으로 200kg까지 견딜 수 있으며 휴대용 파우치 포함",
+      "evidenceIds" : [ "product:271" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:13.084902+09:00",
+        "productId" : 271,
+        "productKey" : "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+        "status" : "ACTIVE",
+        "stock" : 58
+      }
+    }, {
+      "productId" : 274,
+      "name" : "캠핑용 휴대용 샤워기 세트",
+      "brand" : "워시아웃도어",
+      "description" : "충전식 펌프로 작동하는 휴대용 캠핑 샤워기로 물탱크에 연결해 사용할 수 있습니다. 차박이나 오지 캠핑에서도 간편하게 샤워를 즐길 수 있는 아웃도어 용품입니다.",
+      "price" : 38000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9648698112398498,
+      "reason" : "충전식 펌프 방식의 휴대용 캠핑 샤워기로 차박이나 오지 캠핑에 적합",
+      "evidenceIds" : [ "product:274" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:13.084902+09:00",
+        "productId" : 274,
+        "productKey" : "캠핑용 휴대용 샤워기 세트|워시아웃도어",
+        "status" : "ACTIVE",
+        "stock" : 44
+      }
+    }, {
+      "productId" : 217,
+      "name" : "사계절 차박 캠핑 침낭",
+      "brand" : "아웃도어랩",
+      "description" : "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭입니다. 차박, 백패킹, 캠핑 시 따뜻하게 사용할 수 있으며 압축 가방이 함께 제공됩니다.",
+      "price" : 42000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9629120658120561,
+      "reason" : "극세사 충전재로 보온성을 높인 사계절용 침낭으로 압축 가방 포함",
+      "evidenceIds" : [ "product:217" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:13.084902+09:00",
+        "productId" : 217,
+        "productKey" : "사계절 차박 캠핑 침낭|아웃도어랩",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 212,
+      "name" : "알루미늄 폴딩 캠핑 의자",
+      "brand" : "아웃도어랩",
+      "description" : "경량 알루미늄 프레임으로 제작된 접이식 캠핑 의자입니다. 휴대가 간편하고 내구성이 뛰어나 캠핑, 등산, 낚시 등 야외활동에 활용됩니다.",
+      "price" : 45000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9565516995466757,
+      "reason" : "경량 알루미늄 프레임의 접이식 캠핑 의자로 휴대가 간편하고 내구성 우수",
+      "evidenceIds" : [ "product:212" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:13.084902+09:00",
+        "productId" : 212,
+        "productKey" : "알루미늄 폴딩 캠핑 의자|아웃도어랩",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 283,
+      "name" : "캠핑용 휴대용 도끼 장작패개",
+      "brand" : "툴마스터",
+      "description" : "단조 강철로 제작되어 장작을 손쉽게 패는 캠핑용 휴대용 도끼입니다. 보호 케이스가 함께 제공되어 안전하게 휴대할 수 있는 캠핑·아웃도어 필수 장비입니다.",
+      "price" : 36000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9341995118042139,
+      "reason" : "단조 강철 제작의 휴대용 도끼로 보호 케이스 포함된 캠핑 필수 장비",
+      "evidenceIds" : [ "product:283" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:13.084902+09:00",
+        "productId" : 283,
+        "productKey" : "캠핑용 휴대용 도끼 장작패개|툴마스터",
+        "status" : "ACTIVE",
+        "stock" : 41
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 2,
+    "llmCallAttempts" : 3,
+    "promptTokens" : 5331,
+    "completionTokens" : 752,
+    "totalTokens" : 6083,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 11365
+  }, {
+    "queryId" : "C02",
+    "family" : "constraint",
+    "query" : "50,000원 이하 돌잔치 선물",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "50,000원 이하의 돌잔치 선물 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 196,
+      "name" : "돌잔치 기념 명패 세트",
+      "brand" : "리틀우드",
+      "description" : "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다.",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 1.0,
+      "reason" : "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트로 돌잔치 기념 선물로 자주 선택되는 고급스러운 제품입니다.",
+      "evidenceIds" : [ "product:196" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:20.142395500+09:00",
+        "productId" : 196,
+        "productKey" : "돌잔치 기념 명패 세트|리틀우드",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 197,
+      "name" : "유아용 도자기 식기 세트",
+      "brand" : "마이베베",
+      "description" : "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다.",
+      "price" : 42000.00,
+      "category" : "유아동",
+      "score" : 0.9434205604344724,
+      "reason" : "이름 각인이 가능한 내열 도자기 식기 세트로 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 돌잔치 선물로 많이 찾는 제품입니다.",
+      "evidenceIds" : [ "product:197" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:20.142395500+09:00",
+        "productId" : 197,
+        "productKey" : "유아용 도자기 식기 세트|마이베베",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 208,
+      "name" : "아기 첫걸음 가죽 신발",
+      "brand" : "베이비웰",
+      "description" : "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다.",
+      "price" : 32000.00,
+      "category" : "유아동",
+      "score" : 0.854204520909164,
+      "reason" : "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발로 인체공학적 디자인이 돌잔치 선물로 자주 선택됩니다.",
+      "evidenceIds" : [ "product:208" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:20.142395500+09:00",
+        "productId" : 208,
+        "productKey" : "아기 첫걸음 가죽 신발|베이비웰",
+        "status" : "ACTIVE",
+        "stock" : 50
+      }
+    }, {
+      "productId" : 262,
+      "name" : "신생아 우주복 내의 5종 세트",
+      "brand" : "코튼베이비",
+      "description" : "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다.",
+      "price" : 35000.00,
+      "category" : "유아동",
+      "score" : 0.86134136034774,
+      "reason" : "부드러운 면 소재의 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다.",
+      "evidenceIds" : [ "product:262" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:20.142395500+09:00",
+        "productId" : 262,
+        "productKey" : "신생아 우주복 내의 5종 세트|코튼베이비",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    }, {
+      "productId" : 258,
+      "name" : "아기 침대 모빌 음악기 세트",
+      "brand" : "꿈나라키즈",
+      "description" : "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기입니다. 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물로 좋습니다.",
+      "price" : 42000.00,
+      "category" : "유아동",
+      "score" : 0.8619167272161753,
+      "reason" : "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기로 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물입니다.",
+      "evidenceIds" : [ "product:258" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:20.142395500+09:00",
+        "productId" : 258,
+        "productKey" : "아기 침대 모빌 음악기 세트|꿈나라키즈",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4259,
+    "completionTokens" : 722,
+    "totalTokens" : 4981,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 7036
+  }, {
+    "queryId" : "C03",
+    "family" : "constraint",
+    "query" : "패션·의류 카테고리의 겨울 장갑",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "패션·의류 카테고리의 겨울 장갑 상품을 추천합니다.",
+    "results" : [ {
+      "productId" : 422,
+      "name" : "터치스크린 방한 장갑",
+      "brand" : "핸디웜",
+      "description" : "스마트폰 터치가 가능한 방한 장갑으로 손끝까지 따뜻하게 보호해줍니다. 안쪽 기모 처리로 한겨울에도 손이 시리지 않습니다.",
+      "price" : 15000.00,
+      "category" : "패션·의류",
+      "score" : 1.0,
+      "reason" : "터치스크린 기능이 있는 방한 장갑으로 겨울철 손 보온에 최적화되었으며, 안쪽 기모 처리로 한겨울에도 따뜻함을 유지합니다.",
+      "evidenceIds" : [ "product:422" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:25.375092400+09:00",
+        "productId" : 422,
+        "productKey" : "터치스크린 방한 장갑|핸디웜",
+        "status" : "ACTIVE",
+        "stock" : 95
+      }
+    }, {
+      "productId" : 678,
+      "name" : "발열 기능성 보온장갑",
+      "brand" : "웜핸드",
+      "description" : "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다.",
+      "price" : 16000.00,
+      "category" : "패션·의류",
+      "score" : 0.9809564758106558,
+      "reason" : "발열 기능성 보온장갑으로 터치스크린 사용이 가능하며, 겨울 등산이나 캠핑, 추운 날씨 방한용품으로 적합합니다.",
+      "evidenceIds" : [ "product:678" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:25.375092400+09:00",
+        "productId" : 678,
+        "productKey" : "발열 기능성 보온장갑|웜핸드",
+        "status" : "ACTIVE",
+        "stock" : 66
+      }
+    } ],
+    "resultCount" : 2,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4184,
+    "completionTokens" : 462,
+    "totalTokens" : 4646,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 5212
+  }, {
+    "queryId" : "C04",
+    "family" : "constraint",
+    "query" : "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "주방용품 카테고리에서 추천 상품 5개를 찾았습니다.",
+    "results" : [ {
+      "productId" : 451,
+      "name" : "대용량 에어프라이어 7L",
+      "brand" : "에어쿡",
+      "description" : "7리터 대용량 에어프라이어로 한 번에 많은 양의 요리를 조리할 수 있습니다. 기름 없이 바삭한 튀김 요리를 만들 수 있어 주방용품으로 인기가 많습니다.",
+      "price" : 119000.00,
+      "category" : "주방용품",
+      "score" : 1.0,
+      "reason" : "대용량 에어프라이어로 기름 없이 바삭한 요리를 만들 수 있는 인기 주방용품",
+      "evidenceIds" : [ "product:451" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:31.816032800+09:00",
+        "productId" : 451,
+        "productKey" : "대용량 에어프라이어 7L|에어쿡",
+        "status" : "ACTIVE",
+        "stock" : 40
+      }
+    }, {
+      "productId" : 469,
+      "name" : "디지털 주방용 계량저울",
+      "brand" : "키친메이트",
+      "description" : "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다.",
+      "price" : 16000.00,
+      "category" : "주방용품",
+      "score" : 0.9790655146023951,
+      "reason" : "0.1g 단위 정밀 계량이 가능한 디지털 계량저울로 베이킹과 요리에 필수적",
+      "evidenceIds" : [ "product:469" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:31.816032800+09:00",
+        "productId" : 469,
+        "productKey" : "디지털 주방용 계량저울|키친메이트",
+        "status" : "ACTIVE",
+        "stock" : 75
+      }
+    }, {
+      "productId" : 453,
+      "name" : "스테인리스 계량컵 스푼 세트",
+      "brand" : "키친메이트",
+      "description" : "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다.",
+      "price" : 12000.00,
+      "category" : "주방용품",
+      "score" : 0.9145639098001601,
+      "reason" : "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트로 요리 필수템",
+      "evidenceIds" : [ "product:453" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:31.816032800+09:00",
+        "productId" : 453,
+        "productKey" : "스테인리스 계량컵 스푼 세트|키친메이트",
+        "status" : "ACTIVE",
+        "stock" : 85
+      }
+    }, {
+      "productId" : 470,
+      "name" : "밀폐 보관용기 10종 세트",
+      "brand" : "홈클린",
+      "description" : "다양한 크기의 밀폐 보관용기 10종 세트로 식재료와 반찬 보관에 적합합니다. 냉장, 냉동, 전자레인지 사용이 모두 가능한 주방 필수품입니다.",
+      "price" : 29000.00,
+      "category" : "주방용품",
+      "score" : 0.8407694929301228,
+      "reason" : "다양한 크기의 밀폐 보관용기 10종 세트로 식재료 보관에 최적",
+      "evidenceIds" : [ "product:470" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:31.816032800+09:00",
+        "productId" : 470,
+        "productKey" : "밀폐 보관용기 10종 세트|홈클린",
+        "status" : "ACTIVE",
+        "stock" : 65
+      }
+    }, {
+      "productId" : 479,
+      "name" : "본차이나 식기 세트",
+      "brand" : "쿡플랜",
+      "description" : "고급스러운 본차이나 소재로 제작된 식기 12종 세트로 일상 식사부터 손님 접대까지 사용할 수 있습니다. 은은한 광택과 내구성을 갖춘 주방용품입니다.",
+      "price" : 175000.00,
+      "category" : "주방용품",
+      "score" : 0.9055168960974945,
+      "reason" : "고급 본차이나 식기 12종 세트로 일상 식사부터 손님 접대까지 사용 가능",
+      "evidenceIds" : [ "product:479" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:31.816032800+09:00",
+        "productId" : 479,
+        "productKey" : "본차이나 식기 세트|쿡플랜",
+        "status" : "ACTIVE",
+        "stock" : 30
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4226,
+    "completionTokens" : 667,
+    "totalTokens" : 4893,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6315
+  }, {
+    "queryId" : "R01",
+    "family" : "rephrased",
+    "query" : "야외 숙박 때 비바람을 막아 줄 장비",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "야외 숙박 시 비바람을 막아주는 장비 5가지를 추천합니다.",
+    "results" : [ {
+      "productId" : 493,
+      "name" : "1인용 비비색 방수텐트",
+      "brand" : "서바이벌기어",
+      "description" : "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다.",
+      "price" : 58000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 1.0,
+      "reason" : "방수 코팅된 1인용 비비색으로 갑작스러운 비나 눈을 효과적으로 막아주며, 야영에 최적화된 제품입니다.",
+      "evidenceIds" : [ "product:493" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:38.669169500+09:00",
+        "productId" : 493,
+        "productKey" : "1인용 비비색 방수텐트|서바이벌기어",
+        "status" : "ACTIVE",
+        "stock" : 30
+      }
+    }, {
+      "productId" : 219,
+      "name" : "방수 차광 캠핑 타프 4x4m",
+      "brand" : "캠프힐",
+      "description" : "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다.",
+      "price" : 95000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9104616037139827,
+      "reason" : "강한 방수 및 차광 기능의 4x4m 대형 타프로 넓은 그늘 공간을 확보하여 비바람으로부터 보호합니다.",
+      "evidenceIds" : [ "product:219" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:38.669169500+09:00",
+        "productId" : 219,
+        "productKey" : "방수 차광 캠핑 타프 4x4m|캠프힐",
+        "status" : "ACTIVE",
+        "stock" : 25
+      }
+    }, {
+      "productId" : 210,
+      "name" : "4인용 거실형 캠핑 텐트",
+      "brand" : "캠프힐",
+      "description" : "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다.",
+      "price" : 320000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.9042538144112734,
+      "reason" : "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합하며 우천 시에도 안심하고 사용할 수 있습니다.",
+      "evidenceIds" : [ "product:210" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:38.669169500+09:00",
+        "productId" : 210,
+        "productKey" : "4인용 거실형 캠핑 텐트|캠프힐",
+        "status" : "ACTIVE",
+        "stock" : 20
+      }
+    }, {
+      "productId" : 272,
+      "name" : "차박용 사이드 텐트 도킹형",
+      "brand" : "오토캠프",
+      "description" : "차량 트렁크와 도킹하여 생활 공간을 확장할 수 있는 차박용 사이드 텐트입니다. 방수 코팅 원단으로 우천 시에도 안심하고 사용할 수 있는 차박 캠핑 필수품입니다.",
+      "price" : 168000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8321723449383188,
+      "reason" : "차량과 도킹하는 사이드 텐트로 방수 코팅 원단으로 우천 시에도 안심하고 사용할 수 있는 차박 필수품입니다.",
+      "evidenceIds" : [ "product:272" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:38.669169500+09:00",
+        "productId" : 272,
+        "productKey" : "차박용 사이드 텐트 도킹형|오토캠프",
+        "status" : "ACTIVE",
+        "stock" : 25
+      }
+    }, {
+      "productId" : 670,
+      "name" : "원터치 자동 텐트 1~2인용",
+      "brand" : "퀵쉘터",
+      "description" : "펼치면 자동으로 형태가 잡히는 원터치 텐트로 설치 시간을 크게 줄여줍니다. 캠핑은 물론 가벼운 등산이나 여행지에서 간이 쉘터로도 활용할 수 있습니다.",
+      "price" : 65000.00,
+      "category" : "캠핑·아웃도어",
+      "score" : 0.8246396618433302,
+      "reason" : "원터치 자동 텐트로 설치가 간편하며 캠핑이나 야외 활동 시 빠르게 비바람으로부터 보호할 수 있습니다.",
+      "evidenceIds" : [ "product:670" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:38.669169500+09:00",
+        "productId" : 670,
+        "productKey" : "원터치 자동 텐트 1~2인용|퀵쉘터",
+        "status" : "ACTIVE",
+        "stock" : 35
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 4377,
+    "completionTokens" : 709,
+    "totalTokens" : 5086,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6672
+  }, {
+    "queryId" : "R02",
+    "family" : "rephrased",
+    "query" : "좁은 원룸 수납과 청소에 도움 되는 물건",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "좁은 원룸의 수납과 청소에 도움이 되는 상품 5개를 추천합니다.",
+    "results" : [ {
+      "productId" : 358,
+      "name" : "원룸용 4단 서랍장",
+      "brand" : "스마트케이스",
+      "description" : "옷과 소품을 정리할 수 있는 플라스틱 4단 서랍장입니다. 좁은 자취방의 수납 부족을 해결해주는 필수템입니다.",
+      "price" : 31000.00,
+      "category" : "생활용품",
+      "score" : 1.0,
+      "reason" : "좁은 원룸의 수납 부족을 직접 해결하는 4단 서랍장으로 옷과 소품을 효율적으로 정리할 수 있습니다.",
+      "evidenceIds" : [ "product:358" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:44.923298200+09:00",
+        "productId" : 358,
+        "productKey" : "원룸용 4단 서랍장|스마트케이스",
+        "status" : "ACTIVE",
+        "stock" : 55
+      }
+    }, {
+      "productId" : 684,
+      "name" : "휴대용 접이식 빗자루 세트",
+      "brand" : "클린업",
+      "description" : "작게 접어 보관할 수 있는 빗자루와 쓰레받기 세트로 좁은 공간 청소에 효과적입니다. 자취방이나 캠핑 텐트 안, 차박 차량 내부 정리에 두루 사용할 수 있습니다.",
+      "price" : 9500.00,
+      "category" : "생활용품",
+      "score" : 0.9060296927269934,
+      "reason" : "접이식 빗자루 세트로 좁은 공간에서 청소를 효과적으로 하면서도 보관 공간을 절약할 수 있습니다.",
+      "evidenceIds" : [ "product:684" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:44.923298200+09:00",
+        "productId" : 684,
+        "productKey" : "휴대용 접이식 빗자루 세트|클린업",
+        "status" : "ACTIVE",
+        "stock" : 80
+      }
+    }, {
+      "productId" : 341,
+      "name" : "투명 수납박스 대형 세트",
+      "brand" : "스마트케이스",
+      "description" : "내용물이 보이는 투명 수납박스 대형 3개 세트입니다. 짐이 많은 자취방을 깔끔하게 정리할 수 있는 자취 필수템입니다.",
+      "price" : 32000.00,
+      "category" : "생활용품",
+      "score" : 0.8220731829755314,
+      "reason" : "투명 수납박스 세트로 짐이 많은 원룸을 깔끔하게 정리하고 내용물을 한눈에 확인할 수 있습니다.",
+      "evidenceIds" : [ "product:341" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:44.923298200+09:00",
+        "productId" : 341,
+        "productKey" : "투명 수납박스 대형 세트|스마트케이스",
+        "status" : "ACTIVE",
+        "stock" : 65
+      }
+    }, {
+      "productId" : 356,
+      "name" : "벽걸이형 무선 청소기 거치대",
+      "brand" : "클린업",
+      "description" : "무선 청소기를 충전하며 보관할 수 있는 벽걸이형 거치대입니다. 청소기를 효율적으로 보관할 수 있는 자취 필수템 액세서리입니다.",
+      "price" : 16000.00,
+      "category" : "생활용품",
+      "score" : 0.8814858879434997,
+      "reason" : "벽걸이형 청소기 거치대로 청소기를 효율적으로 보관하면서 바닥 공간을 절약할 수 있습니다.",
+      "evidenceIds" : [ "product:356" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:44.923298200+09:00",
+        "productId" : 356,
+        "productKey" : "벽걸이형 무선 청소기 거치대|클린업",
+        "status" : "ACTIVE",
+        "stock" : 60
+      }
+    }, {
+      "productId" : 668,
+      "name" : "압축 진공 의류 정리팩 세트",
+      "brand" : "컴팩트라이프",
+      "description" : "공기를 빼서 부피를 줄이는 압축 진공팩 세트로 옷과 이불을 깔끔하게 보관할 수 있습니다. 여행 짐 싸기는 물론 자취방이나 신혼집의 계절 옷 정리에도 효과적입니다.",
+      "price" : 15000.00,
+      "category" : "생활용품",
+      "score" : 0.7441667905230585,
+      "reason" : "압축 진공팩으로 옷과 이불의 부피를 줄여 원룸의 제한된 수납공간을 최대한 활용할 수 있습니다.",
+      "evidenceIds" : [ "product:668" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:44.923298200+09:00",
+        "productId" : 668,
+        "productKey" : "압축 진공 의류 정리팩 세트|컴팩트라이프",
+        "status" : "ACTIVE",
+        "stock" : 70
+      }
+    } ],
+    "resultCount" : 5,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 3834,
+    "completionTokens" : 697,
+    "totalTokens" : 4531,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6234
+  }, {
+    "queryId" : "R03",
+    "family" : "rephrased",
+    "query" : "반려견과 이동할 때 필요한 물건",
+    "outcome" : "SUCCESS",
+    "actionCode" : "COMPLETED",
+    "message" : "반려견과 이동할 때 필요한 물건을 추천합니다.",
+    "results" : [ {
+      "productId" : 651,
+      "name" : "반려동물 캐리어형 백팩",
+      "brand" : "펫드라이브",
+      "description" : "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다.",
+      "price" : 56000.00,
+      "category" : "반려동물용품",
+      "score" : 1.0,
+      "reason" : "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있으며, 여행이나 등산처럼 장시간 이동에 최적화되어 있습니다.",
+      "evidenceIds" : [ "product:651" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:50.179302600+09:00",
+        "productId" : 651,
+        "productKey" : "반려동물 캐리어형 백팩|펫드라이브",
+        "status" : "ACTIVE",
+        "stock" : 36
+      }
+    }, {
+      "productId" : 227,
+      "name" : "항공기 기내 반입 반려동물 이동장",
+      "brand" : "펫프렌즈",
+      "description" : "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다.",
+      "price" : 55000.00,
+      "category" : "반려동물용품",
+      "score" : 0.8686860943746207,
+      "reason" : "항공사 기준에 맞춘 사이즈의 반려동물 이동장으로, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리하게 사용할 수 있습니다.",
+      "evidenceIds" : [ "product:227" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:50.179302600+09:00",
+        "productId" : 227,
+        "productKey" : "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+        "status" : "ACTIVE",
+        "stock" : 35
+      }
+    }, {
+      "productId" : 288,
+      "name" : "고양이 외출용 백팩 캐리어",
+      "brand" : "펫트래블",
+      "description" : "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다.",
+      "price" : 65000.00,
+      "category" : "반려동물용품",
+      "score" : 0.9962445265773856,
+      "reason" : "통풍이 잘되는 메쉬 창과 두꺼운 어깨끈 패딩이 있어 장시간 이동에도 편안한 외출용 백팩 캐리어입니다.",
+      "evidenceIds" : [ "product:288" ],
+      "policyObservation" : {
+        "source" : "POST_RESPONSE_DATABASE_READ",
+        "observedAt" : "2026-09-18T09:51:50.179302600+09:00",
+        "productId" : 288,
+        "productKey" : "고양이 외출용 백팩 캐리어|펫트래블",
+        "status" : "ACTIVE",
+        "stock" : 42
+      }
+    } ],
+    "resultCount" : 3,
+    "searchCount" : 1,
+    "llmCallAttempts" : 2,
+    "promptTokens" : 3454,
+    "completionTokens" : 565,
+    "totalTokens" : 4019,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 5234
+  }, {
+    "queryId" : "N01",
+    "family" : "out_of_catalog",
+    "query" : "여자 악세사리 선물",
+    "outcome" : "NO_RESULTS",
+    "actionCode" : "NO_RESULTS",
+    "message" : "죄송합니다. 현재 카탈로그에 여자 악세사리 선물에 해당하는 상품이 없습니다. 목걸이, 팔찌, 반지, 귀걸이 등 구체적인 악세사리 종류를 알려주시면 더 정확한 검색이 가능합니다.",
+    "results" : [ ],
+    "resultCount" : 0,
+    "searchCount" : 2,
+    "llmCallAttempts" : 3,
+    "promptTokens" : 3643,
+    "completionTokens" : 518,
+    "totalTokens" : 4161,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 7732
+  }, {
+    "queryId" : "N02",
+    "family" : "out_of_catalog",
+    "query" : "자동차 세차용품 추천",
+    "outcome" : "NO_RESULTS",
+    "actionCode" : "NO_RESULTS",
+    "message" : "죄송합니다. 현재 카탈로그에 자동차 세차용품(세차 왁스, 세차 샴푸, 광택제 등)이 등록되어 있지 않습니다. 다른 상품 카테고리의 추천을 원하시면 말씀해 주세요.",
+    "results" : [ ],
+    "resultCount" : 0,
+    "searchCount" : 2,
+    "llmCallAttempts" : 3,
+    "promptTokens" : 4213,
+    "completionTokens" : 494,
+    "totalTokens" : 4707,
+    "chatModels" : [ "claude-haiku-4-5-20251001" ],
+    "latencyMillis" : 6331
+  }, {
+    "queryId" : "A01",
+    "family" : "ambiguous",
+    "query" : "5만원 이상 3만원 이하 캠핑용품",
+    "outcome" : "CLARIFICATION_REQUIRED",
+    "actionCode" : "CLARIFICATION_REQUIRED",
+    "message" : "가격 범위가 서로 충돌합니다. 조건을 확인해 주세요.",
+    "results" : [ ],
+    "resultCount" : 0,
+    "searchCount" : 0,
+    "llmCallAttempts" : 0,
+    "promptTokens" : 0,
+    "completionTokens" : 0,
+    "totalTokens" : 0,
+    "chatModels" : [ ],
+    "latencyMillis" : 0
+  } ],
+  "schemaVersion" : 2,
+  "kind" : "real-model-agentic-rag-raw-run",
+  "runId" : "agentic-rag-fe2766f-20260918T004833Z-r1",
+  "capturedAt" : "2026-09-18T09:49:38.785353300+09:00",
+  "agentCommit" : "fe2766fc99131c94f2209a87694505c162bd3e89",
+  "chatProvider" : "anthropic",
+  "chatModelConfigured" : "claude-haiku-4-5",
+  "embeddingModel" : "bge-m3",
+  "embeddingDimensions" : 1024,
+  "snapshotId" : "recommendation-catalog-2026-09-15",
+  "inputHashes" : {
+    "definitionSha256" : "24634aa1582faa6870101d08e8d92960acabe33b1628803cdefc49ee898cec19",
+    "labelsSha256" : "98b4a799ee6db7fe4ceb7c941785b573081779e025b59392b281d15e083b5349",
+    "scorerSha256" : "2d9ed423138ceb677c9a9a3e08cee38d64e409d4a8ded1b4692fb8e6d76f8465"
+  },
+  "catalogSnapshot" : {
+    "source" : "MYSQL_PRE_RUN_READ",
+    "observedAt" : "2026-09-18T09:49:38.789975400+09:00",
+    "productCount" : 500,
+    "immutableFactsSha256" : "7a991c7ace5ec012a5002a20ae7c2daa72d844da384533049fee40d6f7b9d1f4"
+  },
+  "runtimeSnapshot" : {
+    "mysqlProducts" : 500,
+    "minimumProductId" : 195,
+    "maximumProductId" : 694,
+    "sortedCommaSeparatedProductIdsSha256" : "40883feffe90c108a2b9e798f1e8877630e76f677ebfafe187348300f8db7d93",
+    "pgvectorRows" : 500,
+    "pgvectorProductIds" : 500
+  },
+  "promptSources" : [ "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationAgentService.java", "backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java" ]
+}
