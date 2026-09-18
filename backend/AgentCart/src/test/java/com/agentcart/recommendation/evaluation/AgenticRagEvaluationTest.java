@@ -33,6 +33,8 @@ import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,8 +58,13 @@ class AgenticRagEvaluationTest {
     void captureAgenticRagEvaluation() throws Exception {
         Path root = Path.of(System.getenv("AGENTCART_EVALUATION_ROOT")).toAbsolutePath().normalize();
         Path output = Path.of(System.getenv("AGENTCART_EVALUATION_OUTPUT")).toAbsolutePath().normalize();
+        String agentCommit = System.getenv("AGENTCART_EVALUATION_AGENT_COMMIT");
+        String runId = System.getenv("AGENTCART_EVALUATION_RUN_ID");
+        RecommendationEvaluationArtifactSupport.requireValidRunId(runId, agentCommit);
+        assertThat(output).startsWith(root);
+        assertThat(output).doesNotExist();
         JsonNode queryDocument = objectMapper.readTree(
-                Files.readString(root.resolve("evaluation/recommendation/queries.json")));
+                Files.readString(root.resolve("evaluation/recommendation/v2/definition.json")));
         List<Product> products = productRepository.findAll().stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
@@ -81,10 +88,11 @@ class AgenticRagEvaluationTest {
         ArrayNode evaluations = artifact.putArray("evaluations");
 
         try {
-            artifact.put("schemaVersion", 1);
-            artifact.put("kind", "real-model-agentic-rag-evaluation");
+            artifact.put("schemaVersion", 2);
+            artifact.put("kind", "real-model-agentic-rag-raw-run");
+            artifact.put("runId", runId);
             artifact.put("capturedAt", OffsetDateTime.now().toString());
-            artifact.put("agentCommit", System.getenv("AGENTCART_EVALUATION_AGENT_COMMIT"));
+            artifact.put("agentCommit", agentCommit);
             String chatProvider = environment.getRequiredProperty("spring.ai.model.chat");
             artifact.put("chatProvider", chatProvider);
             artifact.put("chatModelConfigured",
@@ -92,6 +100,17 @@ class AgenticRagEvaluationTest {
             artifact.put("embeddingModel", "bge-m3");
             artifact.put("embeddingDimensions", 1024);
             artifact.put("snapshotId", "recommendation-catalog-2026-09-15");
+            ObjectNode inputs = artifact.putObject("inputHashes");
+            inputs.put("definitionSha256", fileDigest(root.resolve("evaluation/recommendation/v2/definition.json")));
+            inputs.put("labelsSha256", fileDigest(root.resolve("evaluation/recommendation/v2/labels.json")));
+            inputs.put("scorerSha256", fileDigest(root.resolve(
+                    "scripts/evaluation/score_recommendation_run.py")));
+            ObjectNode catalog = artifact.putObject("catalogSnapshot");
+            catalog.put("source", "MYSQL_PRE_RUN_READ");
+            catalog.put("observedAt", OffsetDateTime.now().toString());
+            catalog.put("productCount", products.size());
+            catalog.put("immutableFactsSha256",
+                    RecommendationEvaluationArtifactSupport.immutableFactsSha256(products));
             ObjectNode runtime = artifact.putObject("runtimeSnapshot");
             runtime.put("mysqlProducts", products.size());
             runtime.put("minimumProductId", products.getFirst().getId());
@@ -109,7 +128,12 @@ class AgenticRagEvaluationTest {
                 try {
                     RecommendationAgentResult result = agentService.recommend(
                             queryNode.get("query").asText(), member.getId());
-                    evaluations.add(toEvaluation(queryNode, result));
+                    List<Long> resultIds = result.recommendations().stream()
+                            .map(AgentRecommendation::productId).toList();
+                    Map<Long, Product> observedProducts = productRepository.findAllById(resultIds).stream()
+                            .collect(Collectors.toMap(Product::getId, Function.identity()));
+                    evaluations.add(toEvaluation(queryNode, result, products, observedProducts,
+                            OffsetDateTime.now()));
                 } finally {
                     if (fixtureOrder != null) orderRepository.delete(fixtureOrder);
                 }
@@ -136,7 +160,10 @@ class AgenticRagEvaluationTest {
         return orderRepository.saveAndFlush(order);
     }
 
-    private ObjectNode toEvaluation(JsonNode query, RecommendationAgentResult result) {
+    private ObjectNode toEvaluation(JsonNode query, RecommendationAgentResult result,
+                                    List<Product> snapshotProducts,
+                                    Map<Long, Product> observedProducts,
+                                    OffsetDateTime observedAt) {
         ObjectNode evaluation = objectMapper.createObjectNode();
         evaluation.put("queryId", query.get("id").asText());
         evaluation.put("family", query.get("family").asText());
@@ -146,15 +173,32 @@ class AgenticRagEvaluationTest {
         evaluation.put("message", result.message());
         ArrayNode results = evaluation.putArray("results");
         for (AgentRecommendation recommendation : result.recommendations()) {
+            Product snapshot = snapshotProducts.stream()
+                    .filter(candidate -> candidate.getId().equals(recommendation.productId()))
+                    .findFirst().orElseThrow();
+            Product observed = observedProducts.get(recommendation.productId());
             ObjectNode product = results.addObject();
             product.put("productId", recommendation.productId());
             product.put("name", recommendation.productName());
             product.put("brand", recommendation.brand());
+            product.put("description", snapshot.getDescription());
             product.put("price", recommendation.price());
             product.put("category", recommendation.category());
             product.put("score", recommendation.score());
             product.put("reason", recommendation.reason());
             product.set("evidenceIds", objectMapper.valueToTree(recommendation.evidenceIds()));
+            ObjectNode observation = product.putObject("policyObservation");
+            observation.put("source", "POST_RESPONSE_DATABASE_READ");
+            observation.put("observedAt", observedAt.toString());
+            observation.put("productId", recommendation.productId());
+            observation.put("productKey", RecommendationEvaluationArtifactSupport.stableKey(snapshot));
+            if (observed == null) {
+                observation.putNull("status");
+                observation.putNull("stock");
+            } else {
+                observation.put("status", observed.getStatus().name());
+                observation.put("stock", observed.getStock());
+            }
         }
         evaluation.put("resultCount", result.recommendations().size());
         evaluation.put("searchCount", result.searchCount());
@@ -172,5 +216,10 @@ class AgenticRagEvaluationTest {
                 .reduce((left, right) -> left + "," + right).orElse("");
         return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
                 .digest(ids.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private String fileDigest(Path path) throws Exception {
+        return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                .digest(Files.readAllBytes(path)));
     }
 }
