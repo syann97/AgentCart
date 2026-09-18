@@ -33,8 +33,10 @@ import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -65,6 +67,16 @@ class AgenticRagEvaluationTest {
         assertThat(output).doesNotExist();
         JsonNode queryDocument = objectMapper.readTree(
                 Files.readString(root.resolve("evaluation/recommendation/v2/definition.json")));
+        String querySelection = System.getenv("AGENTCART_EVALUATION_QUERY_IDS");
+        Set<String> selectedQueryIds = querySelection == null || querySelection.isBlank()
+                ? Set.of()
+                : Set.of(querySelection.split(","));
+        List<JsonNode> queries = StreamSupport.stream(queryDocument.get("queries").spliterator(), false)
+                .filter(query -> selectedQueryIds.isEmpty() || selectedQueryIds.contains(query.get("id").asText()))
+                .toList();
+        if (!selectedQueryIds.isEmpty()) {
+            assertThat(queries).hasSize(selectedQueryIds.size());
+        }
         List<Product> products = productRepository.findAll().stream()
                 .sorted(Comparator.comparing(Product::getId))
                 .toList();
@@ -89,7 +101,9 @@ class AgenticRagEvaluationTest {
 
         try {
             artifact.put("schemaVersion", 2);
-            artifact.put("kind", "real-model-agentic-rag-raw-run");
+            artifact.put("kind", selectedQueryIds.isEmpty()
+                    ? "real-model-agentic-rag-raw-run"
+                    : "real-model-agentic-rag-focused-run");
             artifact.put("runId", runId);
             artifact.put("capturedAt", OffsetDateTime.now().toString());
             artifact.put("agentCommit", agentCommit);
@@ -100,6 +114,8 @@ class AgenticRagEvaluationTest {
             artifact.put("embeddingModel", "bge-m3");
             artifact.put("embeddingDimensions", 1024);
             artifact.put("snapshotId", "recommendation-catalog-2026-09-15");
+            artifact.set("selectedQueryIds", objectMapper.valueToTree(
+                    queries.stream().map(query -> query.get("id").asText()).toList()));
             ObjectNode inputs = artifact.putObject("inputHashes");
             inputs.put("definitionSha256", fileDigest(root.resolve("evaluation/recommendation/v2/definition.json")));
             inputs.put("labelsSha256", fileDigest(root.resolve("evaluation/recommendation/v2/labels.json")));
@@ -122,7 +138,7 @@ class AgenticRagEvaluationTest {
                     .add("backend/AgentCart/src/main/java/com/agentcart/recommendation/service/RecommendationAgentService.java")
                     .add("backend/AgentCart/src/main/java/com/agentcart/recommendation/service/SearchCatalogService.java");
 
-            for (JsonNode queryNode : queryDocument.get("queries")) {
+            for (JsonNode queryNode : queries) {
                 String queryId = queryNode.get("id").asText();
                 Order fixtureOrder = queryId.equals("C04") ? createRecentOrder(member, products) : null;
                 try {
