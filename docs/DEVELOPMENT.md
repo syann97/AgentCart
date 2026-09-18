@@ -47,6 +47,18 @@ npm run lint
 npm run build
 ```
 
+## PR 자동 검증
+
+`.github/workflows/validation.yml`은 `dev` 대상 pull request와 `dev` push에서 다음 check를 실행합니다.
+
+| check | 환경과 명령 | 범위 |
+|---|---|---|
+| `evaluation` | Python 3.13, 평가 validator와 `scripts/evaluation` unittest | 고정 artifact·hash·오프라인 scorer 회귀와 PR 전체 diff 공백 검사 |
+| `backend-unit` | Temurin JDK 25, `./gradlew --no-daemon test --tests 'com.agentcart.*.unit.*'` | DB·Kafka·Ollama 없이 실행되는 `unit` 패키지; 실행 수가 0이면 실패 |
+| `frontend` | [`.nvmrc`](../.nvmrc)의 Node 22.14.0, `npm ci`, test, lint, build | lockfile 기반 Frontend 검증과 JUnit 보고서 |
+
+같은 PR에 새 commit이 올라오면 이전 실행을 취소합니다. Backend와 Frontend 테스트 보고서는 실패 시에도 7일 동안 artifact로 보관합니다. 이 workflow는 실제 LLM 평가, Docker 기반 통합·repository·migration 테스트, 데이터 적재와 배포를 실행하지 않습니다. GitHub의 branch protection이나 required check 설정은 저장소 외부 설정이므로 이 파일만으로 병합을 강제하지 않습니다.
+
 검증 결과에는 실제 실행한 명령, 통과·실패·미실행 범위를 구분합니다. `UP-TO-DATE`나 캐시된 결과를 새 실측 결과로 설명하지 않습니다. 검증을 통과했고 새 변경이 없으면 같은 검사를 불필요하게 반복하지 않습니다.
 
 ## 환경과 데이터

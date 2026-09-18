@@ -6,7 +6,7 @@
 
 - JDK 25. Gradle 9.4.1 wrapper는 [wrapper 설정](../backend/AgentCart/gradle/wrapper/gradle-wrapper.properties)에 포함되어 있습니다.
 - Docker Compose. MySQL·Redis·PostgreSQL/pgvector·Kafka·Ollama를 [Compose](../docker-compose.yml)로 실행합니다.
-- Node.js와 npm. 프로젝트가 Node 버전을 고정하지 않으므로 사용하는 버전에서 `npm test`와 `npm run build`로 호환성을 확인합니다.
+- Node.js 22.14.0과 npm 10.x. 저장소 루트의 [`.nvmrc`](../.nvmrc)와 Frontend `package.json`의 engines를 기준으로 합니다.
 - 합성 상품을 API로 적재할 때만 Python과 `requests`가 필요합니다.
 
 ## Backend 로컬 설정

@@ -1,0 +1,132 @@
+name: validation
+
+on:
+  pull_request:
+    branches: [dev]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluation:
+    name: evaluation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Check changed lines
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            git diff-tree --check --no-commit-id -r "$GITHUB_SHA"
+          else
+            git diff --check "$BASE_SHA" "$GITHUB_SHA"
+          fi
+
+      - name: Validate recommendation artifacts
+        run: python -B scripts/evaluation/validate_recommendation_evaluation.py
+
+      - name: Run evaluation regression tests
+        run: python -B -m unittest discover -s scripts/evaluation -p "test_*.py"
+
+  backend-unit:
+    name: backend-unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: gradle
+          cache-dependency-path: |
+            backend/AgentCart/*.gradle
+            backend/AgentCart/gradle/wrapper/gradle-wrapper.properties
+
+      - name: Run Backend unit tests
+        working-directory: backend/AgentCart
+        run: ./gradlew --no-daemon test --tests 'com.agentcart.*.unit.*'
+
+      - name: Confirm unit tests executed
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          reports = list(Path("backend/AgentCart/build/test-results/test").glob("TEST-*.xml"))
+          count = sum(int(ET.parse(report).getroot().attrib.get("tests", 0)) for report in reports)
+          if count == 0:
+              raise SystemExit("No Backend unit tests were executed")
+          print(f"Backend unit tests executed: {count}")
+          PY
+
+      - name: Upload Backend test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backend-unit-reports
+          path: |
+            backend/AgentCart/build/test-results/test
+            backend/AgentCart/build/reports/tests/test
+          if-no-files-found: ignore
+          retention-days: 7
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run Frontend tests
+        working-directory: frontend
+        run: npx --no-install vitest run --reporter=default --reporter=junit --outputFile=test-results/junit.xml
+
+      - name: Run Frontend lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Upload Frontend test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-test-report
+          path: frontend/test-results/junit.xml
+          if-no-files-found: ignore
+          retention-days: 7
