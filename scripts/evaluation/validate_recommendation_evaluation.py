@@ -237,6 +237,7 @@ def main() -> int:
     labels = load_json(evaluation_dir / "labels.json")
     fixtures = load_json(evaluation_dir / "fixtures.json")
     grounding = load_json(evaluation_dir / "grounding-v1.json")
+    grounding_comparison = load_json(evaluation_dir / "grounding-comparison.json")
     v2_labels = load_json(evaluation_dir / "v2" / "labels.json")
     baseline = load_json(evaluation_dir / "baselines" / "fixed-rag-79627c0.json")
     agent_runs = [load_json(path) for path in sorted((evaluation_dir / "runs").glob("*.json"))]
@@ -346,8 +347,50 @@ def main() -> int:
         errors.extend(validate_grounding_rubric(
             grounding, queries, products, v2_labels, grounding_source))
 
+    comparison_sources = grounding_comparison.get("sources", [])
+    comparison_paths = [row.get("path") for row in comparison_sources]
+    if (grounding_comparison.get("rubricVersion") != grounding.get("rubricVersion")
+            or len(comparison_paths) != 8 or len(comparison_paths) != len(set(comparison_paths))):
+        errors.append("grounding comparison must reference eight unique rubric-compatible sources")
+    comparison_runs = []
+    for source in comparison_sources:
+        path = root / str(source.get("path", ""))
+        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != source.get("sha256"):
+            errors.append(f"grounding comparison source hash differs: {source.get('path')}")
+            continue
+        document = load_json(path)
+        if document.get("kind") in {"real-model-agentic-rag-raw-run", "real-model-agentic-rag-focused-run"}:
+            comparison_runs.append(document)
+    if len(comparison_runs) != 6:
+        errors.append("grounding comparison must contain two full and four focused runs")
+    else:
+        before_runs = [run for run in comparison_runs if str(run.get("agentCommit", "")).startswith("fe2766f")]
+        after_runs = [run for run in comparison_runs if not str(run.get("agentCommit", "")).startswith("fe2766f")]
+        problem_keys = {
+            "S10-camping-table": ("S10", "접이식 캠핑 테이블|아웃도어라이프"),
+            "R01-pop-up-tent": ("R01", "원터치 자동 텐트 1~2인용|퀵쉘터"),
+            "R03-cat-carrier": ("R03", "고양이 외출용 백팩 캐리어|펫트래블"),
+        }
+
+        def returned_count(runs, query_id, product_key):
+            return sum(any(stable_key(product) == product_key
+                           for evaluation in run["evaluations"] if evaluation["queryId"] == query_id
+                           for product in evaluation["results"])
+                       for run in runs)
+
+        recorded_cases = {row["caseId"]: row for row in grounding_comparison.get("focusedCases", [])}
+        for case_id, (query_id, product_key) in problem_keys.items():
+            row = recorded_cases.get(case_id, {})
+            before_count = returned_count(before_runs, query_id, product_key)
+            after_count = returned_count(after_runs, query_id, product_key)
+            if (len(before_runs), len(after_runs), before_count, after_count) != (3, 3, 3, 0):
+                errors.append(f"grounding repetition result differs: {case_id}")
+            if (row.get("beforeReturnedRuns"), row.get("afterReturnedRuns")) != (before_count, after_count):
+                errors.append(f"grounding comparison count differs: {case_id}")
+
     serialized = json.dumps(
-        [manifest, queries, labels, fixtures, grounding, baseline, agent_runs], ensure_ascii=False)
+        [manifest, queries, labels, fixtures, grounding, grounding_comparison, baseline, agent_runs],
+        ensure_ascii=False)
     if re.search(r"[A-Za-z]:[/\\]|(?:api[_-]?key|jwt[_-]?secret)\s*[:=]", serialized, re.IGNORECASE):
         errors.append("evaluation artifacts contain a local absolute path or secret-like assignment")
 

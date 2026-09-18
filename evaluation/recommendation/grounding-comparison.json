@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "kind": "grounding-before-after-comparison",
+  "rubricVersion": "grounding-1.0",
+  "comparedAt": "2026-09-18",
+  "chatProvider": "anthropic",
+  "chatModelConfigured": "claude-haiku-4-5",
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "beforeCommit": "fe2766fc99131c94f2209a87694505c162bd3e89",
+  "afterPromptCommit": "770d062",
+  "afterFocusedHarnessCommit": "eeeaa77",
+  "sources": [
+    {"path": "evaluation/recommendation/executions/raw/agentic-rag-fe2766f-20260918T004833Z-r1.json", "sha256": "ea3d659478e316b4adc3a0a183b10e86c30270f6877c79748ff538b767d3650f"},
+    {"path": "evaluation/recommendation/executions/assessments/agentic-rag-fe2766f-20260918T004833Z-r1.json", "sha256": "20354f5f856bee51372824935e0d7ba0aec8b764877f9f267c3a299ed7804329"},
+    {"path": "evaluation/recommendation/executions/raw/agentic-rag-770d062-20260918T005338Z-r1.json", "sha256": "3e0c593661b667979b7b5b9e3bf3561d32ab3a36f73e3a980edc2a73aa613867"},
+    {"path": "evaluation/recommendation/executions/assessments/agentic-rag-770d062-20260918T005338Z-r1.json", "sha256": "710899aff08a1a2d5e5472345908426344e2a5a53f834a06d1c2cd8cce78ae0a"},
+    {"path": "evaluation/recommendation/executions/focused/agentic-rag-fe2766f-20260918T010000Z-r2.json", "sha256": "834899a361d66a74a63cc575ca1b8543991705f98c1586d260e5844064958c2d"},
+    {"path": "evaluation/recommendation/executions/focused/agentic-rag-fe2766f-20260918T010300Z-r3.json", "sha256": "05ea1dfb005f61e4bcf38c206627b968656a36e90d72e187595d23804400f1ac"},
+    {"path": "evaluation/recommendation/executions/focused/agentic-rag-eeeaa77-20260918T010000Z-r2.json", "sha256": "6a37c427d5b327d9d0922ab59d62b6d9c2e570cf15ff12704922834b47ef7574"},
+    {"path": "evaluation/recommendation/executions/focused/agentic-rag-eeeaa77-20260918T010300Z-r3.json", "sha256": "4280a6c48780109d2f58af2bdce9506c57392f412eb5b4b959fc48b88e0f7c9e"}
+  ],
+  "fullRunMetrics": {
+    "before": {"acceptedHitAt5": "17/17", "strictHitAt5": "16/17", "returned": 80, "irrelevant": 1, "unjudged": 5, "policyViolations": 0, "failedQueries": 0, "totalTokens": 94646, "averageLatencyMillis": 7238.9},
+    "after": {"acceptedHitAt5": "17/17", "strictHitAt5": "16/17", "returned": 72, "irrelevant": 0, "unjudged": 9, "policyViolations": 0, "failedQueries": 0, "totalTokens": 114430, "averageLatencyMillis": 8565.45}
+  },
+  "focusedCases": [
+    {"caseId": "S10-camping-table", "beforeReturnedRuns": 3, "afterReturnedRuns": 0, "beforeUnsupportedReasons": 3, "afterUnsupportedReasons": 0},
+    {"caseId": "R01-pop-up-tent", "beforeReturnedRuns": 3, "afterReturnedRuns": 0, "beforeUnsupportedReasons": 3, "afterUnsupportedReasons": 0},
+    {"caseId": "R03-cat-carrier", "beforeReturnedRuns": 3, "afterReturnedRuns": 0, "beforeUnsupportedReasons": 3, "afterUnsupportedReasons": 0}
+  ],
+  "contrastCases": [
+    {"caseId": "S07-hand-warmer", "beforeReturnedRuns": 1, "afterReturnedRuns": 0, "eligibleRuns": 1, "interpretation": "변경 후에도 다섯 개의 직접 근거가 있는 방한 후보를 반환했다. 미반환만으로 카테고리 배제를 입증하지 않는다."},
+    {"caseId": "S10-compact-umbrella", "beforeReturnedRuns": 3, "afterReturnedRuns": 2, "eligibleRuns": 3, "interpretation": "변경 후 두 실행에서 유지됐고 세 번째 실행은 근거 있는 세 상품으로 조기 종료했다."}
+  ],
+  "limitations": [
+    "관련성 및 이유 판정은 assistant review이며 사람 검증 ground truth가 아니다.",
+    "세 focused 사례 밖의 모든 추천 이유를 전수 판정한 결과가 아니다.",
+    "동일 모델도 비결정적이므로 세 번의 반복은 재발 가능성을 줄여 보지만 제거를 증명하지 않는다."
+  ]
+}

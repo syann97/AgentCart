@@ -45,6 +45,15 @@ class GroundingRubricTest(unittest.TestCase):
         rubric["review"]["humanValidated"] = True
         self.assertTrue(any("provenance" in error for error in self.validate(rubric)))
 
+    def test_recorded_comparison_keeps_three_before_and_after_runs(self):
+        comparison = load_json(EVALUATION / "grounding-comparison.json")
+        self.assertEqual(
+            [("S10-camping-table", 3, 0), ("R01-pop-up-tent", 3, 0),
+             ("R03-cat-carrier", 3, 0)],
+            [(row["caseId"], row["beforeReturnedRuns"], row["afterReturnedRuns"])
+             for row in comparison["focusedCases"]])
+        self.assertEqual(8, len(comparison["sources"]))
+
 
 if __name__ == "__main__":
     unittest.main()

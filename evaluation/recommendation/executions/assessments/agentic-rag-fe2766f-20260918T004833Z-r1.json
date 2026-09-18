@@ -1,0 +1,1833 @@
+{
+  "schemaVersion": 2,
+  "kind": "offline-run-assessment",
+  "runId": "agentic-rag-fe2766f-20260918T004833Z-r1",
+  "source": "evaluation/recommendation/executions/raw/agentic-rag-fe2766f-20260918T004833Z-r1.json",
+  "sourceSha256": "59fcdf7a280765ce693135f29e15cd6f5732c979f5c804ec7056064030a44c48",
+  "sourceCommit": "fe2766fc99131c94f2209a87694505c162bd3e89",
+  "capturedAt": "2026-09-18T09:49:38.785353300+09:00",
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "definitionVersion": "2.0",
+  "labelVersion": "2.0",
+  "metricVersion": "2.1-observed-policy",
+  "definitionSha256": "24634aa1582faa6870101d08e8d92960acabe33b1628803cdefc49ee898cec19",
+  "labelsSha256": "98b4a799ee6db7fe4ceb7c941785b573081779e025b59392b281d15e083b5349",
+  "includedInQualityComparison": true,
+  "failedQueries": 0,
+  "metrics": {
+    "hitAt5": {
+      "strictHitAt5": {
+        "hits": 16,
+        "misses": 1,
+        "unjudged": 0,
+        "eligibleQueries": 17,
+        "rateLowerBound": 0.941176,
+        "rateUpperBound": 0.941176
+      },
+      "acceptedHitAt5": {
+        "hits": 17,
+        "misses": 0,
+        "unjudged": 0,
+        "eligibleQueries": 17,
+        "rateLowerBound": 1.0,
+        "rateUpperBound": 1.0
+      },
+      "observedPolicyCompliantAcceptedHitAt5": {
+        "hits": 17,
+        "misses": 0,
+        "unjudged": 0,
+        "eligibleQueries": 17,
+        "rateLowerBound": 1.0,
+        "rateUpperBound": 1.0
+      }
+    },
+    "relevance": {
+      "relevant": 57,
+      "acceptable": 17,
+      "irrelevant": 1,
+      "unjudged": 5,
+      "returned": 80,
+      "judged": 75,
+      "accepted": 74,
+      "judgedAcceptedRate": 0.986667,
+      "acceptedShareLowerBound": 0.925,
+      "acceptedShareUpperBound": 0.9875,
+      "unjudgedRate": 0.0625
+    },
+    "policyViolations": {
+      "price": 0,
+      "category": 0,
+      "stock": 0,
+      "recentOrder": 0,
+      "status": 0,
+      "total": 0
+    },
+    "expectedCategoryMismatches": 2,
+    "activeStatusUnknownProducts": 0,
+    "outOfCatalogQueriesReturningProducts": 0,
+    "outOfCatalogProducts": 0,
+    "clarificationFailures": 0,
+    "execution": {
+      "resultCount": 80,
+      "llmCallAttempts": 42,
+      "searchCount": 23,
+      "promptTokens": 81373,
+      "completionTokens": 13273,
+      "totalTokens": 94646,
+      "latencyMillis": {
+        "average": 7238.9,
+        "p95": 11365,
+        "maximum": 16311
+      }
+    },
+    "queries": [
+      {
+        "queryId": "S01",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 2,
+          "acceptable": 3,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "돌잔치 기념 명패 세트|리틀우드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "유아용 도자기 식기 세트|마이베베",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "디지털 비접촉 아기 체온계|헬스맘",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S02",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "패브릭 도어매트|코지홈",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "소이왁스 무향 캔들 3종 세트|캔들무드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "북유럽풍 액자 3종 세트|월데코",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "원목 손잡이 머그컵 4P 세트|포슬린하우스",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "공기정화 식물 몬스테라 화분|그린포레스트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S03",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "3인용 미니 전기밥솥|쿡메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "무선 핸디 청소기|클린업",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "소형 공기청정기|클린업",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "1인용 휴대용 인덕션|쿡메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "슬림형 전자레인지|리빙테크",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S04",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 1,
+          "acceptable": 3,
+          "irrelevant": 0,
+          "unjudged": 1,
+          "returned": 5,
+          "judged": 4,
+          "accepted": 4,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 0.8,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.2
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "셀프 인플레이팅 캠핑 매트|아웃도어랩",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "캠핑 텐트 풋프린트 방수 그라운드시트|그린필드",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "캠핑용 원터치 모기장 텐트|그린필드",
+            "label": "unjudged",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S05",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "벽걸이형 접이식 풀업바|스트롱암",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "안티버스트 짐볼 65cm 발펌프 포함|필라엣지",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "벽부착형 케이블 운동기구|스트롱암",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "조절 가능 스미스 머신 프레임|스트롱암",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S06",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "스테이플러 클립 사무용품 세트|오피스메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "2단 슬라이드 데스크 정리함|데스크프로",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "대형 가죽 데스크매트 80x40|데스크프로",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "3단 서랍형 서류정리함|오피스메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "도자기 펜꽂이 책상정리세트|오피스메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S07",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 1,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "발열 기능성 보온장갑|웜핸드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "방한 귀달이 비니|포근발",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "방풍 귀마개|이어웜",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "겨울 호흡 방한 마스크|브레스가드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "충전식 손난로 보조배터리 겸용|웜핸드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": true,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S08",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 4,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 1,
+          "returned": 5,
+          "judged": 4,
+          "accepted": 4,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 0.8,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.2
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "내열 오븐장갑 한 쌍|쿡플랜",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "스테인리스 채반 세트|홈클린",
+            "label": "unjudged",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "휴대용 미니 다용도 가위세트|올인툴",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "디지털 주방용 계량저울|키친메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S09",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "고양이 깃털 낚싯대 장난감|캣플레이",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "고양이 캣닢 스크래처 보드|캣라이프",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "고양이 화장실 모래 매트 더블레이어|캣클린",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "고양이 폭스 숨숨집 하우스|캣하우스",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "S10",
+        "hitEligible": true,
+        "strictHitAt5": false,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 0,
+          "acceptable": 4,
+          "irrelevant": 1,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 4,
+          "judgedAcceptedRate": 0.8,
+          "acceptedShareLowerBound": 0.8,
+          "acceptedShareUpperBound": 0.8,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 1,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "편광 등산용 선글라스|선가드",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "접이식 캠핑 테이블|아웃도어라이프",
+            "label": "irrelevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": true,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "C01",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 3,
+          "acceptable": 2,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "캠핑용 휴대용 샤워기 세트|워시아웃도어",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "알루미늄 폴딩 캠핑 의자|아웃도어랩",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "캠핑용 휴대용 도끼 장작패개|툴마스터",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "C02",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 2,
+          "acceptable": 3,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "돌잔치 기념 명패 세트|리틀우드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "유아용 도자기 식기 세트|마이베베",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "아기 침대 모빌 음악기 세트|꿈나라키즈",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "C03",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 2,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 2,
+          "judged": 2,
+          "accepted": 2,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "터치스크린 방한 장갑|핸디웜",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "발열 기능성 보온장갑|웜핸드",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "C04",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 5,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 5,
+          "judged": 5,
+          "accepted": 5,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 1.0,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.0
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "대용량 에어프라이어 7L|에어쿡",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "디지털 주방용 계량저울|키친메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "밀폐 보관용기 10종 세트|홈클린",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "본차이나 식기 세트|쿡플랜",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "R01",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 3,
+          "acceptable": 1,
+          "irrelevant": 0,
+          "unjudged": 1,
+          "returned": 5,
+          "judged": 4,
+          "accepted": 4,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 0.8,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.2
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "차박용 사이드 텐트 도킹형|오토캠프",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+            "label": "unjudged",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "R02",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 3,
+          "acceptable": 1,
+          "irrelevant": 0,
+          "unjudged": 1,
+          "returned": 5,
+          "judged": 4,
+          "accepted": 4,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 0.8,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.2
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "원룸용 4단 서랍장|스마트케이스",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "휴대용 접이식 빗자루 세트|클린업",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "투명 수납박스 대형 세트|스마트케이스",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "벽걸이형 무선 청소기 거치대|클린업",
+            "label": "acceptable",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "압축 진공 의류 정리팩 세트|컴팩트라이프",
+            "label": "unjudged",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "R03",
+        "hitEligible": true,
+        "strictHitAt5": true,
+        "acceptedHitAt5": true,
+        "observedPolicyCompliantAcceptedHitAt5": true,
+        "relevance": {
+          "relevant": 2,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 1,
+          "returned": 3,
+          "judged": 2,
+          "accepted": 2,
+          "judgedAcceptedRate": 1.0,
+          "acceptedShareLowerBound": 0.666667,
+          "acceptedShareUpperBound": 1.0,
+          "unjudgedRate": 0.333333
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": [
+          {
+            "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+            "label": "relevant",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          },
+          {
+            "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+            "label": "unjudged",
+            "violations": {
+              "price": 0,
+              "category": 0,
+              "stock": 0,
+              "recentOrder": 0,
+              "status": 0
+            },
+            "expectedCategoryMismatch": false,
+            "activeStatusUnknown": true,
+            "policyEvidenceUnknown": false
+          }
+        ]
+      },
+      {
+        "queryId": "N01",
+        "hitEligible": false,
+        "strictHitAt5": null,
+        "acceptedHitAt5": null,
+        "observedPolicyCompliantAcceptedHitAt5": null,
+        "relevance": {
+          "relevant": 0,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 0,
+          "judged": 0,
+          "accepted": 0,
+          "judgedAcceptedRate": null,
+          "acceptedShareLowerBound": null,
+          "acceptedShareUpperBound": null,
+          "unjudgedRate": null
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": []
+      },
+      {
+        "queryId": "N02",
+        "hitEligible": false,
+        "strictHitAt5": null,
+        "acceptedHitAt5": null,
+        "observedPolicyCompliantAcceptedHitAt5": null,
+        "relevance": {
+          "relevant": 0,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 0,
+          "judged": 0,
+          "accepted": 0,
+          "judgedAcceptedRate": null,
+          "acceptedShareLowerBound": null,
+          "acceptedShareUpperBound": null,
+          "unjudgedRate": null
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": []
+      },
+      {
+        "queryId": "A01",
+        "hitEligible": false,
+        "strictHitAt5": null,
+        "acceptedHitAt5": null,
+        "observedPolicyCompliantAcceptedHitAt5": null,
+        "relevance": {
+          "relevant": 0,
+          "acceptable": 0,
+          "irrelevant": 0,
+          "unjudged": 0,
+          "returned": 0,
+          "judged": 0,
+          "accepted": 0,
+          "judgedAcceptedRate": null,
+          "acceptedShareLowerBound": null,
+          "acceptedShareUpperBound": null,
+          "unjudgedRate": null
+        },
+        "policyViolations": {
+          "price": 0,
+          "category": 0,
+          "stock": 0,
+          "recentOrder": 0,
+          "status": 0
+        },
+        "expectedCategoryMismatches": 0,
+        "activeStatusUnknownProducts": 0,
+        "products": []
+      }
+    ],
+    "policyEvidence": {
+      "statusKnown": 80,
+      "statusUnknown": 0,
+      "stockKnown": 80,
+      "stockUnknown": 0,
+      "returnedProducts": 80,
+      "fullyObservedProducts": 80,
+      "fullyObservedRate": 1.0,
+      "source": "POST_RESPONSE_DATABASE_READ"
+    }
+  }
+}

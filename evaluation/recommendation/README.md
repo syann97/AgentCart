@@ -15,6 +15,8 @@
 - `v2/labels.json`: 두 완료 실행의 반환 상품 합집합을 검토한 relevance label과 provenance
 - `v2/reassessment.json`: 원본 실행을 수정하지 않고 v2 scorer로 산출한 결정적 재평가 결과
 - `grounding-v1.json`: S10·R01·R03의 선택 및 이유 문제와 S07·S10 대조 사례를 상품명·설명 근거로 판정한 assistant rubric
+- `grounding-comparison.json`: 변경 전후 전체 실행과 focused 반복의 source hash·핵심 지표·사례별 재발 횟수
+- `GROUNDING_EVALUATION_2026-09-18.md`: 상품 선택과 추천 이유 근거 개선의 전후 실제 모델 평가 보고서
 - `executions/raw/<run-id>.json`: 신규 실제 모델 실행의 수정하지 않는 schema v2 원시 결과
 - `executions/assessments/<run-id>.json`: 원시 결과와 분리해 생성한 v2.1 오프라인 채점 결과
 
@@ -45,6 +47,8 @@ v2 엄격 Hit@5는 `relevant`만, 허용 Hit@5는 `relevant`와 `acceptable`을 
 ## Agent 실제 실행
 
 `AgenticRagEvaluationTest`는 일반 테스트에서 비활성화되며 `AGENTCART_EVALUATION_ENABLED=true`일 때만 local profile의 실제 MySQL, pgvector, Ollama와 `CHAT_PROVIDER`로 선택한 채팅 공급자를 호출합니다. 실행 전에 root, output, 평가 대상 commit과 run ID 환경 변수를 명시해야 합니다. run ID 형식은 `agentic-rag-<commit>-<UTC YYYYMMDDTHHMMSSZ>-r<반복번호>`이며, 같은 commit의 반복 실행도 별도 파일로 남깁니다. 출력 파일이 이미 있으면 실행 전에 실패합니다. C04 최근 주문 fixture와 평가 회원은 실행 중 생성하고 `finally`에서 제거합니다.
+
+일부 질의만 반복할 때는 쉼표로 구분한 `AGENTCART_EVALUATION_QUERY_IDS`를 지정합니다. 이 결과는 `real-model-agentic-rag-focused-run`으로 기록하며 전체 20개 품질 assessment에 사용하지 않습니다. #198은 `S10,R01,R03` focused 실행을 전후 두 번씩 추가해 전체 실행과 합쳐 사례별 세 번을 비교했습니다.
 
 PowerShell에서 다음과 같이 원시 실행을 수집합니다. `<run-id>`와 commit은 실제 실행 대상으로 바꾸고, output은 저장소 내부의 새 경로를 사용합니다.
 
