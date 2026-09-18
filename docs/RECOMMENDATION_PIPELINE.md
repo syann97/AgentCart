@@ -134,4 +134,4 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 고정 평가셋의 Claude 실제 실행은 호출 상한을 지켰고, v2 재평가에서 허용 Hit@5 1.0과 명시 정책 위반 0건을 기록했습니다. S07·S10의 기대 카테고리 불일치 2건은 사용자가 명시한 카테고리 제약이 아니므로 정책 위반과 분리합니다. 원본 실행과 v1 판정은 보존하며, assistant 판정·미판정 상품과 모델 간 단회 비교의 한계는 [추천 평가 README](../evaluation/recommendation/README.md)에 기록합니다.
 
-상품 선택과 추천 이유의 직접 근거 기준은 [grounding-v1](../evaluation/recommendation/grounding-v1.json)에 세 문제 사례와 두 대조 사례로 고정했습니다. 프롬프트 변경의 실제 모델 전후 반복 평가는 별도 실행 결과로 판단하며 mock 테스트 통과를 의미 품질 개선의 측정 결과로 간주하지 않습니다.
+상품 선택과 추천 이유의 직접 근거 기준은 [grounding-v1](../evaluation/recommendation/grounding-v1.json)에 세 문제 사례와 두 대조 사례로 고정했습니다. #198의 실제 모델 전후 비교에서 허용 Hit@5 17/17과 정책 위반 0건을 유지했고, S10·R01·R03 문제는 전체 실행과 focused 반복을 합쳐 변경 전 3/3에서 변경 후 0/3으로 줄었습니다. 이는 assistant rubric과 실행에 포함된 조합에 한정된 결과이며 새 상품·질의 조합은 미판정일 수 있습니다. 상세 실행·source hash·판정 한계는 [grounding 평가 보고서](../evaluation/recommendation/GROUNDING_EVALUATION_2026-09-18.md)에 기록합니다.

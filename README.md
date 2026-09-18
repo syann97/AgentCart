@@ -7,7 +7,7 @@ Agentic RAG 기반 상품 추천을 구현하는 개인 실습 프로젝트입�
 ## 현재 구현
 
 - MySQL FULLTEXT와 pgvector 검색 결과를 순위 기반으로 결합합니다.
-- 설정으로 선택한 OpenAI 또는 Anthropic Claude 채팅 모델로 추천 Agent를 실행하고 질의를 확장합니다.
+- 설정으로 선택한 OpenAI 또는 Anthropic Claude 채팅 모델로 추천 Agent를 실행하고 검색 인자와 재검색 여부를 결정합니다.
 - 상품 상태, 카테고리, 최근 주문, 가격 조건을 검증합니다. 현재 fallback의 한계는 [추천 파이프라인](docs/RECOMMENDATION_PIPELINE.md)에 기록합니다.
 - 추천 전체 계산 후 상품별 SSE 메시지를 전송하고 Kafka로 추천 이력을 적재합니다.
 - 회원·인증, 상품 CRUD, 장바구니, 주문·재고 처리, Mock 결제가 구현되어 있습니다.
@@ -46,7 +46,7 @@ GET /api/recommendations/stream?query=...
 
 명시 조건 보존, 근거가 없을 때 결과 없음 처리, 실행 상한과 평가 기준은 [Agentic RAG 구현 계획](docs/AGENTIC_RAG_PLAN.md)이 기준입니다.
 
-고정 snapshot의 실제 Agent 평가 harness와 호출·token·지연 계측을 추가했습니다. 2026-09-16 Claude 완료 실행은 v2 평가 정책으로 별도 재산정했으며, 명시 정책 위반 0건과 허용 Hit@5 1.0을 기록했습니다. 원본 실행·v1 판정은 변경하지 않고 보존합니다. 평가 버전과 해석 한계는 [추천 평가 README](evaluation/recommendation/README.md)를 참조합니다.
+고정 snapshot의 실제 Agent 평가 harness와 호출·token·지연 계측을 추가했습니다. 2026-09-16 Claude 완료 실행은 v2 평가 정책으로 별도 재산정했으며, 명시 정책 위반 0건과 허용 Hit@5 1.0을 기록했습니다. 이후 raw run과 오프라인 assessment를 분리하고 실제 모델 전후 반복 평가에서 허용 Hit@5 17/17과 정책 위반 0건을 유지하면서 세 근거 문제 사례를 3/3에서 0/3으로 줄였습니다. 원본 실행·v1 판정은 변경하지 않고 보존하며, assistant 판정과 미판정 조합의 한계가 있습니다. 평가 버전과 해석 한계는 [추천 평가 README](evaluation/recommendation/README.md)를 참조합니다.
 
 ## 데이터와 실행
 
