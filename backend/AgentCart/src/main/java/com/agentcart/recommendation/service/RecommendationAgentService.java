@@ -162,7 +162,15 @@ public class RecommendationAgentService {
             for (int turn = 1; turn <= MAX_LLM_CALLS; turn++) {
                 checkCanStart(state, true);
                 boolean toolsAvailable = turn < MAX_LLM_CALLS && state.searchCount < MAX_SEARCHES;
-                ChatResponse response = callModel(state, conversation, toolsAvailable);
+                ChatResponse response;
+                try {
+                    response = callModel(state, conversation, toolsAvailable);
+                } catch (CancelledException | DeadlineExceededException e) {
+                    throw e;
+                } catch (RuntimeException e) {
+                    // Only model-boundary failures may enter the condition-preserving fallback.
+                    return fallback(state, candidates, progressListener);
+                }
                 AssistantMessage assistant = response == null || response.getResult() == null
                         ? null : response.getResult().getOutput();
                 if (assistant == null) {
@@ -209,6 +217,8 @@ public class RecommendationAgentService {
         } catch (DeadlineExceededException e) {
             return finish(state, RecommendationAgentOutcome.FAILED,
                     RecommendationAgentActionCode.DEADLINE_EXCEEDED, "추천 처리 시간이 초과되었습니다.", List.of());
+        } catch (SearchFailureException e) {
+            return searchFailed(state, e.actionCode);
         } catch (InvalidModelResponseException e) {
             return fallback(state, candidates, progressListener);
         } catch (RuntimeException e) {
@@ -238,6 +248,7 @@ public class RecommendationAgentService {
         ChatResponse response = withinDeadline(
                 state, () -> chatModel.call(new Prompt(List.copyOf(conversation),
                         chatOptionsFactory.create(0.0, toolCallbacks, toolContext))));
+        checkCanStart(state, false);
         recordUsage(state, response);
         return response;
     }
@@ -273,11 +284,47 @@ public class RecommendationAgentService {
         String json = withinDeadline(state, () -> searchCatalogToolCallback.call(
                 objectMapper.writeValueAsString(request),
                 new ToolContext(Map.of(SearchCatalogToolConfiguration.EXECUTION_CONTEXT_KEY, executionContext))));
+        checkCanStart(state, false);
+        SearchCatalogResponse response;
         try {
-            return objectMapper.readValue(json, SearchCatalogResponse.class);
+            response = objectMapper.readValue(json, SearchCatalogResponse.class);
         } catch (Exception e) {
-            throw new InvalidModelResponseException();
+            throw new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
         }
+        if (response == null || response.status() == null) {
+            throw new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
+        }
+        return switch (response.status()) {
+            case SUCCESS -> {
+                if (response.errorCode() != null) {
+                    throw new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
+                }
+                yield response;
+            }
+            case EMPTY -> {
+                if (!response.candidates().isEmpty() || response.errorCode() != null) {
+                    throw new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
+                }
+                yield response;
+            }
+            case ERROR -> {
+                if (response.errorCode() == null) {
+                    throw new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
+                }
+                throw switch (response.errorCode()) {
+                    case DEADLINE_EXCEEDED -> new DeadlineExceededException();
+                    case EMBEDDING_FAILED -> new SearchFailureException(RecommendationAgentActionCode.EMBEDDING_FAILED);
+                    case SEARCH_REPOSITORY_FAILURE -> new SearchFailureException(
+                            RecommendationAgentActionCode.SEARCH_REPOSITORY_FAILURE);
+                    default -> new SearchFailureException(RecommendationAgentActionCode.PROCESSING_FAILED);
+                };
+            }
+        };
+    }
+
+    private RecommendationAgentResult searchFailed(ExecutionState state, RecommendationAgentActionCode code) {
+        return finish(state, RecommendationAgentOutcome.FAILED, code,
+                "상품 검색에 실패했습니다. 잠시 후 다시 시도해 주세요.", List.of());
     }
 
     private RecommendationAgentResult fallback(
@@ -289,6 +336,9 @@ public class RecommendationAgentService {
                     state.requestContext.originalQuery(), state.requestContext.originalQuery(), null);
             String fingerprint = fingerprint(request);
             Map<Long, SearchCatalogCandidate> fallbackCandidates = new LinkedHashMap<>(existingCandidates);
+            // Reuse only candidates from successful searches in this request when the original
+            // search was already executed or the search budget is exhausted. A new ERROR aborts
+            // the entire request even if earlier candidates exist.
             if (!state.searchFingerprints.contains(fingerprint) && state.searchCount < MAX_SEARCHES) {
                 state.searchFingerprints.add(fingerprint);
                 SearchCatalogResponse response = executeSearch(
@@ -310,6 +360,8 @@ public class RecommendationAgentService {
         } catch (DeadlineExceededException e) {
             return finish(state, RecommendationAgentOutcome.FAILED,
                     RecommendationAgentActionCode.DEADLINE_EXCEEDED, "추천 처리 시간이 초과되었습니다.", List.of());
+        } catch (SearchFailureException e) {
+            return searchFailed(state, e.actionCode);
         } catch (RuntimeException e) {
             return finish(state, RecommendationAgentOutcome.FAILED,
                     RecommendationAgentActionCode.PROCESSING_FAILED, "추천 처리에 실패했습니다.", List.of());
@@ -495,6 +547,13 @@ public class RecommendationAgentService {
     }
 
     private static final class InvalidModelResponseException extends RuntimeException {}
+    private static final class SearchFailureException extends RuntimeException {
+        private final RecommendationAgentActionCode actionCode;
+
+        private SearchFailureException(RecommendationAgentActionCode actionCode) {
+            this.actionCode = actionCode;
+        }
+    }
     private static final class DeadlineExceededException extends RuntimeException {}
     private static final class CancelledException extends RuntimeException {}
 }
