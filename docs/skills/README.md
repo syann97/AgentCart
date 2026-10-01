@@ -2,7 +2,7 @@
 
 `docs/skills`의 문서는 특정 코딩 도구에 자동 등록되는 skill이 아니라, 사람과 도구가 함께 참고하는 일반 Markdown 가이드입니다. 공통 범위·변경·검증 원칙은 [DEVELOPMENT](../DEVELOPMENT.md)가 기준이며, 현재 구현 사실은 각 context 문서와 소스에서 확인합니다.
 
-작업에 직접 필요한 가이드만 읽습니다. 여러 가이드가 같은 내용을 반복하면 공통 규칙과 담당 context를 우선하고, 이 문서는 해당 작업에 특화된 점검 항목만 보충합니다.
+[작업별 읽기 경로](../README.md#작업별-읽기-경로)에 따라 필요한 가이드만 읽습니다. 함께 볼 문서도 관련 계약만 확인하며, 예제·평가 기록은 필요할 때 엽니다. 여러 가이드가 같은 내용을 반복하면 공통 규칙과 담당 context를 우선합니다.
 
 ## Backend
 
@@ -30,4 +30,4 @@
 | [코드 리뷰](shared/code-review.md) | 변경 diff의 정확성·범위·검증 검토 |
 | [보안 리뷰](shared/security-review.md) | 인증·인가·secret·외부 입력 경계 검토 |
 
-추천 작업은 위 가이드보다 먼저 [현재 추천 파이프라인](../RECOMMENDATION_PIPELINE.md)과 [승인된 목표 설계](../AGENTIC_RAG_PLAN.md)를 구분합니다. 구현된 agent loop와 SSE 계약, 아직 남은 실제 모델 평가 범위를 구분합니다.
+추천 작업은 먼저 [현재 추천 파이프라인](../RECOMMENDATION_PIPELINE.md)과 [승인된 목표 설계](../AGENTIC_RAG_PLAN.md)의 영향받는 절을 함께 확인합니다. 구현된 agent loop와 SSE 계약, 아직 남은 실제 모델 평가 범위를 구분합니다.

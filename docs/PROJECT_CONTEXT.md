@@ -9,11 +9,9 @@ AgentCart는 상품 추천을 통해 Agentic RAG를 학습하는 개인 프로�
 - 추천은 OpenAI 또는 Anthropic Claude 중 설정으로 선택한 채팅 모델, 제한된 단일 에이전트와 `searchCatalog`를 사용하는 Agentic RAG 파이프라인입니다. [현행 동작](RECOMMENDATION_PIPELINE.md)
 - 데이터의 1차 범위는 합성 상품 JSON 500개와 [10개 추천 시나리오](RECOMMENDATION_SCENARIOS.md)입니다.
 
-## 진행 중인 구현
+## 구현 상태와 근거
 
-단일 추천 에이전트가 기존 검색을 감싼 `searchCatalog`를 최대 두 번 호출하며, HTTP/SSE 요청은 진행·결과·종료·오류 이벤트로 이 실행을 전달합니다. 가격·상품 상태·회원 문맥과 호출·시간 상한은 애플리케이션이 관리합니다. 상품 선택과 추천 이유는 사용자 원문의 핵심 요구를 후보 상품명·설명과 대조하고 확인 가능한 속성의 직접 근거를 요구합니다.
-
-문서 정합성 정비와 에이전트 기반 코드는 단계별로 진행합니다. Agent와 SSE 계약은 구현됐고 고정 snapshot의 Claude 실제 평가는 완료됐습니다. v2 오프라인 재평가는 명시 정책과 의미 관련성을 분리해 Agent 실행의 명시 정책 위반 0건, 허용 Hit@5 1.0을 기록했습니다. 상품 근거 개선 전후 평가도 허용 Hit@5 17/17과 정책 위반 0건을 유지했고, 세 문제 사례는 변경 전 3/3에서 변경 후 0/3으로 줄었습니다. assistant 판정과 새 조합의 미판정이라는 근거 한계는 유지합니다. 현재/목표 구분은 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 [구현 계획](AGENTIC_RAG_PLAN.md)을 기준으로 확인합니다.
+Agent와 SSE 계약은 구현됐습니다. 변경할 동작의 현재 값과 남은 목표는 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 [구현 계획](AGENTIC_RAG_PLAN.md)에서 확인합니다. 실제 Claude 실행·오프라인 판정의 수치와 한계는 [Agent 평가](../evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md), [근거 개선 평가](../evaluation/recommendation/GROUNDING_EVALUATION_2026-09-18.md)에 보존합니다.
 
 ## 작업 원칙
 

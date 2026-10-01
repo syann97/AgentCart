@@ -2,11 +2,25 @@
 
 문서는 **현재 구현**, **승인된 목표**, **개발 지침**을 구분합니다. 목표 설계의 수치를 현재 운영 값으로 소개하거나, 문서 변경만으로 기능이 구현되었다고 기록하지 않습니다.
 
-## 읽는 순서
+## 작업별 읽기 경로
 
-1. [프로젝트 개요](PROJECT_CONTEXT.md)
-2. 추천 작업은 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 [목표 설계](AGENTIC_RAG_PLAN.md)
-3. [공통 개발 규칙](DEVELOPMENT.md)과 해당 영역의 context·rules·skill
+공통 시작점은 [DEVELOPMENT](DEVELOPMENT.md)의 `범위와 변경`, `환경과 데이터`입니다. 검증·문서·PR 절은 수행할 작업에 맞춰 추가합니다. 프로젝트 범위가 낯설 때만 [개요](PROJECT_CONTEXT.md)를 먼저 확인합니다. 아래 문서도 관련 절을 선택하며, 영향 범위가 불명확하면 전체를 읽습니다.
+
+| 작업 | 추가로 읽을 문서 / 절 |
+|---|---|
+| 문서·Git 작업 | DEVELOPMENT의 문서·검증·PR 절; 수정 대상 문서와 그 사실의 출처 |
+| Frontend UI | FRONTEND_CONTEXT, FRONTEND_RULES의 사용자 상태 절, [UI](skills/frontend/ui.md), [테스트](skills/frontend/testing.md) |
+| Frontend API·SSE | FRONTEND_CONTEXT, FRONTEND_RULES의 해당 계약, [API client](skills/frontend/api-client.md), 테스트 가이드 |
+| Backend API | BACKEND_CONTEXT, BACKEND_RULES의 관련 계층·입력 규칙, [API](skills/backend/api.md), [검증](skills/backend/validation.md), [테스트](skills/backend/testing.md) |
+| 인증·보안 | 해당 영역 context·rules, AUTH의 변경할 계약, [가이드 인덱스](skills/README.md)의 해당 인증·보안 가이드 |
+| 추천 검색·agent | RECOMMENDATION_PIPELINE의 질의·검색·검증·실행 상한; AGENTIC_RAG_PLAN의 도구·재검색·실행 상한·작업 상태; BACKEND_RULES의 추천 규칙 |
+| 추천 SSE | RECOMMENDATION_PIPELINE의 `현재 SSE 계약`, AGENTIC_RAG_PLAN의 `SSE 계약 — 구현됨`과 작업 상태; 해당 Frontend/Backend 규칙 |
+| 추천 평가 | RECOMMENDATION_SCENARIOS와 해당 평가 artifact; 파이프라인·목표 설계에서 평가할 동작과 완료 기준 |
+| 환경·데이터 적재 | LOCAL_SETUP, INFRA_CONTEXT의 해당 서비스·설정; 데이터 변경은 담당 Backend 계약 |
+
+추천 작업은 **영향받는 현재/목표 계약을 반드시 함께 확인**합니다. 관련 API·인증·캐시로 영향이 이어지면 읽기 범위를 넓힙니다. 가이드는 필요한 것만 선택하고 예제는 작성 방식이 불명확할 때 엽니다. 읽은 지침은 파일·영역 변경이나 기억이 불확실한 경우에 다시 확인합니다.
+
+코딩 에이전트의 문서 효율과 행동 품질 평가는 [AGENT_GUIDANCE_EVALUATION](AGENT_GUIDANCE_EVALUATION.md)에 정의합니다. 이 평가 문서는 일반 작업의 필수 읽기 대상이 아닙니다.
 
 ## 문서별 책임
 

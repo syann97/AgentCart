@@ -1,44 +1,8 @@
 # 버그 수정 작업 가이드
 
-이 파일은 도구 중립적인 저장소 참고 문서입니다. 범위·검증·사용자 변경 보존은 [공통 개발 규칙](../../DEVELOPMENT.md)을 따릅니다.
+결함·회귀 수정에 사용합니다. 범위·변경 보존·검증은 [공통 규칙](../../DEVELOPMENT.md)을 따릅니다.
 
-## Goal
-
-Fix bugs with minimal and targeted changes.
-
-## When To Use
-
-- Fixing defects
-- Handling regressions
-- Stabilizing existing behavior
-
-## Rules
-
-- Reproduce the bug first.
-- Change only what is necessary.
-- Avoid unrelated refactoring.
-- Preserve existing architecture and style.
-- Prefer root-cause fixes over symptom masking.
-
-## Workflow
-
-1. Reproduce the bug.
-2. Identify the root cause.
-3. 회귀 가능성이 있거나 경계 동작이 바뀌면 실패를 재현하는 의미 있는 테스트를 추가합니다.
-4. Apply the minimal fix.
-5. Verify the fix.
-6. Run regression verification.
-
-## Verification
-
-- Bug reproduction no longer occurs.
-- Existing behavior remains stable.
-- 실행한 관련 검증이 통과합니다.
-- No unrelated code changed.
-
-## Anti-Patterns
-
-- Refactoring during bug fixes
-- Broad architectural changes
-- Fixing symptoms only
-- Silent exception swallowing
+1. 입력·환경·관찰 결과로 문제를 재현합니다. 재현이 불가능하면 근거와 가정을 구분합니다.
+2. 증상을 숨기거나 예외를 삼키지 말고 원인을 찾아 기존 구조에 맞는 최소 수정을 합니다.
+3. 회귀 가능성이나 경계 동작 변경은 실패를 재현하는 의미 있는 테스트로 검증합니다.
+4. 원래 재현이 사라졌고 관련 기존 동작이 유지되는지 확인합니다. 실행한 검증과 남은 한계를 기록합니다.
