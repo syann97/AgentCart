@@ -1,47 +1,8 @@
 # 코드 리뷰 작업 가이드
 
-이 파일은 도구 중립적인 저장소 참고 문서입니다. 요구사항과 [공통 개발 규칙](../../DEVELOPMENT.md), 변경 영역의 context·rules를 기준으로 실제 diff를 검토합니다.
+PR·생성 코드·수정 diff를 요구사항, [공통 규칙](../../DEVELOPMENT.md), 해당 context·rules에 대조합니다.
 
-## Goal
-
-Review code for correctness, simplicity, and maintainability.
-
-## When To Use
-
-- Reviewing pull requests
-- Reviewing AI-generated code
-- Reviewing bug fixes
-- Reviewing refactors
-
-## Rules
-
-- Focus on correctness first.
-- Prefer simplicity over cleverness.
-- Verify changes match requirements.
-- Review only relevant changes.
-
-## Workflow
-
-1. Understand the requested change.
-2. Verify implementation correctness.
-3. Check architectural consistency.
-4. Check test coverage.
-5. Check unnecessary complexity.
-6. Verify regression risks.
-7. Verify documentation describes current and planned behavior separately.
-
-## Verification
-
-- Changes match requirements.
-- Complexity is justified.
-- Tests cover important behavior.
-- No unnecessary changes exist.
-- Report unrun tests and unresolved assumptions explicitly.
-
-## Anti-Patterns
-
-- Premature abstraction
-- Overengineering
-- Large unrelated diffs
-- Missing validation
-- Missing tests
+- 정확성과 회귀 위험을 먼저 확인합니다. 중요한 성공·실패 경계를 테스트가 검증하는지 봅니다.
+- 기존 구조에 맞는지, 복잡성·추상화가 필요한지, 무관한 변경이 섞였는지 확인합니다.
+- 문서의 현재 동작과 목표 동작을 구분하고 구현 상태를 소스·테스트와 대조합니다.
+- 발견 사항에 위치·영향·근거를 적습니다. 미실행 테스트와 해결되지 않은 가정을 명시합니다.
