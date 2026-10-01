@@ -18,7 +18,9 @@
 - `grounding-comparison.json`: 변경 전후 전체 실행과 focused 반복의 source hash·핵심 지표·사례별 재발 횟수
 - `GROUNDING_EVALUATION_2026-09-18.md`: 상품 선택과 추천 이유 근거 개선의 전후 실제 모델 평가 보고서
 - `executions/raw/<run-id>.json`: 신규 실제 모델 실행의 수정하지 않는 schema v2 원시 결과
-- `executions/assessments/<run-id>.json`: 원시 결과와 분리해 생성한 v2.1 오프라인 채점 결과
+- `executions/assessments/<run-id>.json`: 보존하는 v2.1 오프라인 채점 결과
+- `executions/assessments/v2.2/<run-id>.json`: 같은 raw run에서 상세·집계 불일치를 보정한 v2.2 채점 결과
+- `v2.2/manifest.json`: 보존한 역사 파일의 hash, 기준 commit, 이전 scorer hash와 보정 결과의 source/output/supersedes 연결
 
 상품 DB ID는 적재 순서에 따라 달라질 수 있어 label의 식별자로 쓰지 않습니다. `name|brand`가 중복되면 validator가 snapshot을 거부합니다. 기준선의 `productId`는 실행 당시 MySQL snapshot을 추적하기 위한 값입니다.
 
@@ -32,7 +34,7 @@ python scripts/evaluation/validate_recommendation_evaluation.py --print-metrics
 python -m unittest discover -s scripts/evaluation -p "test_*.py"
 ```
 
-validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·fixture 참조, 기준선 결과의 상품 사실과 ID 중복, 로컬 절대 경로·secret 형태 문자열을 검사합니다. 기존 v1 metrics를 원래 공식으로 확인한 뒤 원본 파일 hash, v2 판정 pool의 완전성, provenance와 v2 재평가 결과도 검증합니다. 이 검증은 모델이나 외부 서비스를 호출하지 않으므로 CI와 로컬에서 결정적입니다. 재평가 산출물을 의도적으로 갱신할 때만 `--write-reassessment`를 사용하며, 과거 실행 artifact를 쓰던 옵션은 거부됩니다.
+validator는 파일 hash와 8/500 합계, 안정 키 유일성, 질의·label·fixture 참조, 기준선 결과의 상품 사실과 ID 중복, 로컬 절대 경로·secret 형태 문자열을 검사합니다. v1은 원래 공식, v2는 기존 scorer로 재계산하고, v2.1은 기록한 역사 hash로 보존을 검증합니다. v2.2는 상품→질의→전체 불변식과 최신 scorer의 결정적 재계산을 모두 확인합니다. 새 scorer로 과거 v2.1을 다시 계산해 같은 결과라고 주장하지 않습니다. 일반 텍스트 hash는 기존 `content_sha256`의 LF 정규화 규칙을 사용하며 `.gitattributes`의 `-text` 실행 기록은 grounding comparison의 바이트 hash 검사도 유지합니다. 이 검증은 외부 서비스를 호출하지 않습니다. `--write-reassessment`는 기존 v2 전용이며 v2.1·v2.2 파일을 덮어쓰지 않습니다.
 
 ## 실제 모델 실행과 mock 회귀 테스트
 
@@ -72,10 +74,44 @@ python -B scripts/evaluation/score_recommendation_run.py `
   --labels evaluation/recommendation/v2/labels.json `
   --manifest evaluation/recommendation/snapshot-manifest.json `
   --fixtures evaluation/recommendation/fixtures.json `
-  --output evaluation/recommendation/executions/assessments/<run-id>.json
+  --output evaluation/recommendation/executions/assessments/v2.2/<run-id>.json
 ```
 
-scorer는 raw run, snapshot, 질의·상품 사실, 중복 결과와 실행 상한을 검증한 후 `metricVersion=2.1-observed-policy`로 채점합니다. 요청 직후 DB에서 관측한 status·stock만 정책 근거로 사용하며 삭제·조회 누락은 unknown으로 집계합니다. label에 없는 상품-질의 조합도 `unjudged`로 남습니다. `FAILED` 질의가 하나라도 있는 실행은 품질 비교에서 제외하고 metrics를 만들지 않습니다. 기존 raw run이나 assessment 경로가 이미 있으면 덮어쓰지 않습니다.
+scorer는 raw run, snapshot, 질의·상품 사실, 중복 결과와 실행 상한을 검증한 후 `metricVersion=2.2-observed-policy`로 채점합니다. 요청 직후 DB에서 관측한 status·stock만 해당 정책 근거로 사용하며 삭제·조회 누락은 unknown으로 집계합니다. snapshot의 재고·상태를 대체 근거로 쓰지 않습니다. label에 없는 상품-질의 조합도 `unjudged`로 남습니다. `FAILED` 질의가 하나라도 있는 실행은 품질 비교에서 제외하고 metrics를 만들지 않습니다. 기존 raw run이나 assessment 경로가 이미 있으면 덮어쓰지 않습니다.
+
+## v2.2 관측 정책 보정과 재현
+
+#209 이전 v2.1은 status·stock 위반과 전체 집계를 관측값으로 바꾸면서 상품의 `activeStatusUnknown`과 질의의 `observedPolicyCompliantAcceptedHitAt5`를 v2 계산값으로 남겼습니다. 전부 ACTIVE·양수 재고인 변경 전/후 실행에서 상품 상세 unknown은 80/72인데 전체 unknown은 0이었습니다. S01의 상위 5개를 모두 INACTIVE·재고 0으로 바꾼 메모리 fixture에서는 질의 Hit@5가 true인데 전체는 miss로 집계됐습니다.
+
+v2.2는 각 상품의 `activeStatusUnknown`, `stockUnknown`, `policyEvidenceUnknown`과 위반을 관측값으로 확정하고, 질의 unknown 수·위반·Hit@5를 계산한 뒤 그 질의값으로 전체 집계를 만듭니다. 상태·재고의 부분 누락, observation 객체 누락 또는 null도 unknown입니다. `fullyObservedProducts`는 정책 **근거의 완전성**이며 정책 준수 상품 수가 아닙니다.
+
+| 질의별 관측 정책 Hit@5 | 의미 |
+|---|---|
+| `true` | 상위 5개에 relevant/acceptable이고 알려진 위반이 없으며 상태·재고 근거가 완전한 상품 존재 |
+| `null` | 입증된 hit는 없지만 알려진 위반이 없는 후보의 relevance 또는 상태·재고가 미판정이어서 hit 가능성이 남음 |
+| `false` | hit 가능 후보 없음; 빈 결과·전부 알려진 정책 위반·전부 irrelevant 포함 |
+
+알려진 위반이 있는 상품은 다른 근거가 누락돼도 hit 가능 후보가 아닙니다. irrelevant 상품의 정책 unknown도 Hit@5를 null로 바꾸지 않습니다. 입증된 hit가 있으면 다른 unknown보다 우선합니다. 상품의 unknown 플래그는 이 Hit@5 판정과 별도로 유지합니다. S/C/R 17개만 전체 `hits + misses + unjudged = eligibleQueries` 분모에 포함하며, null도 분모에서 제외하지 않습니다. N/A 질의의 null은 비대상 표시이고 unjudged 수에 넣지 않습니다.
+
+두 고정 raw run의 보정 결과는 새 경로에 저장했습니다. relevance label·raw run·v1/v2/v2.1 assessment·grounding comparison과 보고서는 변경하지 않았습니다.
+
+| raw run | 반환 상품 | 상품 상세 status unknown 전→후 | 전체 status unknown | 관측 정책 Hit@5 |
+|---|---:|---:|---:|---|
+| `agentic-rag-fe2766f-20260918T004833Z-r1` | 80 | 80→0 | 0→0 | 17/17 유지 |
+| `agentic-rag-770d062-20260918T005338Z-r1` | 72 | 72→0 | 0→0 | 17/17 유지 |
+
+새 평가는 scorer와 기반 v2 scorer의 hash도 기록합니다. 현재 scorer는 v2.2만 생성하며, 과거 scorer는 manifest의 기준 commit과 `previousScorerSha256`로 추적합니다. 역사 hash 목록은 LF 정규화 내용 hash이며 보호된 실행 기록은 기존 byte hash 검증도 통과해야 합니다.
+
+재현은 루트에서 아래 명령으로 수행합니다. validator가 두 보정 결과를 메모리에서 재계산해 저장 결과와 비교하며 파일을 쓰지 않습니다.
+
+```bash
+python -B scripts/evaluation/validate_recommendation_evaluation.py
+python -B -m unittest discover -s scripts/evaluation -p "test_*.py"
+```
+
+CLI로 별도 결과를 만들려면 위 채점 명령의 output을 **존재하지 않는 새 경로**로 지정합니다. 같은 raw 입력의 반복 채점은 동일한 결과를 만들며 기존 경로는 거부합니다. v2.2 결과를 저장소에 추가할 때는 manifest의 assessments에 source/output을 등록하고 원시 source hash를 preservedHistory에 추가합니다. v2.1 보정이면 supersedes도 지정하며 기존 역사 항목과 두 보정 연결을 유지합니다. validator는 v2.2 폴더의 미등록·누락 결과를 거부합니다.
+
+이 작업은 오프라인 계산 수정이며 실제 LLM 재실행이나 추천 품질 개선 실험이 아닙니다. 알려진 평가 한계와 assistant label provenance는 유지합니다.
 
 2026-09-16 OpenAI 실행은 잔여 credit 부족으로 모델 의존 19개 질의를 완료하지 못했으므로 v2 품질 비교에서도 제외합니다. #191의 `claude-haiku-4-5` 완료 실행은 v2에서 엄격 Hit@5 0.941176, 허용 Hit@5 1.0, 관찰된 정책 준수 허용 Hit@5 1.0과 명시 정책 위반 0건을 기록했습니다. 기존 보고서의 카테고리 위반 2건은 S07·S10의 soft 기대 카테고리 불일치이며 사용자 명시 조건 위반이 아닙니다. Agent 결과 80개 중 2개는 `unjudged`이고 상품 status는 원시 snapshot에 없어 ACTIVE 준수 여부 80건이 unknown입니다.
 

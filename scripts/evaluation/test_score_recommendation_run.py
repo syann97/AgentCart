@@ -7,9 +7,10 @@ import unittest
 from pathlib import Path
 
 from score_recommendation_run import (
-    build_assessment, catalog_fingerprint, load_products, parse_timestamp, validate_run,
+    apply_observed_policy, build_assessment, catalog_fingerprint, load_products, parse_timestamp,
+    validate_observed_metrics, validate_run,
 )
-from reassess_recommendation_evaluation import load_json, stable_key
+from reassess_recommendation_evaluation import RULES, hit_summary, load_json, score_run, stable_key
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -57,6 +58,167 @@ class ScoreRecommendationRunTest(unittest.TestCase):
 
     def validate(self, run):
         validate_run(run, self.definition, self.products, self.manifest)
+
+    def observed_metrics(self, run, labels=None):
+        metrics = score_run(run, self.definition, labels or load_json(self.labels_path),
+                            self.products, load_json(self.fixtures_path))
+        return apply_observed_policy(metrics, run, self.definition)
+
+    def assert_consistent(self, metrics):
+        queries = metrics["queries"]
+        rows = [row for query in queries for row in query["products"]]
+        self.assertEqual(sum(row["activeStatusUnknown"] for row in rows),
+                         metrics["activeStatusUnknownProducts"])
+        for query in queries:
+            self.assertEqual(sum(row["activeStatusUnknown"] for row in query["products"]),
+                             query["activeStatusUnknownProducts"])
+            self.assertEqual(sum(row["stockUnknown"] for row in query["products"]),
+                             query["stockUnknownProducts"])
+            self.assertEqual(sum(row["policyEvidenceUnknown"] for row in query["products"]),
+                             query["policyEvidenceUnknownProducts"])
+        for rule in RULES:
+            self.assertEqual(sum(row["violations"][rule] for row in rows),
+                             metrics["policyViolations"][rule])
+            self.assertEqual(sum(query["policyViolations"][rule] for query in queries),
+                             metrics["policyViolations"][rule])
+        self.assertEqual(sum(row["stockUnknown"] for row in rows), metrics["policyEvidence"]["stockUnknown"])
+        self.assertEqual(sum(row["policyEvidenceUnknown"] for row in rows),
+                         len(rows) - metrics["policyEvidence"]["fullyObservedProducts"])
+        key = "observedPolicyCompliantAcceptedHitAt5"
+        self.assertEqual(hit_summary([query[key] for query in queries if query["hitEligible"]]),
+                         metrics["hitAt5"][key])
+
+    def test_healthy_observations_update_every_product_and_aggregate(self):
+        metrics = self.observed_metrics(self.raw_run())
+        self.assertFalse(any(row["activeStatusUnknown"] for query in metrics["queries"] for row in query["products"]))
+        self.assert_consistent(metrics)
+
+    def test_all_top_five_policy_violations_are_query_and_aggregate_miss(self):
+        run = self.raw_run()
+        for result in run["evaluations"][0]["results"]:
+            result["policyObservation"].update(status="INACTIVE", stock=0)
+        metrics = self.observed_metrics(run)
+        first = metrics["queries"][0]
+        self.assertIs(first["observedPolicyCompliantAcceptedHitAt5"], False)
+        self.assertEqual(5, first["policyViolations"]["status"])
+        self.assertEqual(5, first["policyViolations"]["stock"])
+        self.assertEqual(1, metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"]["misses"])
+        self.assert_consistent(metrics)
+
+    def test_missing_observations_do_not_borrow_snapshot_status_or_stock(self):
+        for missing in ("status", "stock", "observation", "null-observation"):
+            with self.subTest(missing=missing):
+                run = self.raw_run()
+                for result in run["evaluations"][0]["results"]:
+                    if missing == "observation":
+                        result.pop("policyObservation")
+                    elif missing == "null-observation":
+                        result["policyObservation"] = None
+                    else:
+                        result["policyObservation"].pop(missing)
+                metrics = self.observed_metrics(run)
+                self.assertIsNone(metrics["queries"][0]["observedPolicyCompliantAcceptedHitAt5"])
+                self.assertEqual(1, metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"]["unjudged"])
+                self.assert_consistent(metrics)
+
+    def test_entire_run_without_observations_keeps_all_evidence_unknown(self):
+        run = self.raw_run()
+        for evaluation in run["evaluations"]:
+            for result in evaluation["results"]:
+                result.pop("policyObservation")
+        metrics = self.observed_metrics(run)
+        returned = metrics["execution"]["resultCount"]
+        self.assertEqual(returned, metrics["policyEvidence"]["statusUnknown"])
+        self.assertEqual(returned, metrics["policyEvidence"]["stockUnknown"])
+        self.assertEqual(0, metrics["policyEvidence"]["fullyObservedProducts"])
+        self.assertEqual(17, metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"]["unjudged"])
+        self.assertEqual(0, metrics["policyViolations"]["status"])
+        self.assertEqual(0, metrics["policyViolations"]["stock"])
+        self.assert_consistent(metrics)
+
+    def test_proven_hit_takes_precedence_over_another_unknown_candidate(self):
+        run = self.raw_run()
+        first = run["evaluations"][0]
+        first["results"][1]["policyObservation"] = None
+        labels = copy.deepcopy(load_json(self.labels_path))
+        known_key = stable_key(first["results"][0])
+        judgment = next(row for row in labels["judgments"] if row["queryId"] == first["queryId"])
+        next(row for row in judgment["products"] if row["productKey"] == known_key)["label"] = "relevant"
+        metrics = self.observed_metrics(run, labels)
+        self.assertIs(metrics["queries"][0]["observedPolicyCompliantAcceptedHitAt5"], True)
+        self.assertEqual(1, metrics["queries"][0]["policyEvidenceUnknownProducts"])
+        self.assert_consistent(metrics)
+
+    def test_unknown_only_matters_when_a_policy_compliant_accepted_hit_is_possible(self):
+        for label, status, stock, expected in (
+                ("relevant", "ACTIVE", 1, True), ("relevant", None, 1, None),
+                ("acceptable", "ACTIVE", None, None), ("unjudged", "ACTIVE", 1, None),
+                ("irrelevant", None, None, False), ("relevant", None, 0, False),
+                ("unjudged", "INACTIVE", None, False)):
+            with self.subTest(label=label, status=status, stock=stock):
+                run = self.raw_run()
+                first = run["evaluations"][0]
+                first["results"] = first["results"][:1]
+                first["resultCount"] = 1
+                result = first["results"][0]
+                result["policyObservation"].update(status=status, stock=stock)
+                labels = copy.deepcopy(load_json(self.labels_path))
+                judgment = next(row for row in labels["judgments"] if row["queryId"] == first["queryId"])
+                next(row for row in judgment["products"] if row["productKey"] == stable_key(result))["label"] = label
+                metrics = self.observed_metrics(run, labels)
+                self.assertIs(metrics["queries"][0]["observedPolicyCompliantAcceptedHitAt5"], expected)
+                self.assert_consistent(metrics)
+
+    def test_empty_results_and_missing_relevance_share_the_same_hit_denominator(self):
+        run = self.raw_run()
+        run["evaluations"][0]["results"] = []
+        run["evaluations"][0]["resultCount"] = 0
+        labels = copy.deepcopy(load_json(self.labels_path))
+        labels["judgments"][1]["products"] = []
+        metrics = self.observed_metrics(run, labels)
+        self.assertIs(metrics["queries"][0]["observedPolicyCompliantAcceptedHitAt5"], False)
+        self.assertIsNone(metrics["queries"][1]["observedPolicyCompliantAcceptedHitAt5"])
+        self.assertEqual(17, metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"]["eligibleQueries"])
+        self.assert_consistent(metrics)
+
+    def test_assessment_is_deterministic_and_preserves_raw_bytes(self):
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            path = Path(directory) / "raw.json"
+            path.write_text(json.dumps(self.raw_run(), ensure_ascii=False), encoding="utf-8")
+            before = path.read_bytes()
+            first = build_assessment(ROOT, path, self.definition_path, self.labels_path,
+                                     self.manifest_path, self.fixtures_path)
+            second = build_assessment(ROOT, path, self.definition_path, self.labels_path,
+                                      self.manifest_path, self.fixtures_path)
+            self.assertEqual(first, second)
+            self.assertEqual(before, path.read_bytes())
+
+    def test_invariant_validator_rejects_product_query_and_aggregate_drift(self):
+        healthy = self.observed_metrics(self.raw_run())
+        validate_observed_metrics(healthy)
+        for change, message in (("product", "product evidence"), ("query-hit", "query policy hit"),
+                                ("query-count", "query evidence"), ("query-violation", "query violations"),
+                                ("total", "aggregate evidence"), ("total-hit", "aggregate policy hit"),
+                                ("total-violation", "aggregate violations")):
+            with self.subTest(change=change):
+                metrics = copy.deepcopy(healthy)
+                query = metrics["queries"][0]
+                if change == "product":
+                    query["products"][0]["activeStatusUnknown"] = True
+                elif change == "query-hit":
+                    query["observedPolicyCompliantAcceptedHitAt5"] = False
+                elif change == "query-count":
+                    query["stockUnknownProducts"] = 1
+                elif change == "query-violation":
+                    query["policyViolations"]["stock"] = 1
+                elif change == "total":
+                    metrics["activeStatusUnknownProducts"] = 1
+                elif change == "total-hit":
+                    metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"]["eligibleQueries"] = 20
+                else:
+                    metrics["policyViolations"]["status"] = 1
+                with self.assertRaisesRegex(ValueError, message):
+                    validate_observed_metrics(metrics)
 
     def test_java_nanosecond_timestamp_is_accepted_on_python_38(self):
         parsed = parse_timestamp("2026-09-18T09:52:04.123456789+09:00")
