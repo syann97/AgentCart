@@ -76,7 +76,9 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 - 정규화된 동일 검색 인자는 다시 실행하지 않으며, 취소 또는 deadline 이후 새 호출을 시작하지 않습니다.
 - 최종 결과는 검색 후보 ID와 `product:{id}` 근거를 검증하고 상품명·가격·카테고리·브랜드·점수는 서버 후보 데이터로 구성합니다. 최대 5개이며 0개 종료도 허용합니다.
 - 최종 후보를 고를 때 사용자 원문의 대상·용도·필수 성능을 후보 상품명·설명과 대조하도록 지시합니다. 방수·방풍, 무게·휴대성, 규격, 대상 동물 호환성처럼 확인 가능한 속성은 후보 근거에 직접 있을 때만 선택과 이유에 사용하며, 카테고리 불일치만으로 근거 있는 대안을 제외하지 않습니다.
-- 모델 또는 구조화 응답 실패 시 남은 검색 상한 안에서 원본 질의 일반 검색으로 fallback합니다. 후보별 추천 이유 LLM 호출은 이 에이전트 경로에서 사용하지 않습니다.
+- 모델 호출 예외·모델 부재·구조화 응답 실패 시 취소와 deadline을 확인한 뒤 남은 검색 상한 안에서 같은 요청 컨텍스트의 원본 질의 일반 검색으로 fallback합니다. 추가 모델 재시도는 하지 않습니다. 후보별 추천 이유 LLM 호출은 이 에이전트 경로에서 사용하지 않습니다.
+- 첫 검색·재검색·fallback 검색의 `SUCCESS/EMPTY/ERROR`는 서버가 분기합니다. `ERROR`는 모델에 전달하지 않고 즉시 `FAILED`로 종료합니다. embedding 오류는 `EMBEDDING_FAILED`, 저장소 오류는 `SEARCH_REPOSITORY_FAILURE`, 검색 deadline은 `DEADLINE_EXCEEDED`, 기타 도구 오류·파싱 실패는 `PROCESSING_FAILED`입니다. 이전 후보가 있어도 새 검색 오류를 정상 결과로 숨기지 않습니다.
+- fallback 원본 검색이 이미 실행됐거나 검색 2회 예산이 소진됐으면 해당 요청의 성공한 검색에서 정책 검증을 통과한 후보만 재사용합니다. 후보가 없으면 빈 `FALLBACK`입니다. 추가 fallback 검색이 정상 `EMPTY`이면 이전 검증 후보는 유지하고, 이전 후보도 없을 때만 빈 `FALLBACK`으로 종료합니다. 검색 장애와 구분하며 가격·명시 카테고리·회원 문맥과 요청 deadline은 재사용·추가 검색 모두 유지합니다.
 
 ## 검증과 fallback
 
@@ -120,6 +122,7 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 - 살아 있는 연결은 `done` 또는 `error` 중 하나만 전송합니다. terminal 뒤에는 추가 상태·상품·Kafka 이벤트가 없습니다.
 - 추천 성공, 결과 없음, 카탈로그 밖, 입력 구체화와 일반 검색 fallback은 모두 `done.outcome`으로 구분합니다.
 - 처리 실패는 `error`이며 `done`이 뒤따르지 않습니다. EventSource transport 오류는 Frontend에서 서버 `error`와 별도 상태로 처리합니다.
+- 검색 인프라 장애의 `error.code`는 `EMBEDDING_FAILED` 또는 `SEARCH_REPOSITORY_FAILURE`이며 `retryable=true`입니다. 이는 사용자 재시도 가능 안내이고 자동 모델·검색 재시도가 아닙니다. Frontend의 문자열 code 타입은 이 값을 그대로 보존합니다.
 - emitter completion·timeout·error와 전송 실패는 취소 토큰에 반영합니다. 연결이 이미 끊어졌다면 terminal 전송보다 추가 실행 중단을 우선합니다.
 
 브라우저 구독은 `EventSource`와 토큰 query parameter를 사용합니다. [AUTH](AUTH.md)의 실제 인증 계약을 따릅니다.

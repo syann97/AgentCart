@@ -13,10 +13,21 @@ import com.agentcart.product.repository.ProductRepository;
 import com.agentcart.recommendation.domain.RecommendationHistory;
 import com.agentcart.recommendation.repository.RecommendationHistoryRepository;
 import com.agentcart.recommendation.repository.RecommendationVectorRepository;
+import com.agentcart.recommendation.dto.SearchCatalogErrorCode;
+import com.agentcart.recommendation.dto.SearchCatalogResponse;
+import com.agentcart.recommendation.service.SearchCatalogService;
+import com.agentcart.recommendation.service.RecommendationEventProducer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +58,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -74,6 +89,10 @@ class RecommendationIntegrationTest {
 
     @MockitoBean
     EmbeddingModel embeddingModel;
+
+    @MockitoBean ChatModel chatModel;
+    @MockitoBean SearchCatalogService catalogService;
+    @MockitoBean RecommendationEventProducer eventProducer;
 
     @DynamicPropertySource
     static void configureRedis(DynamicPropertyRegistry registry) {
@@ -229,6 +248,41 @@ class RecommendationIntegrationTest {
         var results = vectorRepository.findTopBySimilarityWithinIds(query, List.of(202L), 50, 0.4);
 
         assertThat(results).extracting(result -> result.productId()).containsExactly(202L);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = SearchCatalogErrorCode.class, names = {"EMBEDDING_FAILED", "SEARCH_REPOSITORY_FAILURE"})
+    @DisplayName("검색 오류 - 실제 HTTP/SSE는 error 한 번으로 종료하고 이력을 발행하지 않음")
+    void stream_searchFailure_serializesSingleErrorWithoutDoneOrHistory(SearchCatalogErrorCode code) throws Exception {
+        given(chatModel.call(any(Prompt.class))).willReturn(new ChatResponse(List.of(new Generation(
+                AssistantMessage.builder().content("").toolCalls(List.of(new AssistantMessage.ToolCall(
+                        "call-1", "function", "searchCatalog",
+                        "{\"keywordQuery\":\"camping\",\"semanticQuery\":\"camping\"}"))).build()))));
+        given(catalogService.search(any(), any())).willReturn(SearchCatalogResponse.error(code));
+
+        MvcResult pending = mockMvc.perform(get("/api/recommendations/stream")
+                        .param("query", "캠핑 의자")
+                        .header("Authorization", "Bearer " + memberToken()))
+                .andExpect(request().asyncStarted()).andReturn();
+        pending.getAsyncResult(5_000);
+        MvcResult completed = mockMvc.perform(asyncDispatch(pending))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_EVENT_STREAM))
+                .andReturn();
+        List<JsonNode> events = completed.getResponse().getContentAsString().lines()
+                .filter(line -> line.startsWith("data:"))
+                .map(line -> objectMapper.readTree(line.substring(5)))
+                .toList();
+
+        assertThat(events).extracting(event -> event.get("type").asString()).containsExactly("status", "error");
+        JsonNode error = events.getLast().get("data");
+        assertThat(error.get("code").asString()).isEqualTo(code.name());
+        assertThat(error.get("retryable").asBoolean()).isTrue();
+        assertThat(error.get("requestId").asString()).isNotBlank();
+        verify(chatModel).call(any(Prompt.class));
+        verify(catalogService).search(any(), any());
+        verifyNoInteractions(eventProducer);
+        assertThat(historyRepository.findAll()).isEmpty();
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

@@ -139,28 +139,39 @@ describe('useRecommendationStream', () => {
     },
   );
 
-  it('type: error 메시지 수신 시 isComplete=true가 되고 연결이 종료된다', () => {
-    let capturedOnMessage: ((data: string) => void) | undefined;
-    vi.mocked(useSse).mockImplementation((_url, options) => {
-      capturedOnMessage = options?.onMessage;
-      return { isConnected: true, close: mockClose };
-    });
+  it.each(['PROCESSING_FAILED', 'EMBEDDING_FAILED', 'SEARCH_REPOSITORY_FAILURE'])(
+    'server error %s closes the connection without a normal outcome', (code) => {
+      let capturedOnMessage: ((data: string) => void) | undefined;
+      vi.mocked(useSse).mockImplementation((_url, options) => {
+        capturedOnMessage = options?.onMessage;
+        return { isConnected: true, close: mockClose };
+      });
 
-    const { result } = renderHook(() => useRecommendationStream());
+      const { result } = renderHook(() => useRecommendationStream());
 
-    act(() => { result.current.start('돌잔치'); });
-    act(() => {
-      capturedOnMessage?.(makeChunk('error', {
-        requestId: 'req-1', code: 'PROCESSING_FAILED', message: '처리 실패', retryable: true,
+      act(() => { result.current.start('돌잔치'); });
+      act(() => {
+        capturedOnMessage?.(makeChunk('error', {
+          requestId: 'req-1', code, message: '처리 실패', retryable: true,
+        }));
+      });
+
+      expect(result.current.isComplete).toBe(true);
+      expect(result.current.error).toEqual(expect.objectContaining({
+        code, retryable: true, transport: false,
       }));
-    });
-
-    expect(result.current.isComplete).toBe(true);
-    expect(result.current.error).toEqual(expect.objectContaining({
-      code: 'PROCESSING_FAILED', transport: false,
-    }));
-    expect(mockClose).toHaveBeenCalled();
-  });
+      expect(result.current.isSearching).toBe(false);
+      expect(result.current.outcome).toBeNull();
+      expect(result.current.results).toEqual([]);
+      act(() => {
+        capturedOnMessage?.(doneChunk);
+        capturedOnMessage?.(resultChunk);
+      });
+      expect(result.current.outcome).toBeNull();
+      expect(result.current.results).toEqual([]);
+      expect(mockClose).toHaveBeenCalled();
+    },
+  );
 
   it('onError 발생 시 isComplete=true가 된다', () => {
     let capturedOnError: ((err: Event) => void) | undefined;

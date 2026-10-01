@@ -89,6 +89,8 @@ public class RecommendationStreamService {
 
     private boolean retryable(RecommendationAgentActionCode code) {
         return code == RecommendationAgentActionCode.DEADLINE_EXCEEDED
+                || code == RecommendationAgentActionCode.EMBEDDING_FAILED
+                || code == RecommendationAgentActionCode.SEARCH_REPOSITORY_FAILURE
                 || code == RecommendationAgentActionCode.PROCESSING_FAILED;
     }
 
