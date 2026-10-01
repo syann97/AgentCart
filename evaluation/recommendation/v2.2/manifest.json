@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "kind": "observed-policy-reassessment-manifest",
+  "metricVersion": "2.2-observed-policy",
+  "baselineCommit": "848b85c3771903e4c1c80a7d75c06a6e780fc908",
+  "previousScorerSha256": "3427c0dfd1fdc963dedf5e541560fa669620823a5a493d6d52b0de695e38fda6",
+  "preservedHistory": [
+    {
+      "path": "evaluation/recommendation/AGENTIC_RAG_EVALUATION_2026-09-16.md",
+      "sha256": "57689e3658c077686f878fc2cfd94b9332df354eba604c597bb8fbd71bf2b58f"
+    },
+    {
+      "path": "evaluation/recommendation/GROUNDING_EVALUATION_2026-09-18.md",
+      "sha256": "a52830706b1ff0a913a239c8548d47a7e1a4f66eb436dfb05d9cefbff4b61c44"
+    },
+    {
+      "path": "evaluation/recommendation/baselines/fixed-rag-79627c0.json",
+      "sha256": "49681475dbfb4a9d7ee3fcbd628696743f8d23e85dea912e8768af8c761d6964"
+    },
+    {
+      "path": "evaluation/recommendation/executions/assessments/agentic-rag-770d062-20260918T005338Z-r1.json",
+      "sha256": "710899aff08a1a2d5e5472345908426344e2a5a53f834a06d1c2cd8cce78ae0a"
+    },
+    {
+      "path": "evaluation/recommendation/executions/assessments/agentic-rag-fe2766f-20260918T004833Z-r1.json",
+      "sha256": "20354f5f856bee51372824935e0d7ba0aec8b764877f9f267c3a299ed7804329"
+    },
+    {
+      "path": "evaluation/recommendation/executions/focused/agentic-rag-eeeaa77-20260918T010000Z-r2.json",
+      "sha256": "680932a196e3331e2238854fbdf3a989ad000b8d51ed722325ac4d32ab6fa238"
+    },
+    {
+      "path": "evaluation/recommendation/executions/focused/agentic-rag-eeeaa77-20260918T010300Z-r3.json",
+      "sha256": "a276b3b3d751230ae7fd955355123a90720ba21c1c29e8e51117950d9f073f33"
+    },
+    {
+      "path": "evaluation/recommendation/executions/focused/agentic-rag-fe2766f-20260918T010000Z-r2.json",
+      "sha256": "1d65143a94a6245c7e016d5c0a377b95d5ffc1630bf26a36e906784107d73a68"
+    },
+    {
+      "path": "evaluation/recommendation/executions/focused/agentic-rag-fe2766f-20260918T010300Z-r3.json",
+      "sha256": "f981798fd81cb290154c4e041c8762ead9114b063cc5a4b52adb4a12a5179438"
+    },
+    {
+      "path": "evaluation/recommendation/executions/raw/agentic-rag-770d062-20260918T005338Z-r1.json",
+      "sha256": "90646534456b88406a8851a83906682b88437367a883bce283b9ba416b73f73b"
+    },
+    {
+      "path": "evaluation/recommendation/executions/raw/agentic-rag-fe2766f-20260918T004833Z-r1.json",
+      "sha256": "59fcdf7a280765ce693135f29e15cd6f5732c979f5c804ec7056064030a44c48"
+    },
+    {
+      "path": "evaluation/recommendation/fixtures.json",
+      "sha256": "2d3824a11982ab057ac2a7b31eea0320c18a665a04caf34cf021129c65b377c5"
+    },
+    {
+      "path": "evaluation/recommendation/grounding-comparison.json",
+      "sha256": "09e54841d80d9ccf206d0b8687c6912698df411b1015c686d588fb6ed5d4335a"
+    },
+    {
+      "path": "evaluation/recommendation/grounding-v1.json",
+      "sha256": "40785706ae2bec2999e7134e42ca8d1fd6ebba788e2611db8c3027828a193506"
+    },
+    {
+      "path": "evaluation/recommendation/labels.json",
+      "sha256": "158e93b53e943dd711b93b2e9f298828de0b48597a4a2f43aa4fe28ff5f49bce"
+    },
+    {
+      "path": "evaluation/recommendation/queries.json",
+      "sha256": "9fd75060bd01cf9f8e8a5f6193b0759c1a79022b43c1a1ed254919434db3dc92"
+    },
+    {
+      "path": "evaluation/recommendation/runs/agentic-rag-c795264.json",
+      "sha256": "633f00f91c43bffd911b848d25ffd84289412d0f5b79b085998a897d60adfc46"
+    },
+    {
+      "path": "evaluation/recommendation/runs/agentic-rag-fd7971a.json",
+      "sha256": "2eb704465a1c945f2f84cf502f41f2c90214762ea30d9a61fce174f15c99f5a9"
+    },
+    {
+      "path": "evaluation/recommendation/snapshot-manifest.json",
+      "sha256": "08cc4ddb04f62b5652ea2373893e660cda6d9aaaacb572d3f394ac2502f5eba3"
+    },
+    {
+      "path": "evaluation/recommendation/v2/definition.json",
+      "sha256": "24634aa1582faa6870101d08e8d92960acabe33b1628803cdefc49ee898cec19"
+    },
+    {
+      "path": "evaluation/recommendation/v2/labels.json",
+      "sha256": "98b4a799ee6db7fe4ceb7c941785b573081779e025b59392b281d15e083b5349"
+    },
+    {
+      "path": "evaluation/recommendation/v2/reassessment.json",
+      "sha256": "80f19a579cbd71145d4e08a5b47dade32f0a132272c74caf5d887335b639b8a7"
+    }
+  ],
+  "assessments": [
+    {
+      "source": "evaluation/recommendation/executions/raw/agentic-rag-770d062-20260918T005338Z-r1.json",
+      "supersedes": "evaluation/recommendation/executions/assessments/agentic-rag-770d062-20260918T005338Z-r1.json",
+      "output": "evaluation/recommendation/executions/assessments/v2.2/agentic-rag-770d062-20260918T005338Z-r1.json"
+    },
+    {
+      "source": "evaluation/recommendation/executions/raw/agentic-rag-fe2766f-20260918T004833Z-r1.json",
+      "supersedes": "evaluation/recommendation/executions/assessments/agentic-rag-fe2766f-20260918T004833Z-r1.json",
+      "output": "evaluation/recommendation/executions/assessments/v2.2/agentic-rag-fe2766f-20260918T004833Z-r1.json"
+    }
+  ]
+}

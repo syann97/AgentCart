@@ -11,7 +11,8 @@ import re
 import sys
 from pathlib import Path
 
-from reassess_recommendation_evaluation import build_reassessment
+from reassess_recommendation_evaluation import build_reassessment, content_sha256, source_path
+from score_recommendation_run import METRIC_VERSION, build_assessment, validate_observed_metrics
 
 
 EXPECTED_QUERY_IDS = [
@@ -20,6 +21,65 @@ EXPECTED_QUERY_IDS = [
     *(f"R{i:02d}" for i in range(1, 4)),
     "N01", "N02", "A01",
 ]
+
+
+def validate_observed_assessments(root: Path) -> None:
+    """Pin historical assessments; replay only the corrected metric version."""
+    evaluation = root / "evaluation/recommendation"
+    manifest = load_json(evaluation / "v2.2/manifest.json")
+    if (manifest.get("schemaVersion") != 1
+            or manifest.get("kind") != "observed-policy-reassessment-manifest"
+            or manifest.get("metricVersion") != METRIC_VERSION
+            or not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("baselineCommit", "")))):
+        raise ValueError("unsupported observed-policy manifest")
+    history = manifest["preservedHistory"]
+    paths = {row["path"] for row in history}
+    definition = load_json(evaluation / "v2/definition.json")
+    comparison = load_json(evaluation / "grounding-comparison.json")
+    required = {row["path"] for row in definition["preservedHistory"]} | {
+        row["path"] for row in comparison["sources"]} | {
+        "evaluation/recommendation/grounding-v1.json",
+        "evaluation/recommendation/grounding-comparison.json",
+        "evaluation/recommendation/GROUNDING_EVALUATION_2026-09-18.md",
+        *(f"evaluation/recommendation/v2/{name}.json" for name in ("definition", "labels", "reassessment")),
+    }
+    if len(paths) != len(history) or not required.issubset(paths):
+        raise ValueError("preserved observed-policy history is incomplete or duplicated")
+    for row in history:
+        if content_sha256(source_path(root, row["path"])) != row["sha256"]:
+            raise ValueError(f"preserved observed-policy history changed: {row['path']}")
+    entries = manifest["assessments"]
+    outputs = [row["output"] for row in entries]
+    sources = [row["source"] for row in entries]
+    legacy = [row["supersedes"] for row in entries if row.get("supersedes")]
+    expected_legacy = {row["path"] for row in comparison["sources"]
+                       if "/executions/assessments/" in row["path"]}
+    output_directory = evaluation / "executions/assessments/v2.2"
+    expected_outputs = {str(path.relative_to(root)).replace("\\", "/")
+                        for path in output_directory.glob("*.json")}
+    if (not entries or len(set(outputs)) != len(outputs) or len(set(sources)) != len(sources)
+            or set(legacy) != expected_legacy or len(legacy) != len(expected_legacy)
+            or set(outputs) != expected_outputs):
+        raise ValueError("corrected assessments must uniquely cover historical v2.1 runs and indexed outputs")
+    for row in entries:
+        if row["source"] not in paths or (row.get("supersedes") and row["supersedes"] not in paths):
+            raise ValueError("assessment input and superseded history must be hash-pinned")
+        assessment = load_json(source_path(root, row["output"]))
+        if assessment["metricVersion"] != METRIC_VERSION:
+            raise ValueError("assessment version differs")
+        if row.get("supersedes"):
+            previous = load_json(source_path(root, row["supersedes"]))
+            if (previous["metricVersion"] != "2.1-observed-policy"
+                    or previous["source"] != row["source"]
+                    or assessment["runId"] != previous["runId"]):
+                raise ValueError("assessment version, source or run identity differs")
+        if assessment["metrics"] is not None:
+            validate_observed_metrics(assessment["metrics"])
+        expected = build_assessment(root, source_path(root, row["source"]),
+                                    evaluation / "v2/definition.json", evaluation / "v2/labels.json",
+                                    evaluation / "snapshot-manifest.json", evaluation / "fixtures.json")
+        if assessment != expected:
+            raise ValueError(f"stored observed-policy assessment differs: {row['output']}")
 
 
 def load_json(path: Path):
@@ -250,7 +310,7 @@ def main() -> int:
     item_total = 0
     for entry in manifest["files"]:
         path = root / entry["path"]
-        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        digest = content_sha256(path)
         items = load_json(path)
         if digest != entry["sha256"]:
             errors.append(f"SHA-256 mismatch: {entry['path']}")
@@ -355,6 +415,7 @@ def main() -> int:
     comparison_runs = []
     for source in comparison_sources:
         path = root / str(source.get("path", ""))
+        # Execution artifacts are marked -text in .gitattributes: retain their byte hashes.
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != source.get("sha256"):
             errors.append(f"grounding comparison source hash differs: {source.get('path')}")
             continue
@@ -406,6 +467,10 @@ def main() -> int:
             errors.append("stored v2 reassessment differs; review inputs and run --write-reassessment")
     except (ValueError, KeyError, TypeError, OSError) as error:
         errors.append(f"v2 reassessment: {error}")
+    try:
+        validate_observed_assessments(root)
+    except (ValueError, KeyError, TypeError, OSError) as error:
+        errors.append(f"observed-policy reassessment: {error}")
     if errors:
         print("Evaluation validation failed:", file=sys.stderr)
         for error in errors:
@@ -416,7 +481,7 @@ def main() -> int:
             handle.write(json.dumps(reassessment, ensure_ascii=False, indent=2) + "\n")
     if args.print_metrics:
         print(json.dumps(reassessment, ensure_ascii=False, indent=2))
-    print("Recommendation evaluation valid: 8 files, 500 products, 20 queries; v1 preserved and v2 verified.")
+    print("Recommendation evaluation valid: 8 files, 500 products, 20 queries; v1/v2/v2.1 preserved, v2 and v2.2 verified.")
     return 0
 
 

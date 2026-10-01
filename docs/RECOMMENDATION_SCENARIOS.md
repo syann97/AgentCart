@@ -102,6 +102,8 @@ S·C 사례는 첫 검색으로 종료 가능한 기준선, R 사례는 재검�
 
 ## 지표와 판정
 
+신규 관측 정책 assessment는 `2.2-observed-policy`를 사용합니다. 상품의 status·stock unknown과 질의 Hit@5를 같은 관측 근거로 계산한 뒤 전체에 합산하며, 누락을 snapshot 값으로 대체하지 않습니다. 기존 v1/v2/v2.1은 보존하고 [평가 README](../evaluation/recommendation/README.md#v22-관측-정책-보정과-재현)의 별도 보정 경로·삼상 판정·재현 명령을 따릅니다.
+
 - 명시 가격·카테고리·ACTIVE·양수 재고·최근 주문 규칙 위반 0건
 - 수동 relevance label 기준 Hit@5와 질의별 허용 결과 수
 - 카탈로그 밖 질의의 잘못된 추천 비율과 올바른 결과 없음 비율

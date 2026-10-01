@@ -17,7 +17,7 @@ from reassess_recommendation_evaluation import (
 )
 
 
-METRIC_VERSION = "2.1-observed-policy"
+METRIC_VERSION = "2.2-observed-policy"
 RUN_ID_PATTERN = re.compile(r"agentic-rag-([0-9a-f]{7,40})-(\d{8}T\d{6}Z)-r([1-9]\d*)")
 OBSERVATION_SOURCE = "POST_RESPONSE_DATABASE_READ"
 
@@ -154,13 +154,20 @@ def validate_run(run: dict, definition: dict, products: dict, manifest: dict) ->
         raise ValueError("\n".join(errors))
 
 
+def observed_policy_hit(rows: list[dict]):
+    """True: proven hit; None: possible hit with missing evidence; False: impossible hit."""
+    possible = [row for row in rows[:5]
+                if not any(row["violations"].values()) and row["label"] != "irrelevant"]
+    if any(row["label"] in {"relevant", "acceptable"} and not row["policyEvidenceUnknown"]
+           for row in possible):
+        return True
+    if any(row["label"] == "unjudged" or row["policyEvidenceUnknown"] for row in possible):
+        return None
+    return False
+
+
 def apply_observed_policy(metrics: dict, run: dict, definition: dict) -> dict:
     evaluations = {row["queryId"]: row for row in run["evaluations"]}
-    totals = {"statusKnown": 0, "statusUnknown": 0, "stockKnown": 0, "stockUnknown": 0}
-    violations = dict(metrics["policyViolations"])
-    violations["status"] = 0
-    violations["stock"] = 0
-    policy_hits = []
     query_metrics = {row["queryId"]: row for row in metrics["queries"]}
 
     for query in definition["queries"]:
@@ -170,44 +177,88 @@ def apply_observed_policy(metrics: dict, run: dict, definition: dict) -> dict:
             observation = result_by_key[row["productKey"]].get("policyObservation") or {}
             status = observation.get("status")
             stock = observation.get("stock")
-            totals["statusKnown" if status is not None else "statusUnknown"] += 1
-            totals["stockKnown" if stock is not None else "stockUnknown"] += 1
             row["violations"]["status"] = int(status is not None and status != definition["policies"]["requiredStatus"])
             row["violations"]["stock"] = int(stock is not None and definition["policies"]["positiveStock"] and stock <= 0)
-            row["policyEvidenceUnknown"] = status is None or stock is None
-        query_metric["policyViolations"]["status"] = sum(r["violations"]["status"] for r in query_metric["products"])
-        query_metric["policyViolations"]["stock"] = sum(r["violations"]["stock"] for r in query_metric["products"])
+            row["activeStatusUnknown"] = status is None
+            row["stockUnknown"] = stock is None
+            row["policyEvidenceUnknown"] = row["activeStatusUnknown"] or row["stockUnknown"]
+        rows = query_metric["products"]
+        query_metric["policyViolations"] = {
+            rule: sum(row["violations"][rule] for row in rows) for rule in RULES}
         query_metric["activeStatusUnknownProducts"] = sum(
-            result_by_key[r["productKey"]].get("policyObservation", {}).get("status") is None
-            for r in query_metric["products"])
-        violations["status"] += query_metric["policyViolations"]["status"]
-        violations["stock"] += query_metric["policyViolations"]["stock"]
-        if query_metric["hitEligible"]:
-            eligible = [r for r in query_metric["products"][:5]
-                        if not any(r["violations"].values()) and not r["policyEvidenceUnknown"]]
-            if any(r["label"] in {"relevant", "acceptable"} for r in eligible):
-                policy_hits.append(True)
-            elif any(r["label"] == "unjudged" for r in eligible) or any(
-                    r["policyEvidenceUnknown"] for r in query_metric["products"][:5]):
-                policy_hits.append(None)
-            else:
-                policy_hits.append(False)
+            row["activeStatusUnknown"] for row in rows)
+        query_metric["stockUnknownProducts"] = sum(row["stockUnknown"] for row in rows)
+        query_metric["policyEvidenceUnknownProducts"] = sum(row["policyEvidenceUnknown"] for row in rows)
+        query_metric["observedPolicyCompliantAcceptedHitAt5"] = (
+            observed_policy_hit(rows) if query_metric["hitEligible"] else None)
 
+    queries = metrics["queries"]
+    violations = {rule: sum(query["policyViolations"][rule] for query in queries) for rule in RULES}
     violations["total"] = sum(violations[rule] for rule in RULES)
     metrics["policyViolations"] = violations
-    metrics["activeStatusUnknownProducts"] = totals["statusUnknown"]
-    metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"] = hit_summary(policy_hits)
+    status_unknown = sum(query["activeStatusUnknownProducts"] for query in queries)
+    stock_unknown = sum(query["stockUnknownProducts"] for query in queries)
+    metrics["activeStatusUnknownProducts"] = status_unknown
+    metrics["hitAt5"]["observedPolicyCompliantAcceptedHitAt5"] = hit_summary([
+        query["observedPolicyCompliantAcceptedHitAt5"] for query in queries if query["hitEligible"]])
     returned = metrics["execution"]["resultCount"]
+    fully_observed = returned - sum(query["policyEvidenceUnknownProducts"] for query in queries)
     metrics["policyEvidence"] = {
-        **totals,
+        "statusKnown": returned - status_unknown, "statusUnknown": status_unknown,
+        "stockKnown": returned - stock_unknown, "stockUnknown": stock_unknown,
         "returnedProducts": returned,
-        "fullyObservedProducts": sum(
-            not row["policyEvidenceUnknown"] for query in metrics["queries"] for row in query["products"]),
-        "fullyObservedRate": ratio(sum(
-            not row["policyEvidenceUnknown"] for query in metrics["queries"] for row in query["products"]), returned),
+        "fullyObservedProducts": fully_observed,
+        "fullyObservedRate": ratio(fully_observed, returned),
         "source": OBSERVATION_SOURCE,
     }
     return metrics
+
+
+def validate_observed_metrics(metrics: dict) -> None:
+    """Check product -> query -> run invariants independently of artifact equality."""
+    errors = []
+    queries = metrics["queries"]
+    rows = [row for query in queries for row in query["products"]]
+    for query in queries:
+        products = query["products"]
+        for row in products:
+            flags = (row["activeStatusUnknown"], row["stockUnknown"], row["policyEvidenceUnknown"])
+            if any(type(flag) is not bool for flag in flags) or flags[2] != (flags[0] or flags[1]):
+                errors.append(f"inconsistent product evidence: {query['queryId']} {row['productKey']}")
+        for rule in RULES:
+            if query["policyViolations"][rule] != sum(row["violations"][rule] for row in products):
+                errors.append(f"inconsistent query violations: {query['queryId']} {rule}")
+        for flag, count in (("activeStatusUnknown", "activeStatusUnknownProducts"),
+                            ("stockUnknown", "stockUnknownProducts"),
+                            ("policyEvidenceUnknown", "policyEvidenceUnknownProducts")):
+            if query[count] != sum(row[flag] for row in products):
+                errors.append(f"inconsistent query evidence: {query['queryId']} {count}")
+        expected = observed_policy_hit(products) if query["hitEligible"] else None
+        if query["observedPolicyCompliantAcceptedHitAt5"] is not expected:
+            errors.append(f"inconsistent query policy hit: {query['queryId']}")
+    for rule in RULES:
+        if metrics["policyViolations"][rule] != sum(query["policyViolations"][rule] for query in queries):
+            errors.append(f"inconsistent aggregate violations: {rule}")
+    if metrics["policyViolations"]["total"] != sum(metrics["policyViolations"][rule] for rule in RULES):
+        errors.append("inconsistent aggregate violation total")
+    returned = len(rows)
+    status_unknown = sum(row["activeStatusUnknown"] for row in rows)
+    stock_unknown = sum(row["stockUnknown"] for row in rows)
+    fully_observed = sum(not row["policyEvidenceUnknown"] for row in rows)
+    expected_evidence = {
+        "statusKnown": returned - status_unknown, "statusUnknown": status_unknown,
+        "stockKnown": returned - stock_unknown, "stockUnknown": stock_unknown,
+        "returnedProducts": returned, "fullyObservedProducts": fully_observed,
+        "fullyObservedRate": ratio(fully_observed, returned), "source": OBSERVATION_SOURCE,
+    }
+    if (metrics["policyEvidence"] != expected_evidence or metrics["execution"]["resultCount"] != returned
+            or metrics["activeStatusUnknownProducts"] != status_unknown):
+        errors.append("inconsistent aggregate evidence")
+    key = "observedPolicyCompliantAcceptedHitAt5"
+    if metrics["hitAt5"][key] != hit_summary([query[key] for query in queries if query["hitEligible"]]):
+        errors.append("inconsistent aggregate policy hit")
+    if errors:
+        raise ValueError("\n".join(errors))
 
 
 def build_assessment(root: Path, run_path: Path, definition_path: Path, labels_path: Path,
@@ -233,6 +284,8 @@ def build_assessment(root: Path, run_path: Path, definition_path: Path, labels_p
         "metricVersion": METRIC_VERSION,
         "definitionSha256": content_sha256(definition_path),
         "labelsSha256": content_sha256(labels_path),
+        "scorerSha256": content_sha256(root / "scripts/evaluation/score_recommendation_run.py"),
+        "baseScorerSha256": content_sha256(root / "scripts/evaluation/reassess_recommendation_evaluation.py"),
         "includedInQualityComparison": failed == 0,
         "failedQueries": failed,
     }
@@ -242,6 +295,7 @@ def build_assessment(root: Path, run_path: Path, definition_path: Path, labels_p
     else:
         assessment["metrics"] = apply_observed_policy(
             score_run(run, definition, labels, products, fixtures), run, definition)
+        validate_observed_metrics(assessment["metrics"])
     return assessment
 
 
