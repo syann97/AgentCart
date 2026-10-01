@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate frozen v1 history and the versioned v2 offline reassessment."""
+"""Validate frozen history, corrected policy metrics and expanded assistant review."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from pathlib import Path
 
 from reassess_recommendation_evaluation import build_reassessment, content_sha256, source_path
 from score_recommendation_run import METRIC_VERSION, build_assessment, validate_observed_metrics
+from review_recommendation_evaluation import validate_expanded_review
 
 
 EXPECTED_QUERY_IDS = [
@@ -471,6 +472,10 @@ def main() -> int:
         validate_observed_assessments(root)
     except (ValueError, KeyError, TypeError, OSError) as error:
         errors.append(f"observed-policy reassessment: {error}")
+    try:
+        validate_expanded_review(root)
+    except (ValueError, KeyError, TypeError, OSError) as error:
+        errors.append(f"expanded assistant review: {error}")
     if errors:
         print("Evaluation validation failed:", file=sys.stderr)
         for error in errors:
@@ -481,7 +486,7 @@ def main() -> int:
             handle.write(json.dumps(reassessment, ensure_ascii=False, indent=2) + "\n")
     if args.print_metrics:
         print(json.dumps(reassessment, ensure_ascii=False, indent=2))
-    print("Recommendation evaluation valid: 8 files, 500 products, 20 queries; v1/v2/v2.1 preserved, v2 and v2.2 verified.")
+    print("Recommendation evaluation valid: 8 files, 500 products, 20 queries; history preserved, v2/v2.2/v3 verified.")
     return 0
 
 

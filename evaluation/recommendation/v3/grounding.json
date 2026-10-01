@@ -1,0 +1,3832 @@
+{
+  "schemaVersion": 1,
+  "rubricVersion": "2.0-expanded-reasons",
+  "snapshotId": "recommendation-catalog-2026-09-15",
+  "review": {
+    "reviewer": "Codex",
+    "reviewerType": "assistant",
+    "reviewedAt": "2026-10-01",
+    "humanValidated": false,
+    "method": "여섯 실행의 서로 다른 추천 이유 189개를 원문 질의와 snapshot 상품명·설명으로 개별 검토했다. 동일 질의·상품·이유는 판정을 공유하되 각 실행 반환 197건을 별도 occurrence로 연결했다.",
+    "limitations": "기존 결과를 본 이후의 assistant 단독 검토. 독립 맹검·사람 정답·카탈로그 전체 정답 집합이 아니다. snapshot 판매 설명의 사실성이나 실제 성능을 실험으로 검증하지 않았다."
+  },
+  "labelMeaning": {
+    "supported": "검증 가능한 핵심 사실이 상품명·설명에 있거나 조건을 추가하지 않는 기본 용도 추론이다.",
+    "unsupported": "명시되지 않은 성능·규격·호환·특수 용도를 단정하거나 질의의 대상 조건을 생략해 확대했다.",
+    "unjudged": "상품 근거로 핵심 주장을 확정할 수 없다. 정책 통과만 말하는 fallback 문구는 상품 사실 설명으로 인정하지 않는다."
+  },
+  "rules": [
+    "상품명도 근거다. 발열 장갑·공기정화 화분 명칭은 해당 명칭 수준의 근거이며 실증 성능 검증은 아니다.",
+    "최적·필수·인기 등의 주관적 수사는 성능 수치로 채점하지 않는다. 구체적 수용 인원·호환 대상·방풍 성능은 별도로 검사한다.",
+    "방수는 방풍을 입증하지 않는다. 비·바람을 묶어 단정하면 바람 근거 누락을 unsupported로 기록한다.",
+    "범용 가방의 여행 짐 수납은 반려견 용품 수납의 보조 추론을 허용하되 반려견 수용·안전성은 추론하지 않는다.",
+    "가격 표기는 snapshot price와 별도 대조했다. 이름·설명에 없는 정책 준수 주장은 이 rubric으로 확인할 수 없어 유보한다.",
+    "NOT_REVIEWED는 검토 누락, INSUFFICIENT_EVIDENCE는 검토했으나 근거 부족이다. 이번 고정 pool의 검토 누락은 0이다."
+  ],
+  "judgments": [
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+      "reasonText": "극세사 충전재로 보온성을 높인 사계절용 침낭으로 압축 가방 포함",
+      "reasonSha256": "b5e102769a7069a0898ba7d0b10f73ab2acc3e3d021d2466ba8ec05a45e8bd0e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "사계절 차박 캠핑 침낭",
+        "description": "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭입니다. 차박, 백패킹, 캠핑 시 따뜻하게 사용할 수 있으며 압축 가방이 함께 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+      "reasonText": "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭으로 차박, 백패킹, 캠핑에 사용 가능하며 압축 가방이 함께 제공됩니다.",
+      "reasonSha256": "5018b7073f99e93b5ecbde63c9e78a645e615b047030ee4fa03c2fd5761eb321",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "사계절 차박 캠핑 침낭",
+        "description": "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭입니다. 차박, 백패킹, 캠핑 시 따뜻하게 사용할 수 있으며 압축 가방이 함께 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "셀프 인플레이팅 캠핑 매트|아웃도어랩",
+      "reasonText": "공기를 자동으로 채워주는 셀프 인플레이팅 캠핑 매트로 가볍고 부피가 작아 백패킹, 차박, 등산 시 휴대하기 좋습니다.",
+      "reasonSha256": "b89f6613dd73e962a9faa3112cb49383d2f1ff4afa6bb9bb4e7d8c5c678db06c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "셀프 인플레이팅 캠핑 매트",
+        "description": "공기를 자동으로 채워주는 셀프 인플레이팅 캠핑 매트입니다. 가볍고 부피가 작아 백패킹, 차박, 등산 시 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "알루미늄 폴딩 캠핑 의자|아웃도어랩",
+      "reasonText": "경량 알루미늄 프레임의 접이식 캠핑 의자로 휴대가 간편하고 내구성 우수",
+      "reasonSha256": "446eb15190422486ecb2340589ee6711735523d898401a31152c22ccd4d1d8ca",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "알루미늄 폴딩 캠핑 의자",
+        "description": "경량 알루미늄 프레임으로 제작된 접이식 캠핑 의자입니다. 휴대가 간편하고 내구성이 뛰어나 캠핑, 등산, 낚시 등 야외활동에 활용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "알루미늄 폴딩 캠핑 의자|아웃도어랩",
+      "reasonText": "경량 알루미늄 프레임의 접이식 캠핑 의자로 휴대가 간편하고 캠핑, 등산, 낚시 등 야외활동에 활용됩니다.",
+      "reasonSha256": "98cb50d4511cb994d3550963cb187b686388fd47af37f213b484717b10b61a53",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "알루미늄 폴딩 캠핑 의자",
+        "description": "경량 알루미늄 프레임으로 제작된 접이식 캠핑 의자입니다. 휴대가 간편하고 내구성이 뛰어나 캠핑, 등산, 낚시 등 야외활동에 활용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+      "reasonText": "낙하산 원단으로 제작된 가벼운 캠핑 해먹으로 200kg까지 견디며 휴대용 파우치에 담아 캠핑·아웃도어 여행에 적합합니다.",
+      "reasonSha256": "6d535af2226e8aea3b0a754be2e25d01e99dd6bf46b4c0f69f5e9f301353d6fd",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "야외용 캠핑 해먹 휴대용",
+        "description": "낙하산 원단으로 제작되어 가벼우면서도 200kg까지 견딜 수 있는 캠핑 해먹입니다. 휴대용 파우치에 담아 다닐 수 있어 캠핑·아웃도어 여행에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "야외용 캠핑 해먹 휴대용|릴렉스아웃도어",
+      "reasonText": "낙하산 원단으로 제작된 가벼운 캠핑 해먹으로 200kg까지 견딜 수 있으며 휴대용 파우치 포함",
+      "reasonSha256": "e0f665aaacc7440db3e7f443817d263b8bf5bc4d3fb90e6ee9e6daebec65c685",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "야외용 캠핑 해먹 휴대용",
+        "description": "낙하산 원단으로 제작되어 가벼우면서도 200kg까지 견딜 수 있는 캠핑 해먹입니다. 휴대용 파우치에 담아 다닐 수 있어 캠핑·아웃도어 여행에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "캠핑용 휴대용 도끼 장작패개|툴마스터",
+      "reasonText": "단조 강철 제작의 휴대용 도끼로 보호 케이스 포함된 캠핑 필수 장비",
+      "reasonSha256": "10cb9f7986ff4c0888cca092f12afabbfeb0b013a8ea7f70e3e19c4656d573c0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "캠핑용 휴대용 도끼 장작패개",
+        "description": "단조 강철로 제작되어 장작을 손쉽게 패는 캠핑용 휴대용 도끼입니다. 보호 케이스가 함께 제공되어 안전하게 휴대할 수 있는 캠핑·아웃도어 필수 장비입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "캠핑용 휴대용 샤워기 세트|워시아웃도어",
+      "reasonText": "충전식 펌프 방식의 휴대용 캠핑 샤워기로 차박이나 오지 캠핑에 적합",
+      "reasonSha256": "5f25d8568ee888ac83a2a9606935715a00f15255416e394f82fbb322bf0c9881",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "캠핑용 휴대용 샤워기 세트",
+        "description": "충전식 펌프로 작동하는 휴대용 캠핑 샤워기로 물탱크에 연결해 사용할 수 있습니다. 차박이나 오지 캠핑에서도 간편하게 샤워를 즐길 수 있는 아웃도어 용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C01",
+      "query": "3만원 이상 5만원 이하 캠핑용품",
+      "productKey": "캠핑용 휴대용 샤워기 세트|워시아웃도어",
+      "reasonText": "충전식 펌프로 작동하는 휴대용 캠핑 샤워기로 차박이나 오지 캠핑에서 간편하게 사용할 수 있는 아웃도어 용품입니다.",
+      "reasonSha256": "e484102dd099a87479e380fffa2c3f8f1f768b8d12f75af268d2b5e3fb00a994",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "캠핑용 휴대용 샤워기 세트",
+        "description": "충전식 펌프로 작동하는 휴대용 캠핑 샤워기로 물탱크에 연결해 사용할 수 있습니다. 차박이나 오지 캠핑에서도 간편하게 샤워를 즐길 수 있는 아웃도어 용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "돌잔치 기념 명패 세트|리틀우드",
+      "reasonText": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트로 돌잔치 기념 선물로 자주 선택되는 고급스러운 제품입니다.",
+      "reasonSha256": "fb8fc10106de29cd4c8aeb1ea7413a8502d3c13fe839953b10c69b2f0d612382",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "돌잔치 기념 명패 세트",
+        "description": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "돌잔치 기념 명패 세트|리틀우드",
+      "reasonText": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트로 돌잔치 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다. 가격 35,000원.",
+      "reasonSha256": "97944add2edcccd661016e9a95ead8f4df3c9ff9ee2d73aa1ac4e56996fcde15",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "돌잔치 기념 명패 세트",
+        "description": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+      "reasonText": "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다. 가격 35,000원.",
+      "reasonSha256": "e69f9013fb47523da62628c6f0b3879da001c6e70d197827da666a8155a7d992",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "신생아 우주복 내의 5종 세트",
+        "description": "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+      "reasonText": "부드러운 면 소재의 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다.",
+      "reasonSha256": "19b69ca466bd11494ec07e150f71bfea1523848598115f0836e9051fef87f3cd",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "신생아 우주복 내의 5종 세트",
+        "description": "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+      "reasonText": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발로 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다. 가격 32,000원.",
+      "reasonSha256": "bc95981c999ca7c8062f469f6671e6fbd44dd01be377da65a7258fa261ae7d8e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 첫걸음 가죽 신발",
+        "description": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+      "reasonText": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발로 인체공학적 디자인이 돌잔치 선물로 자주 선택됩니다.",
+      "reasonSha256": "ed07003166bd6c9a9f062949cd384e6e9812c7ed84a1fb867bbccc0f763ea3bc",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 첫걸음 가죽 신발",
+        "description": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "아기 침대 모빌 음악기 세트|꿈나라키즈",
+      "reasonText": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기로 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물입니다.",
+      "reasonSha256": "de0dc2edcb9614c13f1bf129cf3e19f631a738b3e6fd0d36f96a25c9aeef2934",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 침대 모빌 음악기 세트",
+        "description": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기입니다. 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물로 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "아기 침대 모빌 음악기 세트|꿈나라키즈",
+      "reasonText": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기로 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물입니다. 가격 42,000원.",
+      "reasonSha256": "31482b1ea10950b325d8d9758e347d8284e768c0ffe2074f14d28d3700847b48",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 침대 모빌 음악기 세트",
+        "description": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기입니다. 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물로 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "유아용 도자기 식기 세트|마이베베",
+      "reasonText": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다. 가격 42,000원.",
+      "reasonSha256": "2e53154088a5f9dce5f54eb6238d3e2df137f412c136f28bc5d7d3a692daff7e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "유아용 도자기 식기 세트",
+        "description": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C02",
+      "query": "50,000원 이하 돌잔치 선물",
+      "productKey": "유아용 도자기 식기 세트|마이베베",
+      "reasonText": "이름 각인이 가능한 내열 도자기 식기 세트로 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 돌잔치 선물로 많이 찾는 제품입니다.",
+      "reasonSha256": "6ef5af30f311323f93bd2c6c446b4ccd2cae645a7d31f5c6f7c45134e2b14b9d",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "유아용 도자기 식기 세트",
+        "description": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C03",
+      "query": "패션·의류 카테고리의 겨울 장갑",
+      "productKey": "발열 기능성 보온장갑|웜핸드",
+      "reasonText": "발열 기능성 보온장갑으로 터치스크린 사용이 가능하며, 겨울 등산이나 캠핑, 추운 날씨 방한용품으로 적합합니다.",
+      "reasonSha256": "81c8745f716de4d70e04cafd69d7ce392c869877e86a29c05d2cf2f19f052bd9",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "발열 기능성 보온장갑",
+        "description": "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C03",
+      "query": "패션·의류 카테고리의 겨울 장갑",
+      "productKey": "발열 기능성 보온장갑|웜핸드",
+      "reasonText": "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었으며, 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다.",
+      "reasonSha256": "fd87c90d586cc31cc474a044b770ab7e1009d8c44bb7b0709097f69a15d2c313",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "발열 기능성 보온장갑",
+        "description": "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C03",
+      "query": "패션·의류 카테고리의 겨울 장갑",
+      "productKey": "터치스크린 방한 장갑|핸디웜",
+      "reasonText": "스마트폰 터치가 가능한 방한 장갑으로 안쪽 기모 처리로 한겨울에도 손이 시리지 않으며, 손끝까지 따뜻하게 보호해줍니다.",
+      "reasonSha256": "35718049ba49075a0744c38aa30fd2434464f97a9d53a9c042fcc090fd48884e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "터치스크린 방한 장갑",
+        "description": "스마트폰 터치가 가능한 방한 장갑으로 손끝까지 따뜻하게 보호해줍니다. 안쪽 기모 처리로 한겨울에도 손이 시리지 않습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C03",
+      "query": "패션·의류 카테고리의 겨울 장갑",
+      "productKey": "터치스크린 방한 장갑|핸디웜",
+      "reasonText": "터치스크린 기능이 있는 방한 장갑으로 겨울철 손 보온에 최적화되었으며, 안쪽 기모 처리로 한겨울에도 따뜻함을 유지합니다.",
+      "reasonSha256": "833cfada0459c47d168227f8a182f1e4012a34a1ee042314ae6dc7fd15052541",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "터치스크린 방한 장갑",
+        "description": "스마트폰 터치가 가능한 방한 장갑으로 손끝까지 따뜻하게 보호해줍니다. 안쪽 기모 처리로 한겨울에도 손이 시리지 않습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "대용량 에어프라이어 7L|에어쿡",
+      "reasonText": "검색 조건과 서버 정책을 통과한 상품입니다.",
+      "reasonSha256": "741f07644f8bc3ffff60bf7c33e3d04062f581865a28799795066e073467bb14",
+      "label": "unjudged",
+      "reason": "서버 정책 통과만 주장하며 상품의 사실·용도를 설명하지 않는다. 상품명·설명으로 정책 준수 주장은 확인할 수 없으므로 유보한다.",
+      "unsupportedClaim": null,
+      "deferralReason": "INSUFFICIENT_EVIDENCE",
+      "evidence": {
+        "name": "대용량 에어프라이어 7L",
+        "description": "7리터 대용량 에어프라이어로 한 번에 많은 양의 요리를 조리할 수 있습니다. 기름 없이 바삭한 튀김 요리를 만들 수 있어 주방용품으로 인기가 많습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "대용량 에어프라이어 7L|에어쿡",
+      "reasonText": "대용량 에어프라이어로 기름 없이 바삭한 요리를 만들 수 있는 인기 주방용품",
+      "reasonSha256": "40cc0e8c40098e6cfec3d194b127163441f429c2e7766faf5a8e83a20b62bdda",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "대용량 에어프라이어 7L",
+        "description": "7리터 대용량 에어프라이어로 한 번에 많은 양의 요리를 조리할 수 있습니다. 기름 없이 바삭한 튀김 요리를 만들 수 있어 주방용품으로 인기가 많습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "디지털 주방용 계량저울|키친메이트",
+      "reasonText": "0.1g 단위 정밀 계량이 가능한 디지털 계량저울로 베이킹과 요리에 필수적",
+      "reasonSha256": "89061dff3f652d7ee83516d0e705a934246bde0bec6a79b549aea2aae40c883b",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "디지털 주방용 계량저울",
+        "description": "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "디지털 주방용 계량저울|키친메이트",
+      "reasonText": "검색 조건과 서버 정책을 통과한 상품입니다.",
+      "reasonSha256": "741f07644f8bc3ffff60bf7c33e3d04062f581865a28799795066e073467bb14",
+      "label": "unjudged",
+      "reason": "서버 정책 통과만 주장하며 상품의 사실·용도를 설명하지 않는다. 상품명·설명으로 정책 준수 주장은 확인할 수 없으므로 유보한다.",
+      "unsupportedClaim": null,
+      "deferralReason": "INSUFFICIENT_EVIDENCE",
+      "evidence": {
+        "name": "디지털 주방용 계량저울",
+        "description": "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "밀폐 보관용기 10종 세트|홈클린",
+      "reasonText": "다양한 크기의 밀폐 보관용기 10종 세트로 식재료 보관에 최적",
+      "reasonSha256": "d3ed9ae3c3f74285dacdc9853942eee0707aa3477b64b0e9770f9467b0a6f9a5",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "밀폐 보관용기 10종 세트",
+        "description": "다양한 크기의 밀폐 보관용기 10종 세트로 식재료와 반찬 보관에 적합합니다. 냉장, 냉동, 전자레인지 사용이 모두 가능한 주방 필수품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "본차이나 식기 세트|쿡플랜",
+      "reasonText": "고급 본차이나 식기 12종 세트로 일상 식사부터 손님 접대까지 사용 가능",
+      "reasonSha256": "c60e6b432bd84096ba3e28bd2d020ef5efdf7305d9c8ed26fd4ba1bf3d223938",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "본차이나 식기 세트",
+        "description": "고급스러운 본차이나 소재로 제작된 식기 12종 세트로 일상 식사부터 손님 접대까지 사용할 수 있습니다. 은은한 광택과 내구성을 갖춘 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+      "reasonText": "검색 조건과 서버 정책을 통과한 상품입니다.",
+      "reasonSha256": "741f07644f8bc3ffff60bf7c33e3d04062f581865a28799795066e073467bb14",
+      "label": "unjudged",
+      "reason": "서버 정책 통과만 주장하며 상품의 사실·용도를 설명하지 않는다. 상품명·설명으로 정책 준수 주장은 확인할 수 없으므로 유보한다.",
+      "unsupportedClaim": null,
+      "deferralReason": "INSUFFICIENT_EVIDENCE",
+      "evidence": {
+        "name": "스테인리스 계량컵 스푼 세트",
+        "description": "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+      "reasonText": "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트로 요리 필수템",
+      "reasonSha256": "ba24a182effbd65978b9367fa9273bfb1237e9872ab15d09f71633f84bea594f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테인리스 계량컵 스푼 세트",
+        "description": "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "스테인리스 그릇건조대|키친아트",
+      "reasonText": "검색 조건과 서버 정책을 통과한 상품입니다.",
+      "reasonSha256": "741f07644f8bc3ffff60bf7c33e3d04062f581865a28799795066e073467bb14",
+      "label": "unjudged",
+      "reason": "서버 정책 통과만 주장하며 상품의 사실·용도를 설명하지 않는다. 상품명·설명으로 정책 준수 주장은 확인할 수 없으므로 유보한다.",
+      "unsupportedClaim": null,
+      "deferralReason": "INSUFFICIENT_EVIDENCE",
+      "evidence": {
+        "name": "스테인리스 그릇건조대",
+        "description": "넉넉한 수납 공간을 갖춘 스테인리스 그릇건조대입니다. 새 주방을 꾸리는 친구에게 실용적인 집들이 선물로 추천할 만합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "C04",
+      "query": "최근 7일 안에 산 상품은 빼고 주방용품 추천",
+      "productKey": "스테인리스 키친타올홀더|키친아트",
+      "reasonText": "검색 조건과 서버 정책을 통과한 상품입니다.",
+      "reasonSha256": "741f07644f8bc3ffff60bf7c33e3d04062f581865a28799795066e073467bb14",
+      "label": "unjudged",
+      "reason": "서버 정책 통과만 주장하며 상품의 사실·용도를 설명하지 않는다. 상품명·설명으로 정책 준수 주장은 확인할 수 없으므로 유보한다.",
+      "unsupportedClaim": null,
+      "deferralReason": "INSUFFICIENT_EVIDENCE",
+      "evidence": {
+        "name": "스테인리스 키친타올홀더",
+        "description": "심플한 스테인리스 소재의 키친타올홀더로 주방 한켠을 깔끔하게 정리할 수 있습니다. 실용성을 갖춘 집들이 선물로 추천하는 아이템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "1인용 비비색으로 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아주며, 야영이 필요한 등산이나 종주 산행에 적합합니다.",
+      "reasonSha256": "15511f36ed250c9c1718e616d72038717830c92bb1e2c6d746e62f18c86929bf",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "1인용 비비색으로 방수 코팅이 되어 있어 갑작스러운 비나 눈을 효과적으로 막아주며, 야영이 필요한 상황에 최적화된 제품입니다.",
+      "reasonSha256": "078a5baede3ccafb393ef93b7755f29225aa8b1f91b945065cce2d88f418d7b5",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "방수 코팅된 1인용 비비색으로 갑작스러운 비나 눈을 효과적으로 막아주며, 야영에 최적화된 제품입니다.",
+      "reasonSha256": "65ec3953de78889a90a2d2cda71b5bda4f9c22430d9b06d42723bb4d4c68866b",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아주는 1인용 비비색 방수텐트로, 야외 숙박 시 비바람 방어에 직접적으로 적합합니다.",
+      "reasonSha256": "03385849dd60427e62832b69eada170fdefd5120acb76edb0df7bafd7980f631",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아주는 1인용 비비색 방수텐트로, 야외 숙박 시 비바람 방어에 직접적으로 효과적입니다.",
+      "reasonSha256": "f37d02f327931737907a424059953cf1c0ead205a3e77878ce8759cb0485db47",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "1인용 비비색 방수텐트|서바이벌기어",
+      "reasonText": "방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아주는 1인용 비비색으로, 야영이 필요한 야외 숙박에 적합합니다.",
+      "reasonSha256": "11ba8c146ff1b1192ee17a3686fc5183fb30a54fd60e41e23f909a7e73e0bdc6",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 비비색 방수텐트",
+        "description": "비상 시 야영이 필요한 장거리 등산이나 종주 산행에 적합한 1인용 비비색입니다. 방수 코팅이 되어 있어 갑작스러운 비나 눈을 막아줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합하며 우천 시에도 안심하고 사용할 수 있습니다.",
+      "reasonSha256": "9429906a22906ad343fa8993bec7e6fd48dbc44a45b36c91506ae68e1c694885",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합하며, 강한 방수 성능으로 야외 숙박 시 비바람을 효과적으로 차단합니다.",
+      "reasonSha256": "286bc71a56fd925f000bfe28e878c332bf2c1f95f1c633e795a73ff08b78cb1f",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합하며, 통풍 메쉬창과 전실 공간이 있어 비바람을 완벽하게 차단합니다.",
+      "reasonSha256": "855cac9404448d16375d689645dced33fe64ca108c71a4290dd56e87290f865f",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "방수 5000mm의 이중지퍼 거실형 텐트로, 야외 숙박 시 비를 막아주고 4인 가족 캠핑에 적합합니다.",
+      "reasonSha256": "1919c2d7d7a0df7418214b51bd27b51a00b752aa1a5080140e75cef608efc286",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "방수 5000mm의 이중지퍼 거실형 텐트로, 야외 숙박 시 비바람을 효과적으로 차단해주는 주요 장비입니다.",
+      "reasonSha256": "92b0efb55f448fe49d116b68a8e37dabf1755b38ede62901dc9b9b9735572644",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "4x4m 대형 캠핑 타프로 강한 방수 및 차광 기능을 갖추고 있어 넓은 그늘 공간을 확보하면서 비바람을 효과적으로 차단합니다.",
+      "reasonSha256": "1b367364443aa2edfd06247d3ba24ae3ea6a9d8c05cb7cf47bb5f419eb3c8f95",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "4x4m 대형 캠핑 타프로 강한 방수 및 차광 기능을 갖추고 있어 넓은 그늘 공간을 확보하여 비바람을 효과적으로 막아줍니다.",
+      "reasonSha256": "ebdaf198245edcf91478c588175e69da48eda0a203106e299bf1025d4b9eee85",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "강한 방수 기능을 갖춘 4x4m 대형 캠핑 타프로, 야외 숙박 시 넓은 공간에서 비바람을 효과적으로 차단할 수 있습니다.",
+      "reasonSha256": "fcf8e9bb3ccd8b15e9294fd21ba9d33414b960000780ac7f6370ca87393a7201",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "강한 방수 기능을 갖춘 4x4m 대형 캠핑 타프로, 야외 숙박 시 비를 막아주고 넓은 공간을 확보할 수 있습니다.",
+      "reasonSha256": "3e91562613fd94931d32990cb7a9cb70a1ce463fe1cbdf7e8e4c5da038746a07",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "강한 방수 기능을 갖춘 4x4m 대형 캠핑 타프로, 텐트와 함께 사용하여 야외 숙박 시 넓은 공간을 비바람으로부터 보호할 수 있습니다.",
+      "reasonSha256": "95860580049b77f822a9dee9b57667fc0b5fe136756dfb7b82da9a5feb7bda0b",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "방수 차광 캠핑 타프 4x4m|캠프힐",
+      "reasonText": "강한 방수 및 차광 기능의 4x4m 대형 타프로 넓은 그늘 공간을 확보하여 비바람으로부터 보호합니다.",
+      "reasonSha256": "cc1882ae8d2c703a49e1b3704a1af628ee60a84330f518ab5fc37f2611aa7272",
+      "label": "unsupported",
+      "reason": "방수·비 대응 설명을 바람 차단 성능으로 확장했다. 해당 상품명·설명에는 방풍 근거가 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "방수 차광 캠핑 타프 4x4m",
+        "description": "강한 방수 및 차광 기능을 갖춘 4x4m 대형 캠핑 타프입니다. 거실형 텐트와 함께 사용하면 넓은 그늘 공간을 확보할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+      "reasonText": "원터치 자동 텐트로 설치가 간편하며 캠핑이나 야외 활동 시 빠르게 비바람으로부터 보호할 수 있습니다.",
+      "reasonSha256": "fcbd6217d25bd71b8442a58cb199d54a46389dc69efd9f93a75fdda222efc58f",
+      "label": "unsupported",
+      "reason": "원터치 설치·간이 쉘터 설명에 비·바람 차단 성능 근거는 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "원터치 자동 텐트 1~2인용",
+        "description": "펼치면 자동으로 형태가 잡히는 원터치 텐트로 설치 시간을 크게 줄여줍니다. 캠핑은 물론 가벼운 등산이나 여행지에서 간이 쉘터로도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+      "reasonText": "원터치 자동 텐트로 설치가 간편하며, 캠핑이나 등산 시 비바람을 막아주는 간이 쉘터로 활용할 수 있습니다.",
+      "reasonSha256": "49c9358d9273c77e050858221e1fb478c6216b9d216c03bc3a6fb963773bd567",
+      "label": "unsupported",
+      "reason": "원터치 설치·간이 쉘터 설명에 비·바람 차단 성능 근거는 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "원터치 자동 텐트 1~2인용",
+        "description": "펼치면 자동으로 형태가 잡히는 원터치 텐트로 설치 시간을 크게 줄여줍니다. 캠핑은 물론 가벼운 등산이나 여행지에서 간이 쉘터로도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "원터치 자동 텐트 1~2인용|퀵쉘터",
+      "reasonText": "원터치 자동 텐트로 설치가 간편하면서도 캠핑이나 야외 활동 시 비바람을 효과적으로 차단해주는 간이 쉘터로 활용할 수 있습니다.",
+      "reasonSha256": "2b640c6d675086528a21e8d5aca5eb483ae89cb5c608c8b5056f5cc173472850",
+      "label": "unsupported",
+      "reason": "원터치 설치·간이 쉘터 설명에 비·바람 차단 성능 근거는 없다.",
+      "unsupportedClaim": "비바람",
+      "deferralReason": null,
+      "evidence": {
+        "name": "원터치 자동 텐트 1~2인용",
+        "description": "펼치면 자동으로 형태가 잡히는 원터치 텐트로 설치 시간을 크게 줄여줍니다. 캠핑은 물론 가벼운 등산이나 여행지에서 간이 쉘터로도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "차박용 사이드 텐트 도킹형|오토캠프",
+      "reasonText": "차량과 도킹하는 사이드 텐트로 방수 코팅 원단으로 우천 시에도 안심하고 사용할 수 있는 차박 필수품입니다.",
+      "reasonSha256": "959afaae2bfb365bfdad3d20b43f69f17aa3984b0891bb2eab7d3509966249cc",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "차박용 사이드 텐트 도킹형",
+        "description": "차량 트렁크와 도킹하여 생활 공간을 확장할 수 있는 차박용 사이드 텐트입니다. 방수 코팅 원단으로 우천 시에도 안심하고 사용할 수 있는 차박 캠핑 필수품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R01",
+      "query": "야외 숙박 때 비바람을 막아 줄 장비",
+      "productKey": "차박용 사이드 텐트 도킹형|오토캠프",
+      "reasonText": "차박용 사이드 텐트로 방수 코팅 원단으로 제작되어 우천 시에도 안심하고 사용할 수 있는 차박 캠핑 필수품입니다.",
+      "reasonSha256": "d31302571048ade400cab868187a906b32bf20bd29202219839c385a51fedfea",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "차박용 사이드 텐트 도킹형",
+        "description": "차량 트렁크와 도킹하여 생활 공간을 확장할 수 있는 차박용 사이드 텐트입니다. 방수 코팅 원단으로 우천 시에도 안심하고 사용할 수 있는 차박 캠핑 필수품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "다용도 수납정리함 3단|스마트케이스",
+      "reasonText": "투명 플라스틱 소재로 옷이나 소품을 깔끔하게 정리할 수 있는 3단 수납정리함입니다.",
+      "reasonSha256": "f558f4ef785e0ef29c96e2c53d9f5526c80b3b5da220e2d7fc4424eea97e22c5",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "다용도 수납정리함 3단",
+        "description": "투명 플라스틱 소재의 3단 수납정리함으로 옷이나 소품을 깔끔하게 정리할 수 있습니다. 정리정돈이 필요한 새집에 보내기 좋은 집들이 선물입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "무선 핸디 청소기|클린업",
+      "reasonText": "좁은 자취방을 빠르게 청소할 수 있는 가볍고 강력한 흡입력의 무선 핸디 청소기입니다.",
+      "reasonSha256": "6be8f67ab8fe0ffd0f15e680c30fc5f017a261204ed70ec7bddd66ee926fb243",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "무선 핸디 청소기",
+        "description": "가볍고 강력한 흡입력을 가진 무선 핸디 청소기입니다. 좁은 자취방을 빠르게 청소할 수 있어 자취 필수템으로 사랑받습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "벽걸이형 무선 청소기 거치대|클린업",
+      "reasonText": "벽걸이형 청소기 거치대로 청소기를 효율적으로 보관하면서 바닥 공간을 절약할 수 있습니다.",
+      "reasonSha256": "4d60f7c6fde87c6a38fd7beff7c11e835bfc3b6545b6d8169610c4e03c677ce3",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "벽걸이형 무선 청소기 거치대",
+        "description": "무선 청소기를 충전하며 보관할 수 있는 벽걸이형 거치대입니다. 청소기를 효율적으로 보관할 수 있는 자취 필수템 액세서리입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "압축 진공 의류 정리팩 세트|컴팩트라이프",
+      "reasonText": "압축 진공팩으로 옷과 이불의 부피를 줄여 원룸의 제한된 수납공간을 최대한 활용할 수 있습니다.",
+      "reasonSha256": "95f45f3759bbbde5983802029d970bb0981d527dedb625263f173d2de00e54b1",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "압축 진공 의류 정리팩 세트",
+        "description": "공기를 빼서 부피를 줄이는 압축 진공팩 세트로 옷과 이불을 깔끔하게 보관할 수 있습니다. 여행 짐 싸기는 물론 자취방이나 신혼집의 계절 옷 정리에도 효과적입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "원룸용 4단 서랍장|스마트케이스",
+      "reasonText": "좁은 원룸의 수납 부족을 직접 해결하는 4단 서랍장으로 옷과 소품을 효율적으로 정리할 수 있습니다.",
+      "reasonSha256": "7e9b8cdb9d01d7073ee77d15ea4ee13bb0c49408abeb7540fda07fdc565aff94",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "원룸용 4단 서랍장",
+        "description": "옷과 소품을 정리할 수 있는 플라스틱 4단 서랍장입니다. 좁은 자취방의 수납 부족을 해결해주는 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "원룸용 4단 서랍장|스마트케이스",
+      "reasonText": "좁은 자취방의 수납 부족을 해결해주는 필수템으로, 옷과 소품을 정리할 수 있는 4단 서랍장입니다.",
+      "reasonSha256": "4bbd292c4b80e0838326849ca428b493f1711748205b6e6c235c9b118e939b67",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "원룸용 4단 서랍장",
+        "description": "옷과 소품을 정리할 수 있는 플라스틱 4단 서랍장입니다. 좁은 자취방의 수납 부족을 해결해주는 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "투명 수납박스 대형 세트|스마트케이스",
+      "reasonText": "내용물이 보이는 투명 수납박스 대형 3개 세트로 짐이 많은 자취방을 깔끔하게 정리할 수 있습니다.",
+      "reasonSha256": "80d806c4cb9cf6a2a839f851ec504e964ae8ada7d060ba92e8b54ca47917146c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "투명 수납박스 대형 세트",
+        "description": "내용물이 보이는 투명 수납박스 대형 3개 세트입니다. 짐이 많은 자취방을 깔끔하게 정리할 수 있는 자취 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "투명 수납박스 대형 세트|스마트케이스",
+      "reasonText": "투명 수납박스 세트로 짐이 많은 원룸을 깔끔하게 정리하고 내용물을 한눈에 확인할 수 있습니다.",
+      "reasonSha256": "33907302306c9753a35206808911af6cdf62336160e2a22cd3d24843abb220ce",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "투명 수납박스 대형 세트",
+        "description": "내용물이 보이는 투명 수납박스 대형 3개 세트입니다. 짐이 많은 자취방을 깔끔하게 정리할 수 있는 자취 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "휴대용 접이식 빗자루 세트|클린업",
+      "reasonText": "작게 접어 보관할 수 있는 빗자루와 쓰레받기 세트로 좁은 공간 청소에 효과적입니다.",
+      "reasonSha256": "160cbd3cea4185d3da67d3eea2100eaba9b4b003eebd014d76143d5b10800a0c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 접이식 빗자루 세트",
+        "description": "작게 접어 보관할 수 있는 빗자루와 쓰레받기 세트로 좁은 공간 청소에 효과적입니다. 자취방이나 캠핑 텐트 안, 차박 차량 내부 정리에 두루 사용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R02",
+      "query": "좁은 원룸 수납과 청소에 도움 되는 물건",
+      "productKey": "휴대용 접이식 빗자루 세트|클린업",
+      "reasonText": "접이식 빗자루 세트로 좁은 공간에서 청소를 효과적으로 하면서도 보관 공간을 절약할 수 있습니다.",
+      "reasonSha256": "229e349ced702d42c3cdaeb6b7b91d2d0defef0aa821bdeb8434359b93cb23d7",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 접이식 빗자루 세트",
+        "description": "작게 접어 보관할 수 있는 빗자루와 쓰레받기 세트로 좁은 공간 청소에 효과적입니다. 자취방이나 캠핑 텐트 안, 차박 차량 내부 정리에 두루 사용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "강아지 노즈워크 매트 장난감|도그메이트",
+      "reasonText": "이동 중 반려견의 스트레스 해소와 분리불안 완화에 효과적인 노즈워크 매트로, 장거리 이동 시 반려견을 진정시키는 데 도움이 됩니다.",
+      "reasonSha256": "d26b6d6eafa351a3c42c776e1c21212a7124d01f422fa5b1255c9a5d9ba7cc19",
+      "label": "unsupported",
+      "reason": "일반 노즈워크의 스트레스·분리불안 설명을 이동 중 진정 효과로 확장했다. 이동 조건의 근거가 없다.",
+      "unsupportedClaim": "장거리 이동 시 반려견을 진정시키는",
+      "deferralReason": null,
+      "evidence": {
+        "name": "강아지 노즈워크 매트 장난감",
+        "description": "간식을 숨겨 후각 자극과 스트레스 해소에 도움을 주는 노즈워크 매트입니다. 분리불안 완화에도 효과적인 반려견 필수 장난감입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "reasonText": "고양이뿐만 아니라 소형 반려견도 사용 가능한 외출용 백팩 캐리어로, 어깨끈 패딩이 두꺼워 장시간 이동에도 편안합니다.",
+      "reasonSha256": "852d36c526049c03851a87dab3731964edf4e75b7777404c969207c857b0008c",
+      "label": "unsupported",
+      "reason": "고양이 캐리어의 반려견 호환성 근거가 없다.",
+      "unsupportedClaim": "소형 반려견도 사용 가능한",
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 외출용 백팩 캐리어",
+        "description": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "reasonText": "통풍이 잘되는 메쉬 창과 두꺼운 어깨끈 패딩으로 장시간 이동에도 편안하며, 반려동물 외출용품으로 특화되어 있습니다.",
+      "reasonSha256": "f395f6e06d991dc31d8640d453afaa64992183faf98203458a415d18490124f9",
+      "label": "unsupported",
+      "reason": "상품의 고양이 대상을 생략하고 반려견 질의에서 일반 반려동물용으로 확대했다. 반려견 호환성 근거가 없다.",
+      "unsupportedClaim": "반려동물 외출용품으로 특화",
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 외출용 백팩 캐리어",
+        "description": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "reasonText": "통풍이 잘되는 메쉬 창과 두꺼운 어깨끈 패딩이 있어 장시간 이동에도 편안한 외출용 백팩 캐리어입니다.",
+      "reasonSha256": "1b660a6225bbb53fac4d397250ce2425732cb1bee7882d3cf6fdde0d793c6b17",
+      "label": "unsupported",
+      "reason": "고양이용이라는 대상 조건을 생략한 채 반려견 이동에 제시했다. 반려견 호환성 근거가 없다.",
+      "unsupportedClaim": "장시간 이동에도 편안한 외출용 백팩 캐리어",
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 외출용 백팩 캐리어",
+        "description": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+      "reasonText": "소형 반려동물을 안전하게 이동시킬 수 있는 캐리어형 백팩으로, 통풍이 잘되는 메쉬창이 있어 장시간 이동에 적합합니다.",
+      "reasonSha256": "82d4381e90ffdc18c4cefdeaa15642237b0392bfb449cfe8a10d25b9a6481e1a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "반려동물 캐리어형 백팩",
+        "description": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+      "reasonText": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있으며, 여행이나 등산처럼 장시간 이동에 최적화되어 있습니다.",
+      "reasonSha256": "85adebcbef487ba3ca53d40566453c50b947b2c7ba15eb1c92cd2968f162f44e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "반려동물 캐리어형 백팩",
+        "description": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+      "reasonText": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있으며, 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다.",
+      "reasonSha256": "d2a4e06b74c50c3eac1f1ed5c7a1a8e509d58ad21edef747cb095bc7c0d76a84",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "반려동물 캐리어형 백팩",
+        "description": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        },
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "반려동물 캐리어형 백팩|펫드라이브",
+      "reasonText": "통풍이 잘되는 메쉬창이 있어 반려견을 안전하게 이동시킬 수 있으며, 여행이나 등산 같은 장시간 이동에 최적화된 캐리어형 백팩입니다.",
+      "reasonSha256": "350665caec5a29b9ab72426827c00659fe671b2e36c625c147db1ced7d9e4839",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "반려동물 캐리어형 백팩",
+        "description": "통풍이 잘되는 메쉬창이 있는 캐리어형 백팩으로 소형 반려동물을 안전하게 이동시킬 수 있습니다. 여행이나 등산처럼 장시간 이동이 필요한 외출에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "접이식 보조 휴대용 가방|어반트립",
+      "reasonText": "접이식 보조 가방으로 반려견 용품이나 이동 중 필요한 물건들을 추가로 보관할 수 있어 여행 시 유용합니다.",
+      "reasonSha256": "5d4a97f3edd830ceb4f4f1ffb0ba601e907ad9bffd4867ac10aadead5d71191f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "접이식 보조 휴대용 가방",
+        "description": "사용하지 않을 때는 작게 접히고 필요할 때 펼쳐 쓸 수 있는 보조 가방입니다. 여행 중 늘어난 짐이나 기념품 보관에 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+      "reasonText": "반려동물 이동장으로 항공사 기준에 맞춘 사이즈이며, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다.",
+      "reasonSha256": "e23f6ad8e030181ca75f137e287499c2be7c442cdd6254cbe6310f2edacd4471",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "항공기 기내 반입 반려동물 이동장",
+        "description": "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+      "reasonText": "항공사 기준에 맞춘 사이즈로 제작되어 비행기 탑승 시에도 사용 가능하며, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다.",
+      "reasonSha256": "fb5b852338e934a621fa6830491c19b7df03760c9bc23a67773457193004c0b3",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "항공기 기내 반입 반려동물 이동장",
+        "description": "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+      "reasonText": "항공사 기준에 맞춘 사이즈의 반려동물 이동장으로, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 반려견을 안전하게 이동시킬 수 있습니다.",
+      "reasonSha256": "7a430e2c5aefe8b86966a8d3f88d02e4c5e1e785eb809939df6b1bb488f9333b",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "항공기 기내 반입 반려동물 이동장",
+        "description": "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+      "reasonText": "항공사 기준에 맞춘 사이즈의 반려동물 이동장으로, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리하게 반려동물을 이동시킬 수 있습니다.",
+      "reasonSha256": "733e4c0bb6f080cf4318e78175d24d966acea5ea81eb3b68f9e7f27b4aa7e8de",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "항공기 기내 반입 반려동물 이동장",
+        "description": "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "R03",
+      "query": "반려견과 이동할 때 필요한 물건",
+      "productKey": "항공기 기내 반입 반려동물 이동장|펫프렌즈",
+      "reasonText": "항공사 기준에 맞춘 사이즈의 반려동물 이동장으로, 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리하게 사용할 수 있습니다.",
+      "reasonSha256": "fe0d2d586f75226757318d608eb634f9eee9828f5d036df068ffc9917cf529f3",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "항공기 기내 반입 반려동물 이동장",
+        "description": "항공사 기준에 맞춘 사이즈로 제작된 반려동물 이동장입니다. 통풍이 잘되는 메쉬 소재와 어깨끈이 포함되어 여행 시 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "돌잔치 기념 명패 세트|리틀우드",
+      "reasonText": "돌잔치 기념 명패 세트로 아이 이름과 생년월일을 각인할 수 있으며, 고급스러운 패키지로 돌잔치 답례품이나 기념 선물로 자주 선택되는 제품입니다. 가격 35,000원.",
+      "reasonSha256": "dabf8a3698bebaa067daa67df1ba5dbd560700aa8908d1bf7987e8a8cbedc3a0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "돌잔치 기념 명패 세트",
+        "description": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "돌잔치 기념 명패 세트|리틀우드",
+      "reasonText": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트로 돌잔치 기념 선물로 최적의 상품입니다.",
+      "reasonSha256": "345ca6c7c1f70ad7981443a4be440f19bb73a287ccfa62a37683f479faf260b6",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "돌잔치 기념 명패 세트",
+        "description": "아이 이름과 생년월일을 각인할 수 있는 원목 명패와 사진 액자 세트입니다. 돌잔치 답례품이나 기념 선물로 자주 선택되며 고급스러운 패키지로 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "디지털 비접촉 아기 체온계|헬스맘",
+      "reasonText": "비접촉식 디지털 체온계로 신생아를 키우는 부모에게 실용적인 돌잔치 선물입니다.",
+      "reasonSha256": "f2214e17f9165d2e70b964e6b292ade6bd9c65aaecec2a7075c1e61cfcfdcecd",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "디지털 비접촉 아기 체온계",
+        "description": "이마에 가까이 대기만 하면 1초 안에 체온을 측정하는 비접촉식 디지털 체온계입니다. 발열 알림 기능이 있어 신생아를 키우는 부모에게 유용한 돌잔치 선물입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+      "reasonText": "부드러운 면 소재의 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며 돌잔치 선물로 인기 있습니다.",
+      "reasonSha256": "70ecbf7348665d9d784b81e7e47b6fb3d6938cdb5e33092cf2b6b011410a8396",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "신생아 우주복 내의 5종 세트",
+        "description": "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "신생아 우주복 내의 5종 세트|코튼베이비",
+      "reasonText": "부드러운 면 소재의 신생아 우주복 내의 5종 세트로 사계절 활용이 가능하며, 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다. 가격 35,000원.",
+      "reasonSha256": "795f77a346de38831d0c2d57ebc52bd68f4b63eef75330bca4125f194501f442",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "신생아 우주복 내의 5종 세트",
+        "description": "부드러운 면 소재로 제작된 신생아 우주복 내의 5종 세트로 사계절 활용이 가능합니다. 단추형 디자인으로 기저귀 교체가 편리해 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+      "reasonText": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발로, 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다. 가격 32,000원.",
+      "reasonSha256": "133dd091ad8b97919d864aeb9ee10694c9dd65d7638807f6ed59b6182da3f014",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 첫걸음 가죽 신발",
+        "description": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "아기 첫걸음 가죽 신발|베이비웰",
+      "reasonText": "미끄럼 방지 처리된 천연 가죽 소재의 아기 첫걸음 신발로 돌잔치 선물로 자주 선택되는 상품입니다.",
+      "reasonSha256": "abcac1cfe73558e98c9d22d5461aa183c13cd75e4974b326fd28154cbfbcb7bc",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 첫걸음 가죽 신발",
+        "description": "미끄럼 방지 처리가 된 천연 가죽 소재의 아기 첫걸음 신발입니다. 발 모양에 맞춘 인체공학적 디자인으로 돌잔치 선물로 자주 선택됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "아기 침대 모빌 음악기 세트|꿈나라키즈",
+      "reasonText": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기로 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물입니다. 가격 42,000원.",
+      "reasonSha256": "31482b1ea10950b325d8d9758e347d8284e768c0ffe2074f14d28d3700847b48",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "아기 침대 모빌 음악기 세트",
+        "description": "은은한 멜로디와 회전하는 동물 인형이 달린 아기 침대 모빌 음악기입니다. 야간 수면등 기능이 있어 아기를 편안하게 재워주는 돌잔치 선물로 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "유아용 도자기 식기 세트|마이베베",
+      "reasonText": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품이며 실용적입니다.",
+      "reasonSha256": "266ff3d52ca9574ebe970b0e4982785a4a5a6d247624ea885b3a5d938cdf5f10",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "유아용 도자기 식기 세트",
+        "description": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S01",
+      "query": "돌잔치 선물 5만원 이하",
+      "productKey": "유아용 도자기 식기 세트|마이베베",
+      "reasonText": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품이며, 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다. 가격 42,000원.",
+      "reasonSha256": "9734906f172009c89e043166a980dedfe573980bcfc27973cb467370f23d61fa",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "유아용 도자기 식기 세트",
+        "description": "이름 각인이 가능한 내열 도자기 식기 세트로 돌잔치 선물로 많이 찾는 제품입니다. 밥그릇, 국그릇, 수저까지 한 세트로 구성되어 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "공기정화 식물 몬스테라 화분|그린포레스트",
+      "reasonText": "키우기 쉬운 몬스테라 공기정화 식물로 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택됩니다.",
+      "reasonSha256": "061cd20ff18876a93b9954042faa9ad9c012f11fb7216c172042cfd118620d8c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "공기정화 식물 몬스테라 화분",
+        "description": "키우기 쉬운 몬스테라를 세라믹 화분에 심어 보내드립니다. 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택되는 식물입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "공기정화 식물 몬스테라 화분|그린포레스트",
+      "reasonText": "키우기 쉬운 몬스테라 화분으로 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택됩니다.",
+      "reasonSha256": "a293e549715bf0e49f03a3876cda588deddce673709a78eaaa54532fb334a2ef",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "공기정화 식물 몬스테라 화분",
+        "description": "키우기 쉬운 몬스테라를 세라믹 화분에 심어 보내드립니다. 새로운 공간에 생기를 더해주는 집들이 선물로 자주 선택되는 식물입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "북유럽풍 액자 3종 세트|월데코",
+      "reasonText": "북유럽풍 액자 3종 세트로 가벼운 무게로 벽에 걸기 쉬워 새집 인테리어를 꾸미는 집들이 선물로 적합합니다.",
+      "reasonSha256": "70f014f16fc9548f644fdd97971c628657dd635df30e378dd81a92db78bd4472",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "북유럽풍 액자 3종 세트",
+        "description": "심플한 일러스트가 담긴 북유럽풍 액자 3개 세트입니다. 가벼운 무게로 벽에 걸기 쉬워 새집 인테리어를 꾸미는 집들이 선물로 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "북유럽풍 액자 3종 세트|월데코",
+      "reasonText": "북유럽풍 액자 3종 세트로 새집 인테리어를 꾸미는 데 최적이며 가벼워 설치가 쉬운 집들이 선물입니다.",
+      "reasonSha256": "594f33c175cb58c2668dcce9fafe2dc0ab14f2ddd263b5db21394e9453b377d0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "북유럽풍 액자 3종 세트",
+        "description": "심플한 일러스트가 담긴 북유럽풍 액자 3개 세트입니다. 가벼운 무게로 벽에 걸기 쉬워 새집 인테리어를 꾸미는 집들이 선물로 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "소이왁스 무향 캔들 3종 세트|캔들무드",
+      "reasonText": "친환경 소이왁스 캔들 3종 세트로 새집에 은은한 분위기를 연출하며 집들이 선물로 인기가 높습니다.",
+      "reasonSha256": "9fce2881f2fd25de91825c0fc0415b4df2c4d01f6c1e259d8d789a0323c80fbd",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "소이왁스 무향 캔들 3종 세트",
+        "description": "콩기름으로 만든 친환경 소이왁스 캔들 3개 세트로 은은한 분위기를 연출합니다. 새집으로 이사한 친구에게 주는 집들이 선물로 인기가 높습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "소이왁스 무향 캔들 3종 세트|캔들무드",
+      "reasonText": "친환경 소이왁스 캔들 3종 세트로 은은한 분위기를 연출하며, 새집으로 이사한 친구에게 주는 집들이 선물로 인기가 높다고 설명되어 있습니다.",
+      "reasonSha256": "312f990dedbeca0692ada59aa74f54067dff7c7f7890ce1665e7aff99d4e03ab",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "소이왁스 무향 캔들 3종 세트",
+        "description": "콩기름으로 만든 친환경 소이왁스 캔들 3개 세트로 은은한 분위기를 연출합니다. 새집으로 이사한 친구에게 주는 집들이 선물로 인기가 높습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "원목 손잡이 머그컵 4P 세트|포슬린하우스",
+      "reasonText": "원목 손잡이 머그컵 4P 세트로 따뜻한 느낌을 주는 디자인으로 신혼집 집들이 선물로 잘 어울립니다.",
+      "reasonSha256": "87ca90a980f79605118aef450219b42dd7bbbd242b2c254ce5300da6eab4d66f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "원목 손잡이 머그컵 4P 세트",
+        "description": "도자기 컵에 원목 손잡이를 더한 머그컵 4개 세트입니다. 따뜻한 느낌을 주는 디자인으로 신혼집 집들이 선물로 잘 어울립니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "원목 손잡이 머그컵 4P 세트|포슬린하우스",
+      "reasonText": "원목 손잡이가 있는 도자기 머그컵 4개 세트로 따뜻한 느낌을 주는 디자인이 신혼집 집들이 선물로 잘 어울립니다.",
+      "reasonSha256": "d79d342e60365420ecfcfee0a731923ca61c4a13ce4c5b2a4274ff8ca70002b5",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "원목 손잡이 머그컵 4P 세트",
+        "description": "도자기 컵에 원목 손잡이를 더한 머그컵 4개 세트입니다. 따뜻한 느낌을 주는 디자인으로 신혼집 집들이 선물로 잘 어울립니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "패브릭 도어매트|코지홈",
+      "reasonText": "현관 입구에 두기 좋은 패브릭 도어매트로 새집의 첫 인상을 깔끔하게 만들어주는 실용적인 집들이 선물입니다.",
+      "reasonSha256": "a68e0928d0c6ca35d37879855596609c82f06bb95330f1cfe98bb00669bbf996",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "패브릭 도어매트",
+        "description": "현관 입구에 두기 좋은 패브릭 소재의 도어매트입니다. 새집의 첫 인상을 깔끔하게 만들어주는 집들이 선물 아이디어입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S02",
+      "query": "새집에 어울리는 집들이 선물",
+      "productKey": "패브릭 도어매트|코지홈",
+      "reasonText": "현관 입구에 두기 좋은 패브릭 도어매트로, 새집의 첫 인상을 깔끔하게 만들어주는 집들이 선물로 명시되어 있습니다.",
+      "reasonSha256": "073f6f521e7e78a5047cd3a50b3599ec4bebe8fa3457d6fd9b9c6aeecee44208",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "패브릭 도어매트",
+        "description": "현관 입구에 두기 좋은 패브릭 소재의 도어매트입니다. 새집의 첫 인상을 깔끔하게 만들어주는 집들이 선물 아이디어입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "1인 가구 미니 전기밥솥 3인용|홈쿠진",
+      "reasonText": "공간을 적게 차지하는 컴팩트한 3인용 전기밥솥으로 자취 필수템이며 간편한 취사가 가능합니다. 가격 49,000원",
+      "reasonSha256": "15356ac7e57fb160e8edc7d1b4fd934363a4da703fdb6fcf0cdbbc533e27d84e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인 가구 미니 전기밥솥 3인용",
+        "description": "공간을 적게 차지하는 컴팩트한 3인용 전기밥솥입니다. 자취 필수템으로 간편한 취사가 가능합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "1인용 휴대용 인덕션|쿡메이트",
+      "reasonText": "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있는 자취 필수템입니다.",
+      "reasonSha256": "025ca08ba3fa96d291b38522fa859190245cd57ba7086bcb6d1e2348b1f75409",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 휴대용 인덕션",
+        "description": "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있습니다. 자취생을 위한 자취 필수템으로 자주 추천되는 제품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "1인용 휴대용 인덕션|쿡메이트",
+      "reasonText": "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있는 자취 필수템입니다. 가격 32,000원",
+      "reasonSha256": "b8c22bf4d89e50dbc5d1a349a2170ff7f98637c2a58d849cf1f8a3818d9ed506",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "1인용 휴대용 인덕션",
+        "description": "한 칸짜리 컴팩트한 인덕션으로 좁은 주방에서도 간편하게 요리할 수 있습니다. 자취생을 위한 자취 필수템으로 자주 추천되는 제품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "3인용 미니 전기밥솥|쿡메이트",
+      "reasonText": "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있는 자취 필수템입니다.",
+      "reasonSha256": "a3c023f06213131b71af9774ae7fb3f395a19a390a706c0d032d8334ba73f815",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "3인용 미니 전기밥솥",
+        "description": "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있습니다. 매일 밥을 지어 먹는 자취 필수템으로 빠지지 않는 가전입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "3인용 미니 전기밥솥|쿡메이트",
+      "reasonText": "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있으며, 자취 필수템입니다. 가격 49,000원",
+      "reasonSha256": "bbb6f312112f450b3ead07d397876a28efc409d23c0d1e801ff93a8a117b13d7",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "3인용 미니 전기밥솥",
+        "description": "1~3인분 취사에 적합한 소형 전기밥솥으로 자취방 주방에 부담 없이 둘 수 있습니다. 매일 밥을 지어 먹는 자취 필수템으로 빠지지 않는 가전입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "무선 핸디 청소기|클린업",
+      "reasonText": "가볍고 강력한 흡입력을 가진 무선 핸디 청소기로 좁은 자취방을 빠르게 청소할 수 있는 자취 필수템입니다. 가격 68,000원",
+      "reasonSha256": "d8ce67d8131ee08c7936125a2a663e2c1c62cf8b690f99d68660360a2a32b269",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "무선 핸디 청소기",
+        "description": "가볍고 강력한 흡입력을 가진 무선 핸디 청소기입니다. 좁은 자취방을 빠르게 청소할 수 있어 자취 필수템으로 사랑받습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "무선 핸디 청소기|클린업",
+      "reasonText": "가볍고 강력한 흡입력의 무선 핸디 청소기로 좁은 자취방을 빠르게 청소할 수 있습니다.",
+      "reasonSha256": "d61e286f7db2decb31483e87457251875d71242880b4624978689eb3bc3b2094",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "무선 핸디 청소기",
+        "description": "가볍고 강력한 흡입력을 가진 무선 핸디 청소기입니다. 좁은 자취방을 빠르게 청소할 수 있어 자취 필수템으로 사랑받습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "소형 공기청정기|클린업",
+      "reasonText": "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여 건강한 자취생활을 지원합니다.",
+      "reasonSha256": "41778682830b679cf2c4da2f0b65e088c46ebc2791b4020753fafa24edef3eb4",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "소형 공기청정기",
+        "description": "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여줍니다. 건강을 생각하는 자취생에게 자취 필수템으로 추천됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "소형 공기청정기|클린업",
+      "reasonText": "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여주며, 건강을 생각하는 자취생에게 추천됩니다. 가격 89,000원",
+      "reasonSha256": "1facbea7526c0fda1d7d6a57264a834f7baf88723c89ea288b0ecbc49251148e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "소형 공기청정기",
+        "description": "작은 원룸에 적합한 소형 공기청정기로 미세먼지와 냄새를 줄여줍니다. 건강을 생각하는 자취생에게 자취 필수템으로 추천됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S03",
+      "query": "자취방에서 쓸 10만원 이하 가전",
+      "productKey": "슬림형 전자레인지|리빙테크",
+      "reasonText": "좁은 자리에도 들어가는 슬림한 디자인의 전자레인지로 데우기와 간단한 조리가 모두 가능합니다.",
+      "reasonSha256": "df12f69a81371315b1ea7e50a402cd3f03e49d7a8d7c43bcfcb304284d7e039a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "슬림형 전자레인지",
+        "description": "좁은 자리에도 들어가는 슬림한 디자인의 전자레인지입니다. 데우기와 간단한 조리가 모두 가능해 자취 필수템으로 손꼽힙니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "4인 가족 캠핑에 최적화된 거실형 텐트로 방수 5000mm의 이중지퍼와 통풍 메쉬창, 전실 공간이 있어 가족 캠핑에 적합합니다.",
+      "reasonSha256": "1995788b4c4b2e19dc20c641bc8d0240d74ab11dfe5eaf942c5998b96aa34405",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "4인용 거실형 캠핑 텐트|캠프힐",
+      "reasonText": "4인용으로 명시되어 있으며, 방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 직접 적합합니다. 통풍 메쉬창과 전실 공간이 있어 가족 캠핑의 핵심 용품입니다.",
+      "reasonSha256": "8b9b769620696666952ea62342013303cd0a7725b1883096ba01d6197db400a4",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "4인용 거실형 캠핑 텐트",
+        "description": "방수 5000mm의 이중지퍼 거실형 텐트로 4인 가족 캠핑에 적합합니다. 통풍 메쉬창과 전실 공간이 있어 차박 및 캠핑용품으로 널리 사용됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "사계절 차박 캠핑 침낭|아웃도어랩",
+      "reasonText": "사계절 사용 가능한 캠핑 침낭으로 극세사 충전재로 보온성이 우수하며 압축 가방이 함께 제공되어 가족 캠핑에 필수적입니다.",
+      "reasonSha256": "9299cec26ded3d804afd72f7f092d1e2c6daa58e0773329d0cfea5238ce7a89c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "사계절 차박 캠핑 침낭",
+        "description": "극세사 충전재로 보온성을 높인 사계절용 캠핑 침낭입니다. 차박, 백패킹, 캠핑 시 따뜻하게 사용할 수 있으며 압축 가방이 함께 제공됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "셀프 인플레이팅 캠핑 매트|아웃도어랩",
+      "reasonText": "셀프 인플레이팅 방식의 캠핑 매트로 가볍고 부피가 작아 4인 가족이 함께 사용하기 편리합니다.",
+      "reasonSha256": "f154b018686a67055b7b4c64d33e1ed917c9941a05f40d7dbc7ac602b73130d7",
+      "label": "unsupported",
+      "reason": "경량·휴대성은 명시되지만 4인 공동 사용 크기나 수용 규격은 없다.",
+      "unsupportedClaim": "4인 가족이 함께 사용하기 편리",
+      "deferralReason": null,
+      "evidence": {
+        "name": "셀프 인플레이팅 캠핑 매트",
+        "description": "공기를 자동으로 채워주는 셀프 인플레이팅 캠핑 매트입니다. 가볍고 부피가 작아 백패킹, 차박, 등산 시 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "캠핑 텐트 풋프린트 방수 그라운드시트|그린필드",
+      "reasonText": "텐트 바닥에 깔아 습기와 마모를 방지하는 방수 그라운드시트로 텐트 수명을 늘려주는 필수 보조용품입니다.",
+      "reasonSha256": "455cfb982eea417bb1dc1c59224bd31543b7ae92d7656e23d51c36012018df64",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "캠핑 텐트 풋프린트 방수 그라운드시트",
+        "description": "텐트 바닥에 깔아 습기와 마모를 방지해주는 캠핑 텐트 풋프린트입니다. 고밀도 방수 원단으로 제작되어 캠핑·차박 시 텐트 수명을 늘려줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S04",
+      "query": "4인 가족 캠핑용품",
+      "productKey": "캠핑용 원터치 모기장 텐트|그린필드",
+      "reasonText": "원터치 방식의 모기장 텐트로 설치가 간단하고 여름철 캠핑 시 벌레 걱정 없이 휴식할 수 있습니다.",
+      "reasonSha256": "aa1c76da45a55d97fe5d6df40e157c369a39f168f893eb733e36feb09887788c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "캠핑용 원터치 모기장 텐트",
+        "description": "자동으로 펼쳐지는 원터치 방식의 캠핑용 모기장으로 설치가 매우 간단합니다. 통풍이 잘되는 메쉬 원단을 사용해 여름철 캠핑·차박 시 벌레 걱정 없이 휴식할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리",
+      "reasonText": "2kg 덤벨 세트로 상체 근력 운동에 적합하며, 홈트레이닝 입문자도 부담 없이 사용할 수 있습니다.",
+      "reasonSha256": "ac6c658667545d2e74ec556a3a985022a100441ce1f35df8f126d1f515f6161e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "네오프렌 코팅 덤벨 세트 2kg×2",
+        "description": "미끄러짐을 방지하는 네오프렌 코팅이 적용된 2kg 덤벨 2개 세트입니다. 좁은 공간에서도 부담 없이 상체 근력 운동을 할 수 있어 홈트레이닝 입문자에게 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "네오프렌 코팅 덤벨 세트 2kg×2|바디팩토리",
+      "reasonText": "홈트레이닝 입문자를 위한 기본적인 덤벨 세트로, 미끄럼 방지 코팅이 적용되어 안전하고 편안한 상체 근력 운동이 가능합니다.",
+      "reasonSha256": "5b9c4a2fb5f1936f2fc0786794fe2afc7c8d4772ccb16a39b576647525934b1e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "네오프렌 코팅 덤벨 세트 2kg×2",
+        "description": "미끄러짐을 방지하는 네오프렌 코팅이 적용된 2kg 덤벨 2개 세트입니다. 좁은 공간에서도 부담 없이 상체 근력 운동을 할 수 있어 홈트레이닝 입문자에게 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "대형 접이식 운동매트 180cm|필라엣지",
+      "reasonText": "180cm 접이식 운동매트로 전신 스트레칭과 맨몸운동을 할 수 있으며, 두꺼운 폼 소재로 바닥 충격을 흡수하여 홈트레이닝에 적합합니다.",
+      "reasonSha256": "e281a2bd05ed325c061325491a7b1096ccc3192c0900f1be336524433815bbd4",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "대형 접이식 운동매트 180cm",
+        "description": "180cm 길이의 접이식 운동매트로 매트 위에서 전신 스트레칭과 맨몸운동을 할 수 있습니다. 두꺼운 폼 소재로 바닥 충격을 흡수해 홈트레이닝 시 층간소음 걱정을 줄여줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "벽걸이형 접이식 풀업바|스트롱암",
+      "reasonText": "벽면에 고정하는 접이식 풀업바로 등과 팔 근력 운동에 활용되며, 사용 후 접어서 보관할 수 있어 좁은 공간에 적합합니다.",
+      "reasonSha256": "48f56cdef3c8a54121625d28bd58aaa1abd3799fbee9ceaf1a3c07e3206b9e18",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "벽걸이형 접이식 풀업바",
+        "description": "문틀에 설치 없이 벽면에 고정하는 접이식 풀업바로 등과 팔 근력 운동에 활용됩니다. 사용 후 접어서 보관할 수 있어 좁은 홈트레이닝 공간에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "벽걸이형 접이식 풀업바|스트롱암",
+      "reasonText": "벽면에 설치하는 접이식 풀업바로 등과 팔 근력 운동에 효과적이며, 좁은 공간에서도 사용 가능합니다.",
+      "reasonSha256": "f946e796554d1d4101a54845eb970cfb27073baeafc50606fce7ff0fea5fd4be",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "벽걸이형 접이식 풀업바",
+        "description": "문틀에 설치 없이 벽면에 고정하는 접이식 풀업바로 등과 팔 근력 운동에 활용됩니다. 사용 후 접어서 보관할 수 있어 좁은 홈트레이닝 공간에 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "벽부착형 케이블 운동기구|스트롱암",
+      "reasonText": "벽면에 설치하는 케이블 운동기구로 헬스장 수준의 다양한 근력 운동 동작을 좁은 공간에서도 수행할 수 있습니다.",
+      "reasonSha256": "38722f73add425abcd038b1747c1044ca0ab0e36e1e48da62dd849f655f81da0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "벽부착형 케이블 운동기구",
+        "description": "벽면에 설치하는 케이블 풀리 시스템으로 다양한 근력 운동 동작이 가능합니다. 좁은 공간에서도 헬스장 수준의 케이블 운동을 즐길 수 있는 홈트레이닝 장비입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "벽부착형 케이블 운동기구|스트롱암",
+      "reasonText": "벽면에 설치하는 케이블 풀리 시스템으로 다양한 근력 운동 동작이 가능하며, 좁은 공간에서도 헬스장 수준의 근력 운동을 할 수 있습니다.",
+      "reasonSha256": "5d5efa84ede22c3fd0caa2df64aeb9cf6328ce5ec849db02e8ba31ecbf3f6a3a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "벽부착형 케이블 운동기구",
+        "description": "벽면에 설치하는 케이블 풀리 시스템으로 다양한 근력 운동 동작이 가능합니다. 좁은 공간에서도 헬스장 수준의 케이블 운동을 즐길 수 있는 홈트레이닝 장비입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "안티버스트 짐볼 65cm 발펌프 포함|필라엣지",
+      "reasonText": "65cm 안티버스트 짐볼로 코어 근력 강화와 균형 운동에 적합하며, 발펌프가 포함되어 있어 바로 사용할 수 있습니다.",
+      "reasonSha256": "7420aa7c92261d77e170798f8f5eb783af553dc137b7396d5da8969eff01d2e5",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "안티버스트 짐볼 65cm 발펌프 포함",
+        "description": "65cm 사이즈의 안티버스트 짐볼로 코어 근력 강화와 균형 운동에 적합합니다. 전용 발펌프가 함께 제공되어 홈트레이닝 공간에서 바로 공기 주입 후 사용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "안티버스트 짐볼 65cm 발펌프 포함|필라엣지",
+      "reasonText": "코어 근력 강화와 균형 운동에 적합한 짐볼로, 발펌프가 포함되어 있어 바로 사용할 수 있습니다.",
+      "reasonSha256": "81f7ce48dd8b51f3c9b17dc9d8ee7d89fe7410fd295bc2249ae8eae027b4b262",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "안티버스트 짐볼 65cm 발펌프 포함",
+        "description": "65cm 사이즈의 안티버스트 짐볼로 코어 근력 강화와 균형 운동에 적합합니다. 전용 발펌프가 함께 제공되어 홈트레이닝 공간에서 바로 공기 주입 후 사용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S05",
+      "query": "집에서 근력 운동할 때 쓸 제품",
+      "productKey": "조절 가능 스미스 머신 프레임|스트롱암",
+      "reasonText": "스쿼트와 벤치프레스 등 본격적인 근력 운동을 안전하게 수행할 수 있는 컴팩트 스미스 머신으로, 보조자 없이도 사용 가능합니다.",
+      "reasonSha256": "3c04ecc77552359a9969b73db7ffade0df12611a2d9f91de0d545b0c733a1bfb",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "조절 가능 스미스 머신 프레임",
+        "description": "바벨 가이드 레일이 적용된 컴팩트 스미스 머신 프레임으로 스쿼트와 벤치프레스를 안전하게 수행할 수 있습니다. 안전바가 내장되어 있어 보조자 없이도 홈트레이닝으로 본격적인 근력 운동을 할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "2단 슬라이드 데스크 정리함|데스크프로",
+      "reasonText": "슬라이드 방식의 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류 보관하며, 컴팩트한 크기로 책상 공간을 절약할 수 있습니다.",
+      "reasonSha256": "e6963fe0a53b76be34b973ccb2f217f74d3eda3662c1213157d17a6ccc1d053f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "2단 슬라이드 데스크 정리함",
+        "description": "슬라이드 방식으로 열고 닫을 수 있는 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류해 보관합니다. 컴팩트한 크기로 홈오피스 책상 위 공간을 절약해줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "2단 슬라이드 데스크 정리함|데스크프로",
+      "reasonText": "슬라이드 방식의 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류 보관하여 책상 공간을 절약할 수 있습니다.",
+      "reasonSha256": "fd1a23bc88ee0cd64d1f2de848afbd740d38b116d9193845d821076d94e45ab3",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "2단 슬라이드 데스크 정리함",
+        "description": "슬라이드 방식으로 열고 닫을 수 있는 2단 데스크 정리함으로 필기구와 작은 사무용품을 분류해 보관합니다. 컴팩트한 크기로 홈오피스 책상 위 공간을 절약해줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "3단 서랍형 서류정리함|오피스메이트",
+      "reasonText": "3단 서랍형 서류정리함으로 각종 문서와 사무용품을 종류별로 분류 보관할 수 있어 책상 옆에 두고 사용하기 좋습니다.",
+      "reasonSha256": "e70d0b87ecd41e99bd9f5d2640263fcf1e7a027239fded75ae63682a6c212c67",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "3단 서랍형 서류정리함",
+        "description": "3단 서랍으로 구성된 서류정리함으로 각종 문서와 사무용품을 종류별로 분류해 보관할 수 있습니다. 책상 옆에 두고 사용하기 좋은 사이즈로 홈오피스 정리에 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "3단 서랍형 서류정리함|오피스메이트",
+      "reasonText": "3단 서랍형 서류정리함으로 문서와 사무용품을 종류별로 분류 보관할 수 있으며, 책상 옆에 두고 사용하기 좋은 사이즈입니다.",
+      "reasonSha256": "c2864b3b72cdaf0299a6838c369aa51a8ae760b8dc6613c3538d1ad42d90e38e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "3단 서랍형 서류정리함",
+        "description": "3단 서랍으로 구성된 서류정리함으로 각종 문서와 사무용품을 종류별로 분류해 보관할 수 있습니다. 책상 옆에 두고 사용하기 좋은 사이즈로 홈오피스 정리에 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "대형 가죽 데스크매트 80x40|데스크프로",
+      "reasonText": "80x40 사이즈의 인조가죽 데스크매트로 방수 처리되어 있어 사무용품 관리가 편리하고 책상을 깔끔하게 정리해줍니다.",
+      "reasonSha256": "c57fae6347f7dc5b245517c3e46079fe17087efa3e10c31ea1176e9e95997cdc",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "대형 가죽 데스크매트 80x40",
+        "description": "80x40 사이즈의 인조가죽 데스크매트로 키보드와 마우스 패드 역할을 동시에 합니다. 방수 처리가 되어 있어 사무용품 관리가 편리하고 홈오피스 책상을 깔끔하게 정리해줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "대형 가죽 데스크매트 80x40|데스크프로",
+      "reasonText": "80x40 사이즈의 인조가죽 데스크매트로 키보드와 마우스 패드 역할을 하며, 방수 처리로 사무용품 관리가 편리하고 책상을 깔끔하게 정리해줍니다.",
+      "reasonSha256": "6999191b72d846135187edc77758a573d5f0668beb067e268945da5467a2546d",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "대형 가죽 데스크매트 80x40",
+        "description": "80x40 사이즈의 인조가죽 데스크매트로 키보드와 마우스 패드 역할을 동시에 합니다. 방수 처리가 되어 있어 사무용품 관리가 편리하고 홈오피스 책상을 깔끔하게 정리해줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "도자기 펜꽂이 책상정리세트|오피스메이트",
+      "reasonText": "도자기 소재의 펜꽂이 세트로 펜, 가위, 클립 등을 한 곳에 정리할 수 있으며, 심플한 디자인으로 책상 위를 깔끔하게 꾸며줍니다.",
+      "reasonSha256": "968d97347e6eb5e6a1bc0df20003ef796db27157ac104e9c93e8c5652ef2f798",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "도자기 펜꽂이 책상정리세트",
+        "description": "펜과 가위, 클립 등을 한 곳에 정리할 수 있는 도자기 소재의 펜꽂이 세트입니다. 심플한 디자인으로 홈오피스 책상 위를 깔끔하게 꾸며줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "도자기 펜꽂이 책상정리세트|오피스메이트",
+      "reasonText": "펜, 가위, 클립 등을 한 곳에 정리할 수 있는 도자기 펜꽂이 세트로 심플한 디자인으로 책상 위를 깔끔하게 꾸밀 수 있습니다.",
+      "reasonSha256": "4a5ede24787c27fb535c97aec7e0657b157b1ad32a73b04ed1338a2ebd461736",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "도자기 펜꽂이 책상정리세트",
+        "description": "펜과 가위, 클립 등을 한 곳에 정리할 수 있는 도자기 소재의 펜꽂이 세트입니다. 심플한 디자인으로 홈오피스 책상 위를 깔끔하게 꾸며줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "스테이플러 클립 사무용품 세트|오피스메이트",
+      "reasonText": "스테이플러, 클립, 가위, 테이프 커터 등 자주 쓰는 사무용품을 한 번에 갖출 수 있는 세트로, 책상에서 필요한 기본 사무용품을 효율적으로 구성할 수 있습니다.",
+      "reasonSha256": "57d798c37a523b19b7e342cd7461e69afa02c1e01ea59b4ace4f7c1dac58c1a9",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테이플러 클립 사무용품 세트",
+        "description": "스테이플러, 클립, 가위, 테이프 커터 등이 포함된 사무용품 세트입니다. 자주 쓰는 사무용품을 한 번에 갖출 수 있어 홈오피스를 처음 구성할 때 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S06",
+      "query": "회사 책상에서 쓸 사무용품",
+      "productKey": "스테이플러 클립 사무용품 세트|오피스메이트",
+      "reasonText": "스테이플러, 클립, 가위, 테이프 커터 등 자주 쓰는 사무용품을 한 번에 갖출 수 있는 세트로, 회사 책상 필수 용품을 효율적으로 구성할 수 있습니다.",
+      "reasonSha256": "ef309962c1cdd92e20e25019dc2277530dd16ad7aa1e6eb121be01e972e38b6f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테이플러 클립 사무용품 세트",
+        "description": "스테이플러, 클립, 가위, 테이프 커터 등이 포함된 사무용품 세트입니다. 자주 쓰는 사무용품을 한 번에 갖출 수 있어 홈오피스를 처음 구성할 때 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "겨울 호흡 방한 마스크|브레스가드",
+      "reasonText": "겨울 방한 마스크로 입과 코 주변을 따뜻하게 유지하면서 통기성도 좋아 출퇴근 시 답답함이 적습니다.",
+      "reasonSha256": "0d46753f18db1e842221686ff186f15e6fcff7281caf65a7886d631c1426c849",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "겨울 호흡 방한 마스크",
+        "description": "차가운 바람을 막아주는 겨울 방한 마스크로 입과 코 주변을 따뜻하게 유지합니다. 통기성과 보온성을 함께 고려해 답답함이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "겨울 호흡 방한 마스크|브레스가드",
+      "reasonText": "차가운 바람을 막아주는 방한 마스크로 입과 코 주변을 따뜻하게 유지하며, 통기성과 보온성을 함께 고려해 일상 착용에 적합합니다.",
+      "reasonSha256": "a5021c9fd67218f263015313fbc9cc52a63c8711cb33327e3c866eeefe00325f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "겨울 호흡 방한 마스크",
+        "description": "차가운 바람을 막아주는 겨울 방한 마스크로 입과 코 주변을 따뜻하게 유지합니다. 통기성과 보온성을 함께 고려해 답답함이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "발열 기능성 보온장갑|웜핸드",
+      "reasonText": "추운 날 출퇴근길 방한용품으로 적합하며, 터치스크린 사용이 가능해 출퇴근 중 휴대폰 사용이 필요한 경우 유용합니다.",
+      "reasonSha256": "8345d2129fd8e0d2e1576196cf46e28ce2d4c34df555770b604309f58b3325c6",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "발열 기능성 보온장갑",
+        "description": "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "발열 기능성 보온장갑|웜핸드",
+      "reasonText": "터치스크린 사용이 가능한 보온장갑으로 출퇴근길 스마트폰 사용이 필요한 직장인에게 최적화되었습니다.",
+      "reasonSha256": "f210cfe76f52f5db081087f72a2a5e3a29bf2a460160f96ba520ebfb2627a58a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "발열 기능성 보온장갑",
+        "description": "터치스크린 사용이 가능한 보온장갑으로 손가락 끝부분 특수 원단이 적용되었습니다. 겨울 등산이나 캠핑, 추운 날 출퇴근길 방한용품으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "방풍 귀마개|이어웜",
+      "reasonText": "겨울철 등하교, 출퇴근길 방한에 효과적이며 헤드밴드형으로 머리에 부담 없이 고정되어 일상 출퇴근에 실용적입니다.",
+      "reasonSha256": "abdf2616d233d69f0b5fe7560268a72ae7bd76c9a7e012f332509bd5fa4df7f2",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방풍 귀마개",
+        "description": "강한 바람을 차단해주는 방풍 귀마개로 겨울철 등하교, 출퇴근길 방한에 효과적입니다. 헤드밴드형으로 머리에 부담 없이 고정됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "방풍 귀마개|이어웜",
+      "reasonText": "방풍 귀마개로 강한 바람을 차단하며 헤드밴드형으로 머리에 부담 없이 고정되어 출퇴근길에 편리합니다.",
+      "reasonSha256": "7dda5e0aae5a34698538e9bfadcdbc987be29551459675bb350d1c14a7923485",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방풍 귀마개",
+        "description": "강한 바람을 차단해주는 방풍 귀마개로 겨울철 등하교, 출퇴근길 방한에 효과적입니다. 헤드밴드형으로 머리에 부담 없이 고정됩니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "방한 귀달이 비니|포근발",
+      "reasonText": "기모 안감이 있는 비니 모자로 머리와 귀를 따뜻하게 감싸주며 일상 방한용품으로 두루 활용 가능합니다.",
+      "reasonSha256": "b5923665e8d660da54c7f81dc94d91a3a7e543e0b3125a82d04e19be1e822403",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방한 귀달이 비니",
+        "description": "안쪽에 보드라운 기모 안감이 더해진 비니 모자로 머리와 귀를 따뜻하게 감싸줍니다. 겨울 등산이나 캠핑은 물론 일상 방한용품으로도 두루 활용 가능합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "방한 귀달이 비니|포근발",
+      "reasonText": "기모 안감이 있는 비니로 머리와 귀를 따뜻하게 감싸주며, 일상 방한용품으로 두루 활용 가능해 출퇴근에 적합합니다.",
+      "reasonSha256": "434cd8d1dcc1e3dbd43009906153a3bb32e0ea65a6de243392bbe31195f936c6",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방한 귀달이 비니",
+        "description": "안쪽에 보드라운 기모 안감이 더해진 비니 모자로 머리와 귀를 따뜻하게 감싸줍니다. 겨울 등산이나 캠핑은 물론 일상 방한용품으로도 두루 활용 가능합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "방한 부츠커버|마운틴게이트",
+      "reasonText": "신발 위에 덧신는 방한 부츠커버로 발목과 신발 안쪽까지 찬바람을 막아 겨울 출퇴근 시 발 보온에 효과적입니다.",
+      "reasonSha256": "a43326049d60e5459210147a01766a6fe0504c531d1a49611fb95dd0e885114e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "방한 부츠커버",
+        "description": "신발 위에 덧신는 방한 부츠커버로 발목과 신발 안쪽까지 찬바람을 막아줍니다. 등산이나 겨울철 야외 작업 시 추가 보온 용도로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S07",
+      "query": "겨울 출퇴근 방한용품",
+      "productKey": "충전식 손난로 보조배터리 겸용|웜핸드",
+      "reasonText": "충전식 손난로 겸 보조배터리로 손을 따뜻하게 하면서 스마트폰 충전도 가능한 다기능 제품입니다.",
+      "reasonSha256": "2b5d007f5ef636326ee49ebe1de2d7f80a94e0e7693ade7ba230c8cf757e453f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "충전식 손난로 보조배터리 겸용",
+        "description": "추운 날 손을 따뜻하게 해주면서 동시에 스마트폰 충전도 가능한 다기능 손난로입니다. 겨울 방한용품으로 인기 있으며 캠핑이나 등산길 보조배터리로도 사용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "내열 오븐장갑 한 쌍|쿡플랜",
+      "reasonText": "내열 오븐장갑으로 오븐이나 에어프라이어 사용 시 뜨거운 그릇과 팬을 안전하게 다룰 수 있는 필수 보호용품입니다.",
+      "reasonSha256": "7750ed5f1b1b5fbe00a00870bea6aa79f2d4aed7fd016c2b90fcbd555ce627a1",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "내열 오븐장갑 한 쌍",
+        "description": "고온에서도 손을 안전하게 보호해주는 내열 오븐장갑입니다. 오븐이나 에어프라이어 사용 시 뜨거운 그릇과 팬을 다룰 때 필수적인 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "내열 오븐장갑 한 쌍|쿡플랜",
+      "reasonText": "오븐이나 에어프라이어 사용 시 필수적인 안전용품입니다. 초보자가 뜨거운 조리기구를 안전하게 다루기 위해 꼭 필요합니다.",
+      "reasonSha256": "ed44d685c2802ecd730ec32de117c050c371b024c6f5892f7ee25ed2bdc88141",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "내열 오븐장갑 한 쌍",
+        "description": "고온에서도 손을 안전하게 보호해주는 내열 오븐장갑입니다. 오븐이나 에어프라이어 사용 시 뜨거운 그릇과 팬을 다룰 때 필수적인 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "디지털 주방용 계량저울|키친메이트",
+      "reasonText": "0.1g 단위까지 정확하게 계량할 수 있는 디지털 저울로, 초보자가 정확한 요리 비율을 맞추는 데 필수적입니다.",
+      "reasonSha256": "0ac3161049f1badb9fef6f0fde9603d3dad5c35f1659e4df66860e174b8a662d",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "디지털 주방용 계량저울",
+        "description": "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "디지털 주방용 계량저울|키친메이트",
+      "reasonText": "베이킹이나 정밀한 계량이 필요한 요리에 유용합니다. 0.1g 단위까지 측정 가능하여 초보자도 정확한 요리를 할 수 있습니다.",
+      "reasonSha256": "8c477ab47ad8b405f89a7f8c4d58373af909e2a33884f05e35ba13d265973ba2",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "디지털 주방용 계량저울",
+        "description": "0.1g 단위까지 측정 가능한 디지털 주방용 계량저울로 베이킹 재료를 정확하게 계량할 수 있습니다. 작은 크기로 보관이 편리한 주방용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+      "reasonText": "스테인리스 계량컵과 스푼 세트로 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있는 주방용품 필수템입니다.",
+      "reasonSha256": "1544e53f6627055afba4860c45fd7f05f15425311671953efd64c17dc01a0790",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테인리스 계량컵 스푼 세트",
+        "description": "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "스테인리스 계량컵 스푼 세트|키친메이트",
+      "reasonText": "정확한 계량은 요리 초보자에게 가장 중요합니다. 스테인리스 계량컵과 스푼 세트로 재료 비율을 정밀하게 맞출 수 있어 성공적인 요리의 첫 단계입니다.",
+      "reasonSha256": "0976da58d41a91f89eb965f76413ae46e69b6e47e94370f72630e5f177125fc0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테인리스 계량컵 스푼 세트",
+        "description": "정확한 계량을 위한 스테인리스 계량컵과 스푼 세트입니다. 베이킹과 요리 시 재료 비율을 정밀하게 맞출 수 있어 주방용품 필수템입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "스테인리스 채반 세트|홈클린",
+      "reasonText": "채소 세척, 면 요리 물기 제거 등 기본적인 조리 과정에서 자주 사용되는 필수 도구입니다. 크기별 세트로 다양한 상황에 대응할 수 있습니다.",
+      "reasonSha256": "b7bc86c340d5437ea6d576a800c97e6b2616f76598ff73f4a0476dd54ec04c88",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테인리스 채반 세트",
+        "description": "크기별로 구성된 스테인리스 채반 세트로 채소 세척, 면 요리 물기 제거 등에 활용할 수 있습니다. 튼튼한 손잡이가 달려 있어 사용이 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "스테인리스 채반 세트|홈클린",
+      "reasonText": "크기별 스테인리스 채반 세트로 채소 세척, 면 요리 물기 제거 등 기본적인 식재료 준비에 활용할 수 있습니다.",
+      "reasonSha256": "4bc26a15776e97369da8db37d207134196d88db78aa51dad1df7bf646e72e0f8",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "스테인리스 채반 세트",
+        "description": "크기별로 구성된 스테인리스 채반 세트로 채소 세척, 면 요리 물기 제거 등에 활용할 수 있습니다. 튼튼한 손잡이가 달려 있어 사용이 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "휴대용 미니 다용도 가위세트|올인툴",
+      "reasonText": "다용도 가위와 칼 세트로 자취방 주방의 기본 도구로 식재료 손질에 필수적인 초보자 친화적 제품입니다.",
+      "reasonSha256": "00dc34492bc87711e7760d8f5be8463fbd434749935fbfef79b412344c7a3040",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 미니 다용도 가위세트",
+        "description": "휴대에 편리한 케이스가 포함된 다용도 가위와 칼 세트입니다. 캠핑이나 등산에서 식재료 손질에 사용하거나 자취방 주방의 기본 도구로도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S08",
+      "query": "요리 초보에게 필요한 주방용품",
+      "productKey": "휴대용 미니 다용도 가위세트|올인툴",
+      "reasonText": "식재료 손질을 위한 기본 도구입니다. 자취방 주방의 필수 아이템으로 초보자가 갖춰야 할 가위와 칼 세트입니다.",
+      "reasonSha256": "4dec70549ca75cd29690813105f06281ec4a886d751df2516b00ebf71fb32e6a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 미니 다용도 가위세트",
+        "description": "휴대에 편리한 케이스가 포함된 다용도 가위와 칼 세트입니다. 캠핑이나 등산에서 식재료 손질에 사용하거나 자취방 주방의 기본 도구로도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 깃털 낚싯대 장난감|캣플레이",
+      "reasonText": "고양이의 사냥 본능을 자극하고 운동 부족을 해소해주는 고양이 전용 낚싯대 장난감입니다.",
+      "reasonSha256": "62400b040714a22246e3f42ab78fee3b882d493c75a1ead0db8e1c9d741d89d0",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 깃털 낚싯대 장난감",
+        "description": "탄성 있는 막대 끝에 깃털과 방울이 달린 고양이 낚싯대 장난감입니다. 고양이의 사냥 본능을 자극해 운동 부족을 해소해주는 인기 반려동물용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 깃털 낚싯대 장난감|캣플레이",
+      "reasonText": "탄성 있는 막대 끝에 깃털과 방울이 달린 고양이 낚싯대 장난감으로, 고양이의 사냥 본능을 자극해 운동 부족을 해소해주는 인기 반려동물용품입니다.",
+      "reasonSha256": "acc8af4f9d0862e50fe2c59dbb83021f994b3d4231e203ec416477df5fa49d42",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 깃털 낚싯대 장난감",
+        "description": "탄성 있는 막대 끝에 깃털과 방울이 달린 고양이 낚싯대 장난감입니다. 고양이의 사냥 본능을 자극해 운동 부족을 해소해주는 인기 반려동물용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "reasonText": "통풍이 잘되는 메쉬 창과 패딩된 어깨끈으로 고양이의 안전하고 편안한 외출을 지원하는 백팩 캐리어입니다.",
+      "reasonSha256": "112d38f972c485786392fe8fcddd037a72b2b672061b5466c25413dcab10c777",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 외출용 백팩 캐리어",
+        "description": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 외출용 백팩 캐리어|펫트래블",
+      "reasonText": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어로, 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다.",
+      "reasonSha256": "14d435aab26b32e33db6c73206f9e78e553f2ced1f7e4a485ed9e73f4c05f084",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 외출용 백팩 캐리어",
+        "description": "통풍이 잘되는 메쉬 창이 있는 고양이 외출용 백팩 캐리어입니다. 어깨끈 패딩이 두꺼워 장시간 이동에도 편안한 반려동물 외출용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 자동급수기 순환형 2L|펫워터",
+      "reasonText": "3단계 필터 시스템이 내장된 고양이 자동급수기로 항상 신선한 물을 제공하여 반려동물 위생 관리에 유용합니다.",
+      "reasonSha256": "0aeab564b2d30454a36c2c9b1dbfb216523f23c5163edd32e6a7a31eedb22bdd",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 자동급수기 순환형 2L",
+        "description": "조용한 모터로 물을 순환시켜 항상 신선한 물을 제공하는 고양이 자동급수기입니다. 3단계 필터 시스템이 내장되어 반려동물 위생 관리에 유용합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 캣닢 스크래처 보드|캣라이프",
+      "reasonText": "골판지 소재로 제작된 고양이 스크래처 보드로 캣닢이 포함되어 있으며, 가구를 보호하고 고양이의 스트레스 해소에 도움을 줍니다.",
+      "reasonSha256": "f546fc112104e1c01bd7b23cab60a5cf286a5111e682e08ff73d93c1c480cc16",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 캣닢 스크래처 보드",
+        "description": "골판지 소재로 제작된 고양이 스크래처 보드로 캣닢이 포함되어 있습니다. 가구를 보호하고 고양이의 스트레스 해소에 도움을 줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 캣닢 스크래처 보드|캣라이프",
+      "reasonText": "캣닢이 포함된 고양이 스크래처 보드로 고양이의 스트레스 해소와 가구 보호에 효과적입니다.",
+      "reasonSha256": "df070eead69322573b22d4d27381e7a470d7d336f1dc22deb04c5e774c72a363",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 캣닢 스크래처 보드",
+        "description": "골판지 소재로 제작된 고양이 스크래처 보드로 캣닢이 포함되어 있습니다. 가구를 보호하고 고양이의 스트레스 해소에 도움을 줍니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 폭스 숨숨집 하우스|캣하우스",
+      "reasonText": "극세사 소재의 동굴형 숨숨집으로 고양이가 안심하고 쉴 수 있는 포근한 침구용품입니다.",
+      "reasonSha256": "3eea34ead358717b568a601923e9cbf0190118396d3e842d85d4c581ea798a48",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 폭스 숨숨집 하우스",
+        "description": "포근한 극세사 소재로 만들어진 동굴형 고양이 숨숨집입니다. 사계절 사용 가능하며 세탁이 쉬워 고양이가 안심하고 쉴 수 있는 반려동물 침구용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 폭스 숨숨집 하우스|캣하우스",
+      "reasonText": "포근한 극세사 소재로 만들어진 동굴형 고양이 숨숨집으로, 사계절 사용 가능하며 세탁이 쉬워 고양이가 안심하고 쉴 수 있는 반려동물 침구용품입니다.",
+      "reasonSha256": "f00ebfd0fbb14cf5586c8d2853ad47b667a88fe2f091a401018a00af045b49c2",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 폭스 숨숨집 하우스",
+        "description": "포근한 극세사 소재로 만들어진 동굴형 고양이 숨숨집입니다. 사계절 사용 가능하며 세탁이 쉬워 고양이가 안심하고 쉴 수 있는 반려동물 침구용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S09",
+      "query": "고양이를 위한 반려동물용품",
+      "productKey": "고양이 화장실 모래 매트 더블레이어|캣클린",
+      "reasonText": "고양이가 화장실에서 나올 때 발에 묻은 모래를 털어주는 이중 구조 매트로, 모래 알갱이가 바닥으로 통과하지 않도록 설계되어 청결 유지에 효과적입니다.",
+      "reasonSha256": "453424ceee2765f7ae619fe6704909e9ea239139c079bb4e47956c5f5e6508d2",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "고양이 화장실 모래 매트 더블레이어",
+        "description": "고양이가 화장실에서 나올 때 발에 묻은 모래를 털어주는 이중 구조 매트입니다. 모래 알갱이가 바닥으로 통과하지 않도록 설계되어 청결 유지에 효과적인 반려동물용품입니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지 용품으로, 가벼운 무게로 배낭에 휴대하기 좋습니다.",
+      "reasonSha256": "89d5788643f9af6fef36a7123f869fe1e2232c98ce21c629c4d07da010d5325e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지 체인스패치로, 가벼운 무게로 배낭에 휴대하기 좋아 등산 시 안전성을 높입니다.",
+      "reasonSha256": "074509faf6b7a072657ca55b02644fb62ba2bc1373cb850ee5a5301a6df91d46",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지 체인스패치로, 가벼운 무게로 배낭에 휴대하기 좋아 등산 시 필수 안전용품입니다.",
+      "reasonSha256": "aa469ad2e92c0dea15fe704b80a6019c0b6bf1f1d37c80948ee211fa485559e1",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지 체인스패치로, 가벼운 무게로 배낭에 휴대하기 좋은 등산 필수용품입니다.",
+      "reasonSha256": "37b36a2c339346a159022984050214eb4eae340eaf1b4b3d86ef7f70da40e29c",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지 체인스패치로, 가벼운 무게로 배낭에 휴대하기 좋은 등산용품입니다.",
+      "reasonSha256": "cbc6add19916bd8fb3672cc296614755744e435ee5bcf3d38069a7f889e4b40a",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "등산화 미끄럼 방지 체인스패치|윈터그립",
+      "reasonText": "등산화에 착용하는 미끄럼 방지용품으로, 가벼운 무게로 배낭에 휴대하기 좋습니다.",
+      "reasonSha256": "165c53de552ef1c0ea6ea111d94672926642cf0a7211909370696410cc41da1e",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "등산화 미끄럼 방지 체인스패치",
+        "description": "빙판길이나 급경사 등산로에서 등산화에 착용해 미끄럼을 방지하는 체인스패치입니다. 가벼운 무게로 배낭에 휴대하기 좋습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "접이식 캠핑 테이블|아웃도어라이프",
+      "reasonText": "가벼운 알루미늄 소재의 접이식 캠핑 테이블로, 한 손으로도 들 수 있어 등산 캠프에서 활용하기 좋습니다.",
+      "reasonSha256": "f4bdce407bd4e1ccc0d42966a0812110b628d597845185248d4aaad0cf8c24cd",
+      "label": "unsupported",
+      "reason": "캠핑·차박·베란다 용도를 산행 휴대 적합성으로 확장했다. 산행 용도 근거는 없다.",
+      "unsupportedClaim": "등산 캠프에서 활용하기 좋습니다",
+      "deferralReason": null,
+      "evidence": {
+        "name": "접이식 캠핑 테이블",
+        "description": "가벼운 알루미늄 소재로 만들어져 한 손으로도 들 수 있는 접이식 테이블입니다. 캠핑이나 차박은 물론 베란다에서 작은 홈파티를 즐길 때도 활용할 수 있습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "등산 시 햇빛과 자외선을 차단하는 선글라스로, 가벼운 프레임으로 장시간 착용해도 부담이 적습니다.",
+      "reasonSha256": "a18eaf1ba69879922178d3edfa3b33f5ce278d6cf43d6a390e8ae44d4c020527",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "등산용 선글라스로 가벼운 프레임이 적용되어 장시간 착용해도 부담이 적습니다.",
+      "reasonSha256": "3532935f68c040a8f92deeb053c49327116bebcf818a696495f1e3e0787aeaf4",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "산 정상에서 햇빛과 자외선을 차단하는 등산용 선글라스로, 가벼운 프레임으로 장시간 착용해도 부담이 적습니다.",
+      "reasonSha256": "df76898212e6faeda5c1794693e514d828518e3949d6933296a37cc480132657",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "산 정상에서의 강한 햇빛과 자외선을 차단하는 편광 렌즈 선글라스로, 가벼운 프레임으로 장시간 착용에 적합합니다.",
+      "reasonSha256": "28b93970dec19b54311501f9dec3a6002f851b6040faa60f5748b39eae334c8f",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "산 정상에서의 강한 햇빛과 자외선을 차단하는 편광 선글라스로, 가벼운 프레임으로 장시간 착용에 적합합니다.",
+      "reasonSha256": "0bd8ad8d6a4c1e9ee8e01fcc38905eae29e941124d774bde747ec0294d346731",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "편광 등산용 선글라스|선가드",
+      "reasonText": "편광 렌즈로 자외선을 차단하며, 가벼운 프레임으로 장시간 착용해도 부담이 적어 등산 중 눈 보호에 최적입니다.",
+      "reasonSha256": "270875de13fb49651b64dfdb43d721754157d5c4c03f057daaf39ae804347db9",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "편광 등산용 선글라스",
+        "description": "산 정상에서 강한 햇빛과 자외선을 차단해주는 편광 렌즈가 적용되었습니다. 가벼운 프레임으로 장시간 착용해도 코와 귀에 부담이 적습니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+      "reasonText": "가벼운 무게의 휴대용 부탄가스 버너로 등산 시 취사용으로 적합한 캠핑·등산용품입니다.",
+      "reasonSha256": "d90388d8a4cfab8fac078cab2c54897cea5f77356d199554f4e76228868c5cda",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 부탄가스 캠핑 버너",
+        "description": "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+      "reasonText": "등산 시 취사용으로 적합한 휴대용 버너로, 가벼운 무게로 휴대하기 좋습니다.",
+      "reasonSha256": "091f473ece12307fda9fab45ba24a04a898a1f482a6f6a06a0ddaf765a75324b",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 부탄가스 캠핑 버너",
+        "description": "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+      "reasonText": "등산 시 취사용으로 적합한 휴대용 버너로, 가벼운 무게를 갖추고 있습니다.",
+      "reasonSha256": "51a6ade7774a6a78b4ade0473e85da001bb7044c30e5702be6de47f45ce3f003",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 부탄가스 캠핑 버너",
+        "description": "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+      "reasonText": "자동점화 기능의 휴대용 부탄가스 버너로, 가벼운 무게로 등산 시 취사용으로 매우 실용적입니다.",
+      "reasonSha256": "a16698c8d86e7dd792eb2ced8848fefcfae5f112f8566af531e7d4f47e78dcc2",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 부탄가스 캠핑 버너",
+        "description": "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        },
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 부탄가스 캠핑 버너|파이어캠프",
+      "reasonText": "자동점화 기능의 휴대용 부탄가스 버너로, 가벼운 무게로 등산 시 취사용으로 적합합니다.",
+      "reasonSha256": "b3028501ac1f191e67a1e67df9086591825d0b5a87661d967013ef0459e5f3a3",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 부탄가스 캠핑 버너",
+        "description": "자동점화 기능이 탑재된 부탄가스 전용 휴대용 버너입니다. 가벼운 무게로 캠핑, 차박, 등산 시 취사용으로 적합합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "reasonText": "가벼운 무게와 컴팩트한 사이즈로 등산 시 휴대하기 편한 자동 우산입니다.",
+      "reasonSha256": "284c13a2f4c586cebeee6a3f6047326c45126e863ba5082d88f5d154afd22edb",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 원터치 자동 우산",
+        "description": "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-770d062-20260918T005338Z-r1"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "reasonText": "가벼운 무게와 컴팩트한 사이즈의 자동 우산으로, 등산 중 갑작스러운 날씨 변화에 대비하기 좋습니다.",
+      "reasonSha256": "c113bdfe1c68a20b1e30127011ff70e6084145226002b283d2adeaa7b5e1ad72",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 원터치 자동 우산",
+        "description": "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "reasonText": "등산에 사용 가능한 휴대용 우산으로, 가벼운 무게와 컴팩트한 사이즈를 갖추고 있습니다.",
+      "reasonSha256": "3d5220537d1fc308600531982e9312c60fe21d2870d47e8561e3f77200004f66",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 원터치 자동 우산",
+        "description": "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-eeeaa77-20260918T010000Z-r2"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "reasonText": "한 번의 터치로 개폐 가능한 휴대용 우산으로, 가벼운 무게와 컴팩트한 사이즈로 등산 시 날씨 대비에 편리합니다.",
+      "reasonSha256": "7b4114f7767bef8dd15c84b83f18e62789396a8c0d06a6b1f2a978f92efba4b8",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 원터치 자동 우산",
+        "description": "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T010300Z-r3"
+        }
+      ]
+    },
+    {
+      "queryId": "S10",
+      "query": "가벼운 등산용품 추천",
+      "productKey": "휴대용 원터치 자동 우산|데일리굿즈",
+      "reasonText": "한 번의 터치로 개폐 가능한 휴대용 우산으로, 가벼운 무게와 컴팩트한 사이즈로 등산 중 날씨 변화에 대비할 수 있습니다.",
+      "reasonSha256": "e663087e6fae4d5dab69f8803e9dd2aa406d58732732d96de45742445a3473ed",
+      "label": "supported",
+      "reason": "상품명·설명에 기재된 제품 종류·재질·기능·용도를 바꾸지 않은 요약 또는 추가 성능을 단정하지 않는 기본 용도 추론이다.",
+      "unsupportedClaim": null,
+      "deferralReason": null,
+      "evidence": {
+        "name": "휴대용 원터치 자동 우산",
+        "description": "한 번의 터치로 자동 개폐가 가능한 휴대용 우산입니다. 가벼운 무게와 컴팩트한 사이즈로 여행, 등산, 출퇴근에 편리합니다."
+      },
+      "occurrences": [
+        {
+          "runId": "agentic-rag-fe2766f-20260918T004833Z-r1"
+        }
+      ]
+    }
+  ]
+}
