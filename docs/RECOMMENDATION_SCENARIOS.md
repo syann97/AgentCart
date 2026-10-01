@@ -63,7 +63,7 @@ JSON 항목 수와 실제 MySQL 상품 수, pgvector embedding 수는 다를 수
 
 ## 약 20개 평가 질의 초안
 
-아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다. 원본 평가 질의와 v1 label은 [queries.json](../evaluation/recommendation/queries.json)과 [labels.json](../evaluation/recommendation/labels.json)에 있습니다. 현재 재평가 정의와 assistant 검토 label은 [v2/definition.json](../evaluation/recommendation/v2/definition.json)과 [v2/labels.json](../evaluation/recommendation/v2/labels.json)을 사용합니다.
+아래 target은 목표 설계의 기대 결과이며 현재 pipeline이 모두 만족한다는 뜻은 아닙니다. 원본 평가 질의와 v1 label은 [queries.json](../evaluation/recommendation/queries.json)과 [labels.json](../evaluation/recommendation/labels.json)에 있습니다. 현재 재평가 정의는 [v2/definition.json](../evaluation/recommendation/v2/definition.json), #210 확대 검토 label은 [v3/labels.json](../evaluation/recommendation/v3/labels.json)입니다. 이전 [v2/labels.json](../evaluation/recommendation/v2/labels.json)은 과거 평가를 재현하기 위해 보존합니다.
 
 | ID | 질의 | 검증 목적 | 목표 outcome |
 |---|---|---|---|
@@ -103,6 +103,8 @@ S·C 사례는 첫 검색으로 종료 가능한 기준선, R 사례는 재검�
 ## 지표와 판정
 
 신규 관측 정책 assessment는 `2.2-observed-policy`를 사용합니다. 상품의 status·stock unknown과 질의 Hit@5를 같은 관측 근거로 계산한 뒤 전체에 합산하며, 누락을 snapshot 값으로 대체하지 않습니다. 기존 v1/v2/v2.1은 보존하고 [평가 README](../evaluation/recommendation/README.md#v22-관측-정책-보정과-재현)의 별도 보정 경로·삼상 판정·재현 명령을 따릅니다.
+
+#210의 최신 범위는 [v3 labels](../evaluation/recommendation/v3/labels.json)와 [이유 rubric](../evaluation/recommendation/v3/grounding.json)입니다. v2 정의와 `2.2-observed-policy` scorer를 유지하면서 보관된 여섯 실행의 92개 조합 중 새 13개, 반환 이유 197건을 검토했습니다. 검토 누락은 0이나 관련성 근거 부족은 합집합 3개로 남습니다. 전체 실행 전후 허용 Hit@5 17/17·정책 위반 0건, 관련성 미판정 2/80·0/72, 이유 supported/unsupported/unjudged 75/5/0·65/2/5입니다. 전체 이유 supported 비율 하한–상한은 93.75–93.75%·90.28–97.22%로, 판정 가능 이유만의 비율과 구분합니다. [확대 검토 보고서](../evaluation/recommendation/EXPANDED_REVIEW_2026-10-01.md)는 전체/집중 실행별 분모·이전 평가 대비 변경·기존 token/지연과 남은 한계를 설명합니다. 사람이 검증한 정답이나 새 런타임 효과로 해석하지 않습니다.
 
 - 명시 가격·카테고리·ACTIVE·양수 재고·최근 주문 규칙 위반 0건
 - 수동 relevance label 기준 Hit@5와 질의별 허용 결과 수

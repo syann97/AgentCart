@@ -79,6 +79,28 @@ python -B scripts/evaluation/score_recommendation_run.py `
 
 scorer는 raw run, snapshot, 질의·상품 사실, 중복 결과와 실행 상한을 검증한 후 `metricVersion=2.2-observed-policy`로 채점합니다. 요청 직후 DB에서 관측한 status·stock만 해당 정책 근거로 사용하며 삭제·조회 누락은 unknown으로 집계합니다. snapshot의 재고·상태를 대체 근거로 쓰지 않습니다. label에 없는 상품-질의 조합도 `unjudged`로 남습니다. `FAILED` 질의가 하나라도 있는 실행은 품질 비교에서 제외하고 metrics를 만들지 않습니다. 기존 raw run이나 assessment 경로가 이미 있으면 덮어쓰지 않습니다.
 
+## v3 신규 조합과 이유 전체 검토
+
+#210은 기존 전체 2회·집중 4회 실행을 [v3 manifest](v3/manifest.json)의 hash로 고정하고, 질의·상품 합집합 92개 중 새 13개를 검토했습니다. 기존 77개 판정은 출처와 함께 승계하고 기존 유보 2개는 근거 부족으로 유지했습니다. 관련성 유보는 합집합에서 3개, 검토 누락은 0개입니다. [새 labels](v3/labels.json)는 v2 정의를 유지하며 #209의 변경되지 않은 `2.2-observed-policy` scorer로 두 전체 실행을 재채점했습니다.
+
+[새 이유 rubric](v3/grounding.json)은 서로 다른 이유 189개를 각 실행의 반환 197건에 연결합니다. 원문 질의·상품명·설명·이유 전문·사유·유보 이유를 확인할 수 있습니다. 관련성 판정과 이유 판정은 분리하며 검토 누락과 근거 부족도 구분합니다. 모두 assistant 사후 검토이며 사람이 검증한 정답은 아닙니다.
+
+| 전체 실행 지표 | 변경 전 | 변경 후 |
+|---|---:|---:|
+| 허용 Hit@5 | 17/17 | 17/17 |
+| 허용 상품 비율 하한–상한 | 96.25–98.75% | 100–100% |
+| 관련성 미판정 | 2/80 | 0/72 |
+| 이유 supported / unsupported / unjudged | 75 / 5 / 0 | 65 / 2 / 5 |
+| 전체 이유 supported 비율 하한–상한 | 93.75–93.75% | 90.28–97.22% |
+
+명시 정책 위반과 status·stock unknown은 두 전체 실행 모두 0입니다. 이유의 미판정 5개는 정책 fallback 문구의 상품 사실 근거 부족이며 관측 정책 unknown과 다릅니다. 집중 실행은 전체 Hit@5 분모에 합치지 않습니다. token 94,646→114,430, 평균 지연 7,238.9→8,565.45ms는 새 측정 없이 기존 값을 유지했습니다. 상세 분모·추가 반례·이전 평가와 차이·실행별 검토 범위는 [확대 검토 보고서](EXPANDED_REVIEW_2026-10-01.md)와 [재계산 결과](v3/reassessment.json)를 참조합니다.
+
+```sh
+python -B scripts/evaluation/review_recommendation_evaluation.py
+```
+
+전체 validator도 v3 입력·출처·coverage와 deterministic replay를 검사합니다. 별도 결과는 `--output <저장소 내부의 존재하지 않는 경로>`로 만들며 기존 경로는 덮어쓰지 않습니다. v1/v2/v2.1/v2.2 label·raw·assessment·grounding 보고서는 보존합니다.
+
 ## v2.2 관측 정책 보정과 재현
 
 #209 이전 v2.1은 status·stock 위반과 전체 집계를 관측값으로 바꾸면서 상품의 `activeStatusUnknown`과 질의의 `observedPolicyCompliantAcceptedHitAt5`를 v2 계산값으로 남겼습니다. 전부 ACTIVE·양수 재고인 변경 전/후 실행에서 상품 상세 unknown은 80/72인데 전체 unknown은 0이었습니다. S01의 상위 5개를 모두 INACTIVE·재고 0으로 바꾼 메모리 fixture에서는 질의 Hit@5가 true인데 전체는 miss로 집계됐습니다.
