@@ -2,7 +2,7 @@
 
 ## 현재 구성
 
-루트는 [frontend](../frontend/)이며 의존성 선언과 실행 명령은 [package.json](../frontend/package.json), 설치된 의존성 기준은 [package-lock.json](../frontend/package-lock.json)입니다. Node.js 버전은 프로젝트의 고정 선언으로 확인되지 않으므로 기존 로컬 버전을 프로젝트 보장으로 기록하지 않습니다.
+루트는 [frontend](../frontend/)이며 의존성 선언과 실행 명령은 [package.json](../frontend/package.json), 설치된 의존성 기준은 [package-lock.json](../frontend/package-lock.json)입니다. Node.js는 루트 [`.nvmrc`](../.nvmrc)에 22.14.0으로 고정되어 있고 npm은 `package.json`에서 10.x를 요구합니다.
 
 - Next.js App Router, React, TypeScript
 - Tailwind CSS

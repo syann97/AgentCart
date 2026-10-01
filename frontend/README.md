@@ -6,7 +6,7 @@
 
 | 분류 | 기술 | 현재 역할 |
 |------|------|----------|
-| 프레임워크 | Next.js 15.5.18 (App Router) | page와 layout routing |
+| 프레임워크 | Next.js 15.5.27 (App Router) | page와 layout routing |
 | UI | React 19.1.0 + Tailwind CSS 4 | component와 styling |
 | 서버 상태 | TanStack Query v5 | API 상태와 cache |
 | 클라이언트 상태 | Zustand | 현재 인증 member와 상태 |
@@ -14,7 +14,7 @@
 | 폼 검증 | React Hook Form + Zod | 폼 상태와 client 입력 검증 |
 | 테스트 | Vitest, Testing Library, MSW, jsdom | unit·component·hook 검증 |
 
-버전의 기준은 [package.json](package.json)과 [package-lock.json](package-lock.json)입니다. Node.js 버전은 저장소에 고정되어 있지 않습니다.
+버전의 기준은 [package.json](package.json)과 [package-lock.json](package-lock.json)입니다. Node.js는 루트 [`.nvmrc`](../.nvmrc)의 22.14.0, npm은 `package.json`의 10.x를 사용합니다.
 
 ## 폴더 구조
 
@@ -94,7 +94,7 @@ Backend와 Frontend는 `status | result | done | error` 판별 유니온을 공�
 
 ```bash
 # 의존성 설치
-npm install
+npm ci
 
 # 환경 변수 설정
 cp .env.local.example .env.local
@@ -123,3 +123,7 @@ npm run build
 ```
 
 변경 범위에 맞는 Vitest를 먼저 실행하고 type·bundle 경계가 관련되면 build까지 확인합니다. SSE 변경은 메시지 누적, 0개 결과, 오류, 재검색 또는 연결 정리처럼 사용자에게 보이는 상태를 검증합니다. 공통 원칙은 [Frontend 변경 규칙](../docs/FRONTEND_RULES.md)을 따릅니다.
+
+## 의존성 보안 점검
+
+2026-10-01 `npm audit --package-lock-only` 기준, #207 변경 전에는 전체 13건(critical 1, high 9, moderate 3), 운영 의존성 6건(critical 1, high 5)이 보고됐습니다. 변경 후 전체·운영 의존성 모두 0건입니다. Next.js와 대응하는 ESLint 설정을 15.5.27로, Axios를 1.20.0으로, Vitest와 coverage를 4.1.11로 갱신했습니다. 잠금 파일에서는 form-data, nanoid, sharp, undici, vite, brace-expansion, js-yaml도 수정 버전으로 갱신했습니다. Next.js 15.5.27이 PostCSS 8.4.31을 정확한 버전으로 요구하므로 `overrides`에서 PostCSS 8.5.28을 지정했습니다. Node 22.14.0 / npm 10.9.2에서 `npm ci`, 전체 테스트, lint, build를 확인했습니다. 취약점 재현이나 운영 배포는 이 점검 범위에 포함하지 않았습니다.
