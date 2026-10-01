@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface RecommendationHistoryRepository extends JpaRepository<RecommendationHistory, Long> {
 
+    boolean existsByEventId(String eventId);
+
     List<RecommendationHistory> findTop20ByMemberIdOrderByRecommendedAtDesc(Long memberId);
 }

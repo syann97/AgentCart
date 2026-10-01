@@ -7,7 +7,7 @@
 | service | image | host port | 용도 | volume |
 |---|---|---:|---|---|
 | MySQL | `mysql:8.4` | 3307 | 회원·상품·장바구니·주문·결제·추천 이력 | `mysql-data` |
-| Redis | `redis:7.4-alpine` | 6379 | refresh token, 질의 cache, 이벤트 중복 억제, 재고 lock | 없음 |
+| Redis | `redis:7.4-alpine` | 6379 | refresh token, 질의 cache, 재고 lock | 없음 |
 | PostgreSQL | `pgvector/pgvector:0.8.2-pg17` | 5432 | 상품 embedding | `postgres-data` |
 | Kafka | `apache/kafka:4.1.2` | 19092 | `recommendation.served` 이벤트 | 없음 |
 | RedisInsight | `redis/redisinsight:latest` | 8002 | 로컬 Redis 확인 | 없음 |
@@ -22,8 +22,9 @@
 | `rt:member:{memberId}` | 7일 | 회원 → refresh token | [RefreshTokenRedisRepository](../backend/AgentCart/src/main/java/com/agentcart/auth/redis/RefreshTokenRedisRepository.java) |
 | `rt:token:{token}` | 7일 | refresh token → 회원 | 같은 파일 |
 | `rec:query:{sha256}` | 5분 | 질의 확장 결과 cache | [QueryEnrichmentService](../backend/AgentCart/src/main/java/com/agentcart/recommendation/service/QueryEnrichmentService.java) |
-| `rec:event:{eventId}` | 24시간 | Kafka event 중복 처리 억제 | [RecommendationServedConsumer](../backend/AgentCart/src/main/java/com/agentcart/recommendation/consumer/RecommendationServedConsumer.java) |
 | `inventory:product:{productId}` | 획득 대기 5초 | 주문 상품별 Redisson lock | [InventoryLockService](../backend/AgentCart/src/main/java/com/agentcart/order/service/InventoryLockService.java) |
+
+추천 Consumer는 `rec:event:{eventId}` 키를 더 이상 읽거나 기록하지 않습니다. 이전 버전이 남긴 키는 기존 24시간 TTL로 만료되며 삭제 작업 없이 새 저장 경로와 공존할 수 있습니다. 중복 판단은 MySQL `event_id` unique 제약을 사용합니다.
 
 재고 lock은 `tryLock(waitTime, unit)` overload를 사용하고 고정 lease time을 코드에 지정하지 않습니다. 획득 대기 5초를 cache TTL이나 lock 유지 시간으로 설명하지 않습니다.
 
@@ -34,7 +35,7 @@ Access token 30분, SSE emitter 60초, Agent 요청 전체 30초, 상품 embeddi
 - Spring의 기본 `DataSource`와 Flyway는 MySQL을 사용합니다.
 - pgvector는 [PgVectorJdbcConfig](../backend/AgentCart/src/main/java/com/agentcart/config/PgVectorJdbcConfig.java)의 별도 JDBC template과 [PgVectorDataSourceConfig](../backend/AgentCart/src/main/java/com/agentcart/config/PgVectorDataSourceConfig.java)의 별도 Flyway runner를 사용합니다.
 - pgvector migration 위치는 `classpath:db/pgvector-migration`입니다. V4에서 1536차원 데이터를 비우고 1024차원으로 변경합니다.
-- Redis의 event key 기록과 MySQL 추천 이력 저장은 하나의 원자적 transaction이 아니므로 exactly-once 저장을 보장하지 않습니다.
+- MySQL V10은 추천 이력에 nullable `event_id`와 unique 제약을 추가합니다. Consumer의 이벤트 저장은 ID와 이력을 같은 DB 트랜잭션에서 커밋하며, 과거·직접 저장 이력의 NULL ID는 보존합니다. Redis를 중복 판단에 사용하지 않습니다. 보장 범위와 Kafka 재전달의 한계는 [현재 추천 파이프라인](RECOMMENDATION_PIPELINE.md#이력과-데이터)을 따릅니다.
 
 ## Testcontainers
 

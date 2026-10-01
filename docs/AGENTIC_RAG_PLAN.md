@@ -108,6 +108,8 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 
 기존 Kafka 이력은 전송한 상품 결과에 대해서만 사용합니다. 진행 상태와 결과 없음은 상품 추천 이력으로 만들지 않습니다. 로그에는 요청 ID, 검색 시도, 선택한 행동 코드, 결과 수, 소요 시간과 호출 수를 남깁니다.
 
+#211에서 Consumer 이력 저장의 eventId 멱등성을 MySQL unique 제약으로 구현했습니다. 저장 실패는 전파하며 같은 ID의 재전달·동시 저장은 최대 한 건만 커밋합니다. 과거·직접 저장 이력의 NULL ID는 보존하고 Redis 중복 키는 제거했습니다. 이는 Producer 전달 보장이나 브로커 전체의 exactly-once가 아니며, 상세 저장·조회 계약은 [현재 파이프라인](RECOMMENDATION_PIPELINE.md#이력과-데이터)을 따릅니다.
+
 ## 평가와 완료 기준
 
 [추천 시나리오](RECOMMENDATION_SCENARIOS.md)의 약 20개 평가 질의와 고정된 데이터 스냅샷으로 시작합니다. 예상 정답 상품은 수동 검토하며 FULLTEXT 매칭 수를 정답 개수로 취급하지 않습니다.
@@ -131,5 +133,6 @@ Backend와 Frontend 계약을 같은 변경에서 갱신합니다. 현재 `compl
 | 4. #180 응답 | SSE 진행·종료·오류, 연결 취소, Frontend 상태 처리 | 완료 |
 | 5. #181, #191, #193 평가 | harness·token/호출 계측, OpenAI 차단 기록, Claude 실제 모델 비교와 v2 재평가 | 완료; soft 기대 카테고리 불일치 2건을 명시 정책 위반과 분리 |
 | 6. #197, #198 평가 보강 | raw run 분리 채점과 관찰 정책 근거, 상품 선택·추천 이유 근거 개선 및 반복 평가 | 완료; 허용 Hit@5 17/17과 정책 위반 0건 유지, 세 문제 사례 3/3 → 0/3 |
+| 7. #211 이력 저장 | MySQL eventId unique 제약, 저장 실패 재전달, 과거 이력 보존 | 구현됨; Mockito와 실제 MySQL Testcontainers로 rollback·동시 저장·V10 migration 검증 |
 
 구현한 단계는 해당 변경에서 [현재 파이프라인](RECOMMENDATION_PIPELINE.md)과 이 상태표를 함께 갱신합니다.

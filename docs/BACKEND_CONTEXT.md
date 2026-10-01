@@ -9,7 +9,7 @@ Spring Framework·Security·Hibernate·Jackson 등 간접 의존성의 세부 �
 - Spring MVC Controller → Service → Repository 구조
 - MySQL: 회원·상품·주문·추천 이력 등 도메인 데이터
 - PostgreSQL + pgvector: 상품 임베딩, 별도 JDBC 연결·Flyway 경로
-- Redis: refresh token, 질의 확장 캐시, 이벤트 중복 처리 억제, 재고 분산 락
+- Redis: refresh token, 질의 확장 캐시, 재고 분산 락
 - Kafka: 추천 이력 이벤트
 
 ## LLM과 임베딩

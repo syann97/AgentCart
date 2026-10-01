@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "recommendation_history")
+@Table(name = "recommendation_history", uniqueConstraints =
+        @UniqueConstraint(name = "uk_recommendation_history_event_id", columnNames = "event_id"))
 @Getter
 @NoArgsConstructor
 public class RecommendationHistory {
@@ -15,6 +16,9 @@ public class RecommendationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "event_id", length = 255)
+    private String eventId;
 
     @Column(nullable = false)
     private Long memberId;
@@ -47,6 +51,16 @@ public class RecommendationHistory {
         h.reason = reason;
         h.score = score;
         h.recommendedAt = LocalDateTime.now();
+        return h;
+    }
+
+    public static RecommendationHistory ofEvent(String eventId, Long memberId, String query,
+                                                Long productId, String productName, String reason, double score) {
+        if (eventId == null || eventId.isBlank()) {
+            throw new IllegalArgumentException("Recommendation eventId is required");
+        }
+        RecommendationHistory h = of(memberId, query, productId, productName, reason, score);
+        h.eventId = eventId;
         return h;
     }
 }
