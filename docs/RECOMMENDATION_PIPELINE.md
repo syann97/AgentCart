@@ -129,7 +129,11 @@ score = rawScore / 남은 검색 후보의 최대 rawScore
 
 ## 이력과 데이터
 
-전송한 상품별로 `recommendation.served` 이벤트를 발행합니다. Consumer는 Redis `rec:event:` 키를 24시간 보관해 같은 eventId의 재처리를 억제한 뒤 MySQL 이력을 저장합니다. Redis 처리와 DB 저장은 하나의 원자적 트랜잭션이 아니므로 exactly-once 저장을 보장한다고 설명하지 않습니다.
+성공적으로 전송한 상품별로 `recommendation.served` 이벤트를 발행합니다. Consumer는 이벤트의 `eventId`를 MySQL 이력과 함께 저장하며, `event_id` unique 제약으로 같은 ID의 재전달·동시 저장에서 최대 한 건만 커밋합니다. Redis `rec:event:` 키는 사용하지 않으므로 키 만료·소실·Redis 장애가 이력 저장의 중복 판단에 영향을 주지 않습니다.
+
+저장은 repository의 `saveAndFlush` 트랜잭션에서 완료합니다. Consumer 자체는 트랜잭션으로 감싸지 않으며, 무결성 오류가 나면 저장 트랜잭션이 rollback된 뒤 별도 조회로 같은 `eventId`의 커밋 이력이 있는지 확인합니다. 이력이 있으면 중복 처리로 종료하고, 없거나 DB 저장·조회가 실패하면 예외를 전달해 Kafka 재전달이 가능하게 합니다. 재전달은 실제 재시도·offset·보관 정책에 의존하므로 모든 실패 이벤트의 최종 저장을 보장하지 않습니다. 잘못된 JSON은 기존처럼 로그 후 무시하고, 이벤트 ID 누락·공백은 저장 실패로 처리합니다.
+
+[V10 migration](../backend/AgentCart/src/main/resources/db/migration/V10__add_recommendation_history_event_id.sql)은 기존 이력을 보존하고 nullable `event_id`를 추가합니다. 과거 이력과 기존 직접 저장 경로의 ID는 NULL이며 여러 건을 허용합니다. 이 경로에는 이벤트 멱등성 보장이 없고, 회원별 최근 20건 조회는 두 종류의 이력을 함께 최신순으로 반환합니다. 이 보장은 Consumer의 MySQL 저장 경계에 한정되며 Producer 전달 보장이나 Kafka·Redis·MySQL 전체의 exactly-once를 의미하지 않습니다.
 
 상품 임베딩의 현행 기준은 `bge-m3`, 1024차원이며 상품명·설명·카테고리·브랜드를 사용합니다. 생성 실패 시 적재가 누락될 수 있고 삭제된 상품의 벡터 정리도 현재 보장되지 않습니다. 재생성 경로와 이전 스크립트 차이는 [LOCAL_SETUP](LOCAL_SETUP.md)을 참조합니다.
 

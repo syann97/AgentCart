@@ -7,13 +7,11 @@ import com.agentcart.recommendation.service.RecommendationEventProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -21,11 +19,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RecommendationServedConsumer {
 
-    private static final String IDEMPOTENCY_PREFIX = "rec:event:";
-    private static final long IDEMPOTENCY_TTL_HOURS = 24;
-
     private final RecommendationHistoryRepository historyRepository;
-    private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = RecommendationEventProducer.TOPIC,
@@ -39,18 +33,20 @@ public class RecommendationServedConsumer {
             return;
         }
 
-        String idempotencyKey = IDEMPOTENCY_PREFIX + event.eventId();
-        Boolean isNew = redisTemplate.opsForValue()
-                .setIfAbsent(idempotencyKey, "1", IDEMPOTENCY_TTL_HOURS, TimeUnit.HOURS);
-
-        if (!Boolean.TRUE.equals(isNew)) {
-            log.debug("Duplicate event skipped: eventId={}", event.eventId());
-            return;
+        // The repository proxy commits (or rolls back) before returning. Keep this
+        // listener outside a transaction so the duplicate check sees committed data
+        // after a failed insert, rather than a rollback-only persistence context.
+        try {
+            historyRepository.saveAndFlush(RecommendationHistory.ofEvent(
+                    event.eventId(), event.memberId(), event.query(), event.productId(),
+                    event.productName(), event.reason(), event.score()));
+        } catch (DataIntegrityViolationException failure) {
+            if (historyRepository.existsByEventId(event.eventId())) {
+                log.debug("Duplicate event skipped: eventId={}", event.eventId());
+                return;
+            }
+            throw failure;
         }
-
-        historyRepository.save(RecommendationHistory.of(
-                event.memberId(), event.query(), event.productId(),
-                event.productName(), event.reason(), event.score()));
 
         log.debug("RecommendationHistory saved via Kafka: productId={} memberId={}", event.productId(), event.memberId());
     }
